@@ -8,6 +8,8 @@
 
 import { useState } from "react";
 import { simulateHash, shortHash } from "@/lib/poa/sim-sig";
+import type { OnChainCommit } from "@/lib/agent-onchain/types";
+import { CommitBadge } from "@/components/CommitBadge";
 
 const CALDER_KEY = "5SbV3eF8nP2qL7mR1xY4kJ9wT6vG3bC8aZ5oH2dN4uV9iW";
 const OPERATOR_WALLET = "0xOperatorWallet0000000000000000000000aBcD";
@@ -66,6 +68,7 @@ type EventState =
       structuralClaim: string;
       modelUsed: string;
       latencyMs: number;
+      onChain: OnChainCommit | null;
     };
 
 export default function TamperTest() {
@@ -113,6 +116,7 @@ export default function TamperTest() {
         structuralClaim: data.structuralClaim,
         modelUsed: data.modelUsed,
         latencyMs: data.latencyMs,
+        onChain: data.onChain ?? null,
       });
     } catch (err) {
       setEventState({
@@ -368,6 +372,7 @@ function EventResult({
             <p className="mt-4 font-mono text-[10.5px] text-[var(--poa-ink-soft)]">
               signed {shortHash(CALDER_KEY)} · {state.latencyMs}ms
             </p>
+            {state.onChain && <CommitBadge commit={state.onChain} />}
           </>
         )}
       </div>

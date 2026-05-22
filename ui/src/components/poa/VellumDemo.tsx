@@ -7,6 +7,8 @@
 
 import { useState } from "react";
 import { shortHash } from "@/lib/poa/sim-sig";
+import type { OnChainCommit } from "@/lib/agent-onchain/types";
+import { CommitBadge } from "@/components/CommitBadge";
 
 const VELLUM_KEY = "0x149200000000c0f1e9d4b7a3e8f5c2b9d6e0a4c7";
 
@@ -179,6 +181,7 @@ type LiveState =
       adjacentProposal: string | null;
       modelUsed: string;
       latencyMs: number;
+      onChain: OnChainCommit | null;
     };
 
 export default function VellumDemo() {
@@ -227,6 +230,7 @@ export default function VellumDemo() {
         adjacentProposal: data.adjacentProposal,
         modelUsed: data.modelUsed,
         latencyMs: data.latencyMs,
+        onChain: data.onChain ?? null,
       });
     } catch (err) {
       setLive({
@@ -404,6 +408,7 @@ function EditResult({
               {live.clauseViolated && <>clause {live.clauseViolated} · </>}
               signed {shortHash(VELLUM_KEY)} · {live.latencyMs}ms
             </p>
+            {live.onChain && <CommitBadge commit={live.onChain} />}
           </>
         )}
       </div>

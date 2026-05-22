@@ -8,6 +8,8 @@
 
 import { useState } from "react";
 import { shortHash } from "@/lib/poa/sim-sig";
+import type { OnChainCommit } from "@/lib/agent-onchain/types";
+import { CommitBadge } from "@/components/CommitBadge";
 
 const QUILL_KEY = "5PqW7xY4vK9bN2cR5tM8eA1dJ3fG6hL9oP4sZ7uX2wV5nQ";
 
@@ -112,6 +114,7 @@ type LiveState =
       controlling: string | null;
       modelUsed: string;
       latencyMs: number;
+      onChain: OnChainCommit | null;
     };
 
 export default function QuillDemo() {
@@ -162,6 +165,7 @@ export default function QuillDemo() {
         controlling: data.controlling,
         modelUsed: data.modelUsed,
         latencyMs: data.latencyMs,
+        onChain: data.onChain ?? null,
       });
     } catch (err) {
       setLive({
@@ -380,6 +384,7 @@ function CitationResult({
             <p className="mt-4 font-mono text-[10.5px] text-[var(--poa-ink-soft)]">
               signed {shortHash(QUILL_KEY)} · {live.latencyMs}ms
             </p>
+            {live.onChain && <CommitBadge commit={live.onChain} />}
           </>
         )}
       </div>

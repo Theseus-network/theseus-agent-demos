@@ -9,6 +9,8 @@
 
 import { useState } from "react";
 import { shortHash } from "@/lib/poa/sim-sig";
+import type { OnChainCommit } from "@/lib/agent-onchain/types";
+import { CommitBadge } from "@/components/CommitBadge";
 import MoltbookPost from "./MoltbookPost";
 
 const APERTURE_KEY = "0xaa9e72e0f1c4b8d3a7e2f5b9c1d6e4a8f3c5b7d1";
@@ -164,6 +166,7 @@ type LiveState =
       acceptedDescription: string | null;
       modelUsed: string;
       latencyMs: number;
+      onChain: OnChainCommit | null;
     };
 
 export default function ApertureDemo() {
@@ -212,6 +215,7 @@ export default function ApertureDemo() {
         acceptedDescription: data.acceptedDescription,
         modelUsed: data.modelUsed,
         latencyMs: data.latencyMs,
+        onChain: data.onChain ?? null,
       });
     } catch (err) {
       setLive({
@@ -409,6 +413,7 @@ function CommissionResult({
               {live.clauseViolated && <>clause {live.clauseViolated} · </>}
               signed {shortHash(APERTURE_KEY)} · {live.latencyMs}ms
             </p>
+            {live.onChain && <CommitBadge commit={live.onChain} />}
           </>
         )}
       </div>

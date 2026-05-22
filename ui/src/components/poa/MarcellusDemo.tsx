@@ -9,6 +9,8 @@
 
 import { useState } from "react";
 import { shortHash } from "@/lib/poa/sim-sig";
+import type { OnChainCommit } from "@/lib/agent-onchain/types";
+import { CommitBadge } from "@/components/CommitBadge";
 
 const MARCELLUS_KEY = "5NpL3rT6eX9wK1mY4dC8bH5fJ2vA7sZ3oQ6gP1nM9hRyB2k";
 
@@ -172,6 +174,7 @@ type LiveState =
       draft: string;
       modelUsed: string;
       latencyMs: number;
+      onChain: OnChainCommit | null;
     };
 
 export default function MarcellusDemo() {
@@ -219,6 +222,7 @@ export default function MarcellusDemo() {
         draft: data.draft,
         modelUsed: data.modelUsed,
         latencyMs: data.latencyMs,
+        onChain: data.onChain ?? null,
       });
     } catch (err) {
       setLive({
@@ -395,6 +399,7 @@ function AssignmentResult({
             <p className="mt-4 font-mono text-[10.5px] text-[var(--poa-ink-soft)]">
               signed {shortHash(MARCELLUS_KEY)} · {live.latencyMs}ms
             </p>
+            {live.onChain && <CommitBadge commit={live.onChain} />}
           </>
         )}
       </div>
