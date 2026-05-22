@@ -17,10 +17,12 @@ import {
   applyGovernanceCommitError,
   applyGovernancePendingAction,
   applyGovernancePreset,
+  applyGovernanceProposal,
   initialGovernanceScenario,
   setGovernancePending,
   setGovernancePendingReasoning,
 } from "@/lib/governance-scenario";
+import type { SnapshotProposal } from "@/lib/snapshot";
 import {
   GovernancePreset,
   readGovernanceUrl,
@@ -155,6 +157,37 @@ export default function GovernancePage() {
     setScenario(initialGovernanceScenario());
   }, []);
 
+  // Live Arbitrum proposals from Snapshot. Lazy-loaded on first
+  // expansion so the page render stays fast.
+  const [liveOpen, setLiveOpen] = useState(false);
+  const [livePropsals, setLiveProposals] = useState<SnapshotProposal[] | null>(
+    null,
+  );
+  const [liveErr, setLiveErr] = useState<string | null>(null);
+
+  const fetchLive = useCallback(async () => {
+    if (livePropsals || liveErr) return;
+    try {
+      const res = await fetch("/api/governance/arbitrum");
+      if (!res.ok) throw new Error(`http ${res.status}`);
+      const j = (await res.json()) as { proposals: SnapshotProposal[] };
+      setLiveProposals(j.proposals);
+    } catch (e) {
+      setLiveErr((e as Error).message);
+    }
+  }, [livePropsals, liveErr]);
+
+  const handleLivePick = useCallback((sp: SnapshotProposal) => {
+    setPresetKey(null);
+    setScenario((s) =>
+      applyGovernanceProposal(
+        s,
+        sp.proposal,
+        `Arbitrum DAO · ${sp.proposal.title.slice(0, 50)}`,
+      ),
+    );
+  }, []);
+
   return (
     <>
       <GovernanceReviewerJsonLd />
@@ -201,6 +234,89 @@ export default function GovernancePage() {
               onReset={handleReset}
             />
           </div>
+
+          <details
+            className="mt-6 border-t pt-4"
+            style={{ borderColor: "var(--border)" }}
+            onToggle={(e) => {
+              const open = (e.currentTarget as HTMLDetailsElement).open;
+              setLiveOpen(open);
+              if (open) fetchLive();
+            }}
+          >
+            <summary className="cursor-pointer text-[10.5px] uppercase tracking-[0.18em] text-fg-mute transition-colors hover:text-fg">
+              or load a live Arbitrum DAO proposal ↓
+            </summary>
+            <p className="mt-3 text-[12px] leading-relaxed text-fg-mute">
+              Pulled from the{" "}
+              <a
+                href="https://snapshot.org/#/arbitrumfoundation.eth"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-border underline-offset-[3px] hover:text-fg hover:decoration-fg"
+              >
+                arbitrumfoundation.eth Snapshot space
+              </a>
+              . The reviewer reads the proposal body + voting state and posts a
+              signed verdict — same flow as the synthetic presets above.
+            </p>
+            <div className="mt-4">
+              {liveOpen && !livePropsals && !liveErr && (
+                <p className="text-[12px] text-fg-mute">Loading…</p>
+              )}
+              {liveErr && (
+                <p
+                  className="text-[12px]"
+                  style={{ color: "var(--red)" }}
+                >
+                  Couldn&apos;t reach Snapshot: {liveErr}
+                </p>
+              )}
+              {livePropsals && livePropsals.length === 0 && (
+                <p className="text-[12px] text-fg-mute">
+                  No recent proposals returned.
+                </p>
+              )}
+              {livePropsals && livePropsals.length > 0 && (
+                <ul className="border-t border-border">
+                  {livePropsals.map((sp) => (
+                    <li
+                      key={sp.snapshotId}
+                      className="border-b border-border py-3 last:border-b-0"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => handleLivePick(sp)}
+                        className="block w-full text-left transition-colors hover:text-fg"
+                      >
+                        <p className="font-serif text-[15px] text-fg leading-snug">
+                          {sp.proposal.title}
+                        </p>
+                        <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-fg-mute">
+                          <span
+                            className="font-bold"
+                            style={{
+                              color:
+                                sp.state === "active"
+                                  ? "var(--green)"
+                                  : "var(--fg-mute)",
+                            }}
+                          >
+                            {sp.state}
+                          </span>
+                          {" · "}
+                          {sp.proposal.votingWindowHours}h window
+                          {" · "}
+                          {(sp.proposal.participatingSupply / 1e6).toFixed(1)}M
+                          {" "}ARB voted
+                        </p>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </details>
 
           <div className="mt-10">
             <p className="mb-2 text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">

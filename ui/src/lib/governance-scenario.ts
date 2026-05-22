@@ -231,6 +231,21 @@ export function applyGovernancePreset(
   };
 }
 
+/** Loads an arbitrary external proposal (e.g. fetched from Snapshot)
+ *  into the scenario, replacing whichever preset was active. */
+export function applyGovernanceProposal(
+  state: GovernanceScenarioState,
+  proposal: ProposalState,
+  label: string,
+): GovernanceScenarioState {
+  return {
+    ...state,
+    proposal: { ...proposal },
+    presetLabel: label,
+    blockOffset: state.blockOffset + 1,
+  };
+}
+
 export function setGovernancePending(
   state: GovernanceScenarioState,
   pending: boolean,
