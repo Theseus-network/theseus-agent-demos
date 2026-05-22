@@ -5,10 +5,49 @@
 // is expected to handle that and use its pre-baked content.
 
 import { NextRequest, NextResponse } from "next/server";
+import { keccak256, toBytes, type Hex } from "viem";
 import { callDemoLLM, rateLimit, isLLMAvailable } from "@/lib/poa/llm";
+import { commitVellumVerdict } from "@/lib/agent-onchain/vellum";
+import { commitApertureVerdict } from "@/lib/agent-onchain/aperture";
+import { commitMarcellusVerdict } from "@/lib/agent-onchain/marcellus";
+import { commitQuillVerdict } from "@/lib/agent-onchain/quill";
+import { commitCalderDispatch } from "@/lib/agent-onchain/calder";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/** A monotonically-likely-unique uint256 id derived from time +
+ *  randomness. Demo volume is low; collisions cause an AlreadyFiled
+ *  revert at the contract, which the API surfaces as a soft warning. */
+function newDemoId(): bigint {
+  return BigInt(Date.now()) * 1000n + BigInt(Math.floor(Math.random() * 1000));
+}
+
+function hashString(s: string): Hex {
+  return keccak256(toBytes(s));
+}
+
+interface OnChainStamp {
+  txHash: string;
+  txUrl: string;
+  reasonHash: string;
+  blobUrl: string | null;
+}
+
+/** Best-effort commit: if the contract isn't deployed or the chain
+ *  call errors, return null and let the LLM result still ship. The
+ *  commit failure is logged server-side but not propagated. */
+async function tryCommit<T extends OnChainStamp | null>(
+  label: string,
+  fn: () => Promise<T>,
+): Promise<OnChainStamp | null> {
+  try {
+    return await fn();
+  } catch (err) {
+    console.warn(`[${label}] on-chain commit failed:`, err);
+    return null;
+  }
+}
 
 type Handler = (body: unknown) => Promise<{
   status: number;
@@ -103,12 +142,34 @@ const quillHandler: Handler = async (body) => {
       body: { error: "model_error", message: result.message },
     };
   }
+
+  const onChain = await tryCommit("quill", () =>
+    commitQuillVerdict({
+      id: Number(newDemoId() % BigInt(Number.MAX_SAFE_INTEGER)),
+      outcome:
+        result.data.outcome === "verified"
+          ? "VERIFIED"
+          : result.data.outcome === "distinguishable"
+            ? "DISTINGUISHABLE"
+            : "FABRICATED",
+      citationHash: hashString(b.citation + "|" + proposition),
+      blob: {
+        schema: "quill/v1",
+        chain: "base-sepolia",
+        input: { citation: b.citation, proposition },
+        verdict: result.data,
+        committedAt: new Date().toISOString(),
+      },
+    }),
+  );
+
   return {
     status: 200,
     body: {
       ...result.data,
       modelUsed: result.modelUsed,
       latencyMs: result.latencyMs,
+      onChain,
     },
   };
 };
@@ -194,12 +255,30 @@ const apertureHandler: Handler = async (body) => {
       body: { error: "model_error", message: result.message },
     };
   }
+
+  const commission = b.commission;
+  const onChain = await tryCommit("aperture", () =>
+    commitApertureVerdict({
+      id: Number(newDemoId() % BigInt(Number.MAX_SAFE_INTEGER)),
+      decision: result.data.accepted ? "PUBLISHED" : "REFUSED",
+      contentHash: hashString(commission),
+      blob: {
+        schema: "aperture-0312/v1",
+        chain: "base-sepolia",
+        input: { commission },
+        verdict: result.data,
+        committedAt: new Date().toISOString(),
+      },
+    }),
+  );
+
   return {
     status: 200,
     body: {
       ...result.data,
       modelUsed: result.modelUsed,
       latencyMs: result.latencyMs,
+      onChain,
     },
   };
 };
@@ -321,12 +400,29 @@ const marcellusHandler: Handler = async (body) => {
       body: { error: "model_error", message: result.message },
     };
   }
+
+  const onChain = await tryCommit("marcellus", () =>
+    commitMarcellusVerdict({
+      id: Number(newDemoId() % BigInt(Number.MAX_SAFE_INTEGER)),
+      decision: result.data.accepted ? "FILED" : "REFUSED",
+      contentHash: hashString(userPrompt),
+      blob: {
+        schema: "marcellus/v1",
+        chain: "base-sepolia",
+        input: { userPrompt },
+        verdict: result.data,
+        committedAt: new Date().toISOString(),
+      },
+    }),
+  );
+
   return {
     status: 200,
     body: {
       ...result.data,
       modelUsed: result.modelUsed,
       latencyMs: result.latencyMs,
+      onChain,
     },
   };
 };
@@ -420,12 +516,29 @@ const vellumHandler: Handler = async (body) => {
       body: { error: "model_error", message: result.message },
     };
   }
+
+  const onChain = await tryCommit("vellum", () =>
+    commitVellumVerdict({
+      id: Number(newDemoId() % BigInt(Number.MAX_SAFE_INTEGER)),
+      decision: result.data.accepted ? "PUBLISHED" : "REFUSED",
+      contentHash: hashString(b.edit + "|" + (b.pieceContext ?? "")),
+      blob: {
+        schema: "vellum-1492/v1",
+        chain: "base-sepolia",
+        input: { edit: b.edit, pieceContext },
+        verdict: result.data,
+        committedAt: new Date().toISOString(),
+      },
+    }),
+  );
+
   return {
     status: 200,
     body: {
       ...result.data,
       modelUsed: result.modelUsed,
       latencyMs: result.latencyMs,
+      onChain,
     },
   };
 };
@@ -503,12 +616,30 @@ const calderHandler: Handler = async (body) => {
       body: { error: "model_error", message: result.message },
     };
   }
+
+  const calderEvent = b.event;
+  const onChain = await tryCommit("calder", () =>
+    commitCalderDispatch({
+      id: Number(newDemoId() % BigInt(Number.MAX_SAFE_INTEGER)),
+      dispatchHash: hashString(result.data.dispatch),
+      eventHash: hashString(calderEvent),
+      blob: {
+        schema: "calder/v1",
+        chain: "base-sepolia",
+        input: { event: calderEvent },
+        verdict: result.data,
+        committedAt: new Date().toISOString(),
+      },
+    }),
+  );
+
   return {
     status: 200,
     body: {
       ...result.data,
       modelUsed: result.modelUsed,
       latencyMs: result.latencyMs,
+      onChain,
     },
   };
 };

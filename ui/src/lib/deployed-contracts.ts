@@ -49,7 +49,38 @@ export const DEPLOYED_CONTRACTS = {
     address: "0xd14A0963D48B944463F3fE6e776C11e09101bE40",
     label: "PredictionMarketAdjudicator",
   },
+  // Five new agents below — addresses filled in after the
+  // DeployVellumAuthor / DeployApertureArtist / DeployMarcellusCritic /
+  // DeployQuillCoAuthor / DeployCalderChronicler scripts run on Base
+  // Sepolia. Until then, commits are skipped at the API layer and the
+  // live-stats indexer treats their tickCount as 0.
+  vellumAuthor: {
+    address: "0x0000000000000000000000000000000000000000",
+    label: "VellumAuthor",
+  },
+  apertureArtist: {
+    address: "0x0000000000000000000000000000000000000000",
+    label: "ApertureArtist",
+  },
+  marcellusCritic: {
+    address: "0x0000000000000000000000000000000000000000",
+    label: "MarcellusCritic",
+  },
+  quillCoAuthor: {
+    address: "0x0000000000000000000000000000000000000000",
+    label: "QuillCoAuthor",
+  },
+  calderChronicler: {
+    address: "0x0000000000000000000000000000000000000000",
+    label: "CalderChronicler",
+  },
 } as const satisfies Record<string, DeployedContract>;
+
+/** True iff a contract has been deployed (non-zero address). Used to
+ *  gate the on-chain commit step on the five new agent routes. */
+export function isContractDeployed(c: DeployedContract): boolean {
+  return c.address !== "0x0000000000000000000000000000000000000000";
+}
 
 export function basescanAddressUrl(address: string): string {
   return `${BASE_SEPOLIA_EXPLORER}/address/${address}`;
