@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { TopBar } from "@/components/TopBar";
+import DemoCTA from "@/components/DemoCTA";
 import { ProposalPanel } from "@/components/governance/ProposalPanel";
 import { ReviewButton } from "@/components/governance/ReviewButton";
 import { GovernanceScenarioControls } from "@/components/governance/GovernanceScenarioControls";
@@ -217,6 +218,8 @@ export default function GovernancePage() {
             </p>
             <GovernanceTimeline entries={scenario.events} />
           </div>
+
+          <DemoCTA />
         </div>
       </main>
     </>

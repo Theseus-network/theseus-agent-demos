@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TopBar } from "@/components/TopBar";
 import TamperTest from "@/components/poa/TamperTest";
+import DemoCTA from "@/components/DemoCTA";
 
 const POA_ID = "5SbV3eF8nP2qL7mR1xY4kJ9wT6vG3bC8aZ5oH2dN4uV9iW";
 const POA_URL = `https://theseus.network/poa/${POA_ID}`;
@@ -53,6 +54,8 @@ export default function CalderPage() {
           </p>
 
           <TamperTest />
+
+          <DemoCTA />
         </div>
       </div>
     </main>

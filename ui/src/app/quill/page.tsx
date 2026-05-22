@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TopBar } from "@/components/TopBar";
 import QuillDemo from "@/components/poa/QuillDemo";
+import DemoCTA from "@/components/DemoCTA";
 
 const POA_ID = "5PqW7xY4vK9bN2cR5tM8eA1dJ3fG6hL9oP4sZ7uX2wV5nQ";
 const POA_URL = `https://theseus.network/poa/${POA_ID}`;
@@ -53,6 +54,8 @@ export default function QuillPage() {
           </p>
 
           <QuillDemo />
+
+          <DemoCTA />
         </div>
       </div>
     </main>

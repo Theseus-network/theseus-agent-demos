@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { TopBar } from "@/components/TopBar";
+import DemoCTA from "@/components/DemoCTA";
 import { VaultPanel } from "@/components/terra/VaultPanel";
 import { MintRedeemForm } from "@/components/terra/MintRedeemForm";
 import { TerraScenarioControls } from "@/components/terra/TerraScenarioControls";
@@ -212,6 +213,8 @@ export default function TerraPage() {
             </p>
             <TerraTimeline entries={scenario.events} pending={scenario.pending} />
           </div>
+
+          <DemoCTA />
         </div>
       </main>
     </>

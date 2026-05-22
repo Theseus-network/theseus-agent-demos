@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/TopBar";
+import DemoCTA from "@/components/DemoCTA";
 import { AdjudicatorJsonLd } from "@/components/JsonLd";
 import { CommitBadge } from "@/components/CommitBadge";
 import type { OnChainCommit } from "@/lib/agent-onchain/types";
@@ -520,6 +521,8 @@ export default function AdjudicatePage() {
               </button>
             </div>
           )}
+
+          <DemoCTA />
         </div>
       </main>
     </>

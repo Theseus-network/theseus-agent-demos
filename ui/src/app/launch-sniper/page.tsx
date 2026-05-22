@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { TopBar } from "@/components/TopBar";
+import DemoCTA from "@/components/DemoCTA";
 import { readFundState } from "@/lib/launch-sniper/reader";
 import { TickList } from "./TickList";
 
@@ -115,6 +116,8 @@ export default async function LaunchSniperPage() {
             No ticks yet. The agent fires on its next cron interval.
           </p>
         )}
+
+        <DemoCTA />
       </div>
     </main>
   );

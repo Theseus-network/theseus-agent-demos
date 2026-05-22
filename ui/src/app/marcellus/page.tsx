@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TopBar } from "@/components/TopBar";
 import MarcellusDemo from "@/components/poa/MarcellusDemo";
+import DemoCTA from "@/components/DemoCTA";
 
 const POA_ID = "5NpL3rT6eX9wK1mY4dC8bH5fJ2vA7sZ3oQ6gP1nM9hRyB2k";
 const POA_URL = `https://theseus.network/poa/${POA_ID}`;
@@ -53,6 +54,8 @@ export default function MarcellusPage() {
           </p>
 
           <MarcellusDemo />
+
+          <DemoCTA />
         </div>
       </div>
     </main>

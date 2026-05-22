@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { TopBar } from "@/components/TopBar";
+import DemoCTA from "@/components/DemoCTA";
 import { BridgePanel } from "@/components/bridge/BridgePanel";
 import { WithdrawForm } from "@/components/bridge/WithdrawForm";
 import { BridgeScenarioControls } from "@/components/bridge/BridgeScenarioControls";
@@ -220,6 +221,8 @@ export default function BridgePage() {
             </p>
             <BridgeTimeline entries={scenario.events} />
           </div>
+
+          <DemoCTA />
         </div>
       </main>
     </>

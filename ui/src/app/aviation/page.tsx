@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { TopBar } from "@/components/TopBar";
+import DemoCTA from "@/components/DemoCTA";
 import { CertificationPanel } from "@/components/aviation/CertificationPanel";
 import { AviationReviewButton } from "@/components/aviation/ReviewButton";
 import { AviationScenarioControls } from "@/components/aviation/AviationScenarioControls";
@@ -214,6 +215,8 @@ export default function AviationPage() {
             </p>
             <AviationTimeline entries={scenario.events} />
           </div>
+
+          <DemoCTA />
         </div>
       </main>
     </>

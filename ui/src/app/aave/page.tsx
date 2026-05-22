@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FeedPanel } from "@/components/FeedPanel";
+import DemoCTA from "@/components/DemoCTA";
 import { VenueCard } from "@/components/VenueCard";
 import { PositionPanel } from "@/components/PositionPanel";
 import { DecisionTimeline } from "@/components/DecisionTimeline";
@@ -469,6 +470,8 @@ export default function HomePage() {
               />
             </div>
           </details>
+
+          <DemoCTA />
         </div>
       </main>
     </>

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { TopBar } from "@/components/TopBar";
+import DemoCTA from "@/components/DemoCTA";
 import { PortfolioPanel } from "@/components/fund/PortfolioPanel";
 import { FundTickButton } from "@/components/fund/TickButton";
 import { FundScenarioControls } from "@/components/fund/FundScenarioControls";
@@ -212,6 +213,8 @@ export default function FundPage() {
             </p>
             <SovereignFundLivePanel />
           </div>
+
+          <DemoCTA />
         </div>
       </main>
     </>

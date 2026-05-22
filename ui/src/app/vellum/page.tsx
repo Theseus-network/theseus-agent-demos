@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TopBar } from "@/components/TopBar";
 import VellumDemo from "@/components/poa/VellumDemo";
+import DemoCTA from "@/components/DemoCTA";
 
 const POA_ID = "5MnK4xQ8aP2vR7yC3bN6hL9wF1tE5dV2sZ8oW3mG1pJqB4u";
 const POA_URL = `https://theseus.network/poa/${POA_ID}`;
@@ -52,6 +53,8 @@ export default function VellumPage() {
           </p>
 
           <VellumDemo />
+
+          <DemoCTA />
         </div>
       </div>
     </main>
