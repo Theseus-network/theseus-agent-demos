@@ -1,18 +1,48 @@
 @import "tailwindcss";
 
+/* ----------------------------------------------------------------
+   Brand kit tokens.
+
+   Light is the default (matches theseus.network). The .dark class
+   on <html>, set by the theme-init script in layout.tsx (mirrors the
+   marketing site), flips the variant. Token names are unchanged
+   (--coral still names the brand accent, even though the brand kit's
+   accent is indigo, not orange) so existing components migrate
+   without per-file edits.
+   ---------------------------------------------------------------- */
+
 :root {
-  --bg: #0a0b0d;
-  --surface: #131418;
-  --surface-2: #1a1c20;
-  --border: #2a2d33;
-  --fg: #ede8dd;
-  --fg-dim: #9b9892;
-  --fg-mute: #6b6864;
-  --coral: #ff5b3a;
-  --coral-dim: #c2422a;
-  --green: #5dd39e;
-  --red: #ff4d4d;
-  --amber: #f5c451;
+  /* LIGHT — brand kit default */
+  --bg: #F8FAFC;          /* slate-050 page bg */
+  --surface: #F1EAE1;     /* kit cream card */
+  --surface-2: #E9E1D2;   /* slightly darker cream for nested cards */
+  --border: #E2E8F0;      /* slate-200 */
+  --fg: #0F172A;          /* slate-900 ink */
+  --fg-dim: #475569;      /* slate-600 body-soft */
+  --fg-mute: #94A3B8;     /* slate-400 caption */
+  --coral: #4F46E5;       /* indigo-600 brand accent */
+  --coral-dim: #4338CA;   /* indigo-700 */
+  --green: #10B981;       /* emerald-500 affirmative */
+  --red: #E53E0C;         /* brand destructive */
+  --amber: #F59E0B;       /* amber-500 caution */
+  --dot: rgba(15, 23, 42, 0.05);  /* dot-grid backdrop */
+}
+
+.dark {
+  /* DARK — brand kit dark variant */
+  --bg: #060B16;
+  --surface: #0F172A;
+  --surface-2: #1E293B;
+  --border: rgba(255, 255, 255, 0.10);
+  --fg: #F8FAFC;
+  --fg-dim: #94A3B8;
+  --fg-mute: #64748B;
+  --coral: #818CF8;       /* indigo-400 */
+  --coral-dim: #6366F1;   /* indigo-500 */
+  --green: #34D399;       /* emerald-400 */
+  --red: #EF4444;
+  --amber: #FBBF24;
+  --dot: rgba(255, 255, 255, 0.04);
 }
 
 @theme inline {
@@ -42,12 +72,10 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Dot grid backdrop, same trick as theseus.network */
+/* Dot grid backdrop, same trick as theseus.network. --dot adapts
+   to light/dark so the dots stay subtle in both modes. */
 body {
-  background-image: radial-gradient(
-    rgba(255, 255, 255, 0.04) 1px,
-    transparent 1px
-  );
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
   background-size: 24px 24px;
   background-position: 0 0;
   min-height: 100vh;
@@ -71,13 +99,13 @@ body {
 }
 
 .surface-hover:hover {
-  border-color: rgba(255, 91, 58, 0.35);
+  border-color: color-mix(in srgb, var(--coral) 35%, transparent);
 }
 
-/* Coral pulse for active states */
+/* Accent pulse for active states */
 @keyframes coral-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 91, 58, 0.45); }
-  50%      { box-shadow: 0 0 0 6px rgba(255, 91, 58, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--coral) 45%, transparent); }
+  50%      { box-shadow: 0 0 0 6px color-mix(in srgb, var(--coral) 0%, transparent); }
 }
 .pulse-coral { animation: coral-pulse 2s ease-in-out infinite; }
 
@@ -107,10 +135,10 @@ body {
   border: 1px solid var(--border);
 }
 
-.badge-priced  { color: var(--green); border-color: rgba(93, 211, 158, 0.35); background: rgba(93, 211, 158, 0.06); }
-.badge-refused { color: var(--red);   border-color: rgba(255, 77, 77, 0.4);   background: rgba(255, 77, 77, 0.06); }
-.badge-stale   { color: var(--amber); border-color: rgba(245, 196, 81, 0.4);  background: rgba(245, 196, 81, 0.06); }
-.badge-tampered { color: var(--red); border-color: rgba(255, 77, 77, 0.4); background: rgba(255, 77, 77, 0.10); }
+.badge-priced   { color: var(--green); border-color: color-mix(in srgb, var(--green) 35%, transparent); background: color-mix(in srgb, var(--green) 8%, transparent); }
+.badge-refused  { color: var(--red);   border-color: color-mix(in srgb, var(--red) 40%, transparent);   background: color-mix(in srgb, var(--red) 8%, transparent); }
+.badge-stale    { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 40%, transparent); background: color-mix(in srgb, var(--amber) 8%, transparent); }
+.badge-tampered { color: var(--red);   border-color: color-mix(in srgb, var(--red) 40%, transparent);   background: color-mix(in srgb, var(--red) 12%, transparent); }
 
 /* Coral buttons */
 .btn {
@@ -133,17 +161,17 @@ body {
 
 .btn-primary {
   background: var(--coral);
-  color: #0a0b0d;
+  color: #FFFFFF;
   border-color: var(--coral);
   font-weight: 500;
 }
-.btn-primary:hover { background: #ff7558; border-color: #ff7558; color: #0a0b0d; }
+.btn-primary:hover { background: var(--coral-dim); border-color: var(--coral-dim); color: #FFFFFF; }
 
 .btn-danger {
-  border-color: rgba(255, 77, 77, 0.4);
+  border-color: color-mix(in srgb, var(--red) 40%, transparent);
   color: var(--red);
 }
-.btn-danger:hover { background: rgba(255, 77, 77, 0.08); border-color: var(--red); }
+.btn-danger:hover { background: color-mix(in srgb, var(--red) 10%, transparent); border-color: var(--red); }
 
 /* ============================================
    PROOF OF AGENTHOOD: design tokens for the 5 hosted demos,
@@ -168,19 +196,19 @@ body {
 
   /* Lines: --border + a softer rule for inner dividers. */
   --poa-rule: var(--border);
-  --poa-rule-soft: rgba(255, 255, 255, 0.05);
+  --poa-rule-soft: color-mix(in srgb, var(--fg) 5%, transparent);
 
-  /* Accent: --coral. PoA used indigo; demo-agents uses coral. */
+  /* Accent: --coral (brand-kit indigo). */
   --poa-wax: var(--coral);
-  --poa-wax-soft: rgba(255, 91, 58, 0.12);
+  --poa-wax-soft: color-mix(in srgb, var(--coral) 12%, transparent);
 
-  /* Destructive: --red, kept as the same warning color. */
+  /* Destructive: --red. */
   --poa-destructive: var(--red);
-  --poa-destructive-soft: rgba(255, 77, 77, 0.10);
+  --poa-destructive-soft: color-mix(in srgb, var(--red) 10%, transparent);
 
   /* Affirmative: --green for accepted / filed / verified verdicts. */
   --poa-affirmative: var(--green);
-  --poa-affirmative-soft: rgba(93, 211, 158, 0.10);
+  --poa-affirmative-soft: color-mix(in srgb, var(--green) 10%, transparent);
 
   background: var(--poa-paper);
   color: var(--poa-ink);
@@ -188,10 +216,10 @@ body {
   font-family: var(--font-sans);
 }
 
-/* CTA: coral-accent button matching demo-agents' .btn pattern. */
+/* CTA: brand-accent button matching demo-agents' .btn pattern. */
 .cta-ink {
   background: var(--coral);
-  color: var(--bg);
+  color: #FFFFFF;
   border: 1px solid var(--coral);
   border-radius: 8px;
   font-family: var(--font-mono);
@@ -229,9 +257,9 @@ body {
 
 /* The dot-grid background from the demo-agents body is hidden by
    .poa-shell's background. Re-expose it so the demos read as part
-   of the same site, not a light island inside it. */
+   of the same site, not an island inside it. */
 .poa-shell {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
   background-size: 24px 24px;
   background-position: 0 0;
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "./ThemeToggle";
 
 interface Props {
   /** "live" | "mock". Surfaces a small status badge. */
@@ -117,6 +118,7 @@ export function TopBar({ mode }: Props) {
           >
             theseus.network ↗
           </a>
+          <ThemeToggle />
         </div>
       </div>
     </div>

@@ -79,6 +79,19 @@ export const metadata: Metadata = {
   },
 };
 
+// Mirrors theseus.network's pattern: defaults to light, reads
+// localStorage 'theme' = 'dark' | 'light' set by the ThemeToggle, and
+// adds `.dark` to <html> before paint to avoid a flash of light theme.
+const themeInitScript = `
+  (function() {
+    try {
+      var stored = localStorage.getItem('theme');
+      var theme = stored === 'dark' || stored === 'light' ? stored : 'light';
+      if (theme === 'dark') document.documentElement.classList.add('dark');
+    } catch (e) {}
+  })();
+`;
+
 export default function RootLayout({
   children,
 }: {
@@ -88,7 +101,11 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} ${jetbrains.variable} ${fraunces.variable}`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
         <Providers>{children}</Providers>
         <Analytics />
