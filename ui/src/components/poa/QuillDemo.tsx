@@ -100,6 +100,16 @@ const OUTCOME_LABEL: Record<CitationOutcome, string> = {
   fabricated: "fabricated",
 };
 
+type CourtListenerResult = {
+  verified: boolean;
+  caseName?: string;
+  court?: string;
+  year?: number;
+  opinionUrl?: string;
+  notes?: string;
+  unavailable?: boolean;
+};
+
 type LiveState =
   | { kind: "idle" }
   | { kind: "loading"; citation: string }
@@ -115,6 +125,7 @@ type LiveState =
       modelUsed: string;
       latencyMs: number;
       onChain: OnChainCommit | null;
+      courtListener: CourtListenerResult | null;
     };
 
 export default function QuillDemo() {
@@ -166,6 +177,7 @@ export default function QuillDemo() {
         modelUsed: data.modelUsed,
         latencyMs: data.latencyMs,
         onChain: data.onChain ?? null,
+        courtListener: (data.courtListener ?? null) as CourtListenerResult | null,
       });
     } catch (err) {
       setLive({
@@ -373,6 +385,9 @@ function CitationResult({
             >
               {OUTCOME_LABEL[live.outcome]}
             </p>
+            {live.courtListener && (
+              <CourtListenerLine result={live.courtListener} />
+            )}
             <p className="mt-2 whitespace-pre-wrap font-serif text-[14px] leading-[1.7] text-[var(--poa-ink)]">
               {live.responseBody}
             </p>
@@ -397,5 +412,68 @@ function CitationResult({
         ← try another citation
       </button>
     </div>
+  );
+}
+
+// Renders the external CourtListener verification line above the LLM's
+// rebuttal. Three states: verified hit (green check + opinion link),
+// confirmed miss (red x + reason), and unavailable (neutral note so the
+// reader knows the LLM verdict is unaided). This is the visible signal
+// that the verdict is grounded in a real reporter database, not just
+// model recall.
+function CourtListenerLine({ result }: { result: CourtListenerResult }) {
+  if (result.unavailable) {
+    return (
+      <p className="mt-2 text-[11.5px] leading-snug text-[var(--poa-ink-soft)]">
+        CourtListener unavailable · LLM verdict only
+      </p>
+    );
+  }
+  if (result.verified) {
+    const meta: string[] = [];
+    if (result.caseName) meta.push(result.caseName);
+    if (result.court) meta.push(result.court);
+    if (result.year) meta.push(String(result.year));
+    return (
+      <p
+        className="mt-2 text-[11.5px] leading-snug"
+        style={{ color: "var(--poa-affirmative)" }}
+      >
+        <span aria-hidden>✓ </span>
+        verified against CourtListener
+        {meta.length > 0 && (
+          <span className="text-[var(--poa-ink-soft)]">
+            {" · "}
+            {meta.join(" · ")}
+          </span>
+        )}
+        {result.opinionUrl && (
+          <>
+            {" · "}
+            <a
+              href={result.opinionUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-[color:var(--poa-rule)] underline-offset-[3px] hover:decoration-[color:var(--poa-affirmative)]"
+              style={{ color: "var(--poa-affirmative)" }}
+            >
+              opinion ↗
+            </a>
+          </>
+        )}
+      </p>
+    );
+  }
+  return (
+    <p
+      className="mt-2 text-[11.5px] leading-snug"
+      style={{ color: "var(--poa-destructive, #e53e0c)" }}
+    >
+      <span aria-hidden>✗ </span>
+      not in CourtListener
+      {result.notes && (
+        <span className="text-[var(--poa-ink-soft)]">{" · " + result.notes}</span>
+      )}
+    </p>
   );
 }

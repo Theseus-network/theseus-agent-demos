@@ -7,7 +7,12 @@ import { AdjudicatorJsonLd } from "@/components/JsonLd";
 import { CommitBadge } from "@/components/CommitBadge";
 import type { OnChainCommit } from "@/lib/agent-onchain/types";
 import { useTypewriter } from "@/lib/use-typewriter";
-import { MARKETS, type Citation } from "@/lib/adjudicator-markets";
+import {
+  MARKETS,
+  type Citation,
+  type PredictionMarket,
+} from "@/lib/adjudicator-markets";
+import type { PolymarketLiveMarket } from "@/lib/polymarket";
 
 function daysUntil(deadlineISO: string): number {
   const todayMs = Date.parse(
@@ -56,6 +61,9 @@ const ADJUDICATOR_PROFILE = `https://theseus.network/poa/${POA_AGENT_ID}`;
 
 export default function AdjudicatePage() {
   const [selectedId, setSelectedId] = useState<string>(MARKETS[0].id);
+  // When set, this Polymarket market supersedes the synthetic selection.
+  // Cleared whenever the user clicks one of the static presets.
+  const [liveMarket, setLiveMarket] = useState<PredictionMarket | null>(null);
   const [run, setRun] = useState<RunState>({ kind: "idle" });
   const [searchSteps, setSearchSteps] = useState<SearchStep[]>([]);
   const abortRef = useRef<AbortController | null>(null);
@@ -79,7 +87,9 @@ export default function AdjudicatePage() {
     );
   }, [selectedId]);
 
-  const market = MARKETS.find((m) => m.id === selectedId) ?? MARKETS[0];
+  const market: PredictionMarket =
+    liveMarket ?? MARKETS.find((m) => m.id === selectedId) ?? MARKETS[0];
+  const isLive = liveMarket !== null;
 
   const adjudicate = useCallback(async () => {
     abortRef.current?.abort();
@@ -89,10 +99,16 @@ export default function AdjudicatePage() {
     setSearchSteps([]);
 
     try {
+      // Live Polymarket picks aren't in the server's static MARKETS
+      // registry; pass the full market payload inline so the agent
+      // gets the same shape it expects.
+      const requestBody = isLive
+        ? { market }
+        : { marketId: market.id };
       const res = await fetch("/api/agent/adjudicate", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ marketId: market.id }),
+        body: JSON.stringify(requestBody),
         signal: ctrl.signal,
       });
       if (!res.ok || !res.body) {
@@ -177,13 +193,38 @@ export default function AdjudicatePage() {
       const msg = e instanceof Error ? e.message : String(e);
       setRun({ kind: "error", message: msg });
     }
-  }, [market.id]);
+  }, [market, isLive]);
 
   useEffect(() => {
     abortRef.current?.abort();
     setRun({ kind: "idle" });
     setSearchSteps([]);
-  }, [selectedId]);
+  }, [selectedId, liveMarket?.id]);
+
+  // Live Polymarket markets, lazy-loaded on first <details> expansion
+  // so the initial render stays fast and we don't spend an upstream
+  // request on visitors who never open the section.
+  const [liveOpen, setLiveOpen] = useState(false);
+  const [liveList, setLiveList] = useState<PolymarketLiveMarket[] | null>(
+    null,
+  );
+  const [liveErr, setLiveErr] = useState<string | null>(null);
+
+  const fetchLive = useCallback(async () => {
+    if (liveList || liveErr) return;
+    try {
+      const res = await fetch("/api/adjudicate/polymarket");
+      if (!res.ok) throw new Error(`http ${res.status}`);
+      const j = (await res.json()) as { markets: PolymarketLiveMarket[] };
+      setLiveList(j.markets);
+    } catch (e) {
+      setLiveErr((e as Error).message);
+    }
+  }, [liveList, liveErr]);
+
+  const handleLivePick = useCallback((pm: PolymarketLiveMarket) => {
+    setLiveMarket(pm.market);
+  }, []);
 
   const summaryTarget =
     run.kind === "done" ? run.output.evidenceSummary : "";
@@ -242,11 +283,14 @@ export default function AdjudicatePage() {
           </p>
           <div className="border-t border-border">
             {MARKETS.map((m) => {
-              const active = m.id === market.id;
+              const active = !isLive && m.id === market.id;
               return (
                 <button
                   key={m.id}
-                  onClick={() => setSelectedId(m.id)}
+                  onClick={() => {
+                    setLiveMarket(null);
+                    setSelectedId(m.id);
+                  }}
                   className="block w-full border-b border-border py-3 text-left transition-colors hover:bg-fg/[0.02]"
                 >
                   <div className="flex items-baseline justify-between gap-3">
@@ -263,6 +307,96 @@ export default function AdjudicatePage() {
               );
             })}
           </div>
+
+          <details
+            className="mt-6 border-t pt-4"
+            style={{ borderColor: "var(--border)" }}
+            onToggle={(e) => {
+              const open = (e.currentTarget as HTMLDetailsElement).open;
+              setLiveOpen(open);
+              if (open) fetchLive();
+            }}
+          >
+            <summary className="cursor-pointer text-[10.5px] uppercase tracking-[0.18em] text-fg-mute transition-colors hover:text-fg">
+              or load a live Polymarket market ↓
+            </summary>
+            <p className="mt-3 text-[12px] leading-relaxed text-fg-mute">
+              Pulled from{" "}
+              <a
+                href="https://polymarket.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-border underline-offset-[3px] hover:text-fg hover:decoration-fg"
+              >
+                Polymarket
+              </a>
+              &rsquo;s public Gamma API — the top binary markets by 24h
+              volume with at least two weeks until resolution. Pick one and
+              the same search→evidence→verdict pipeline runs against it.
+            </p>
+            <div className="mt-4">
+              {liveOpen && !liveList && !liveErr && (
+                <p className="text-[12px] text-fg-mute">Loading…</p>
+              )}
+              {liveErr && (
+                <p
+                  className="text-[12px]"
+                  style={{ color: "var(--coral)" }}
+                >
+                  Couldn&rsquo;t reach Polymarket: {liveErr}
+                </p>
+              )}
+              {liveList && liveList.length === 0 && (
+                <p className="text-[12px] text-fg-mute">
+                  No qualifying markets returned. Try again later.
+                </p>
+              )}
+              {liveList && liveList.length > 0 && (
+                <ul className="border-t border-border">
+                  {liveList.map((pm) => {
+                    const active =
+                      isLive && liveMarket?.id === pm.market.id;
+                    const yesPct =
+                      pm.yesPrice !== null
+                        ? Math.round(pm.yesPrice * 100)
+                        : null;
+                    return (
+                      <li
+                        key={pm.conditionId}
+                        className="border-b border-border last:border-b-0"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleLivePick(pm)}
+                          className="block w-full py-3 text-left transition-colors hover:bg-fg/[0.02]"
+                        >
+                          <div className="flex items-baseline justify-between gap-3">
+                            <span
+                              className={`text-[13.5px] leading-snug ${active ? "text-fg" : "text-fg-mute"}`}
+                            >
+                              {pm.market.question}
+                            </span>
+                            <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-fg-mute shrink-0">
+                              {active ? "selected" : `${(pm.volume24hUsd / 1000).toFixed(0)}k vol`}
+                            </span>
+                          </div>
+                          <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-fg-mute">
+                            {yesPct !== null && (
+                              <>
+                                YES {yesPct}%
+                                {" · "}
+                              </>
+                            )}
+                            ends {pm.market.deadline}
+                          </p>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          </details>
 
           <div className="mt-10">
             <div className="flex items-baseline justify-between gap-3">

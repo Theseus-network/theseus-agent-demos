@@ -12,6 +12,10 @@ import { commitApertureVerdict } from "@/lib/agent-onchain/aperture";
 import { commitMarcellusVerdict } from "@/lib/agent-onchain/marcellus";
 import { commitQuillVerdict } from "@/lib/agent-onchain/quill";
 import { commitCalderDispatch } from "@/lib/agent-onchain/calder";
+import {
+  verifyCitation,
+  type CitationVerification,
+} from "@/lib/courtlistener";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -88,14 +92,62 @@ const quillHandler: Handler = async (body) => {
   }
   const proposition = (b.proposition ?? "").slice(0, 1000);
 
+  // Ground the verdict in CourtListener's reporter database before
+  // asking the LLM. The LLM still authors the rebuttal prose and the
+  // final "verified / distinguishable / fabricated" outcome — but it
+  // now gets to do so with a real external signal, not just its own
+  // recall. If CourtListener is unreachable, `unavailable` is set and
+  // the LLM is told to fall back to its own judgment.
+  const verification: CitationVerification = await verifyCitation(b.citation);
+
+  const verificationBlock = (() => {
+    if (verification.unavailable) {
+      return (
+        "## External verification (CourtListener)\n" +
+        "CourtListener was unreachable for this lookup (" +
+        (verification.notes ?? "no detail") +
+        "). Assess the citation on your own recall; do not invent a verification result."
+      );
+    }
+    if (verification.verified) {
+      const parts: string[] = [
+        "## External verification (CourtListener)",
+        "Status: MATCH — the citation resolves to a real case in CourtListener's reporter database.",
+      ];
+      if (verification.caseName) {
+        parts.push("Canonical case name: " + verification.caseName);
+      }
+      if (verification.court) {
+        parts.push("Court: " + verification.court);
+      }
+      if (verification.year) {
+        parts.push("Year: " + String(verification.year));
+      }
+      if (verification.opinionUrl) {
+        parts.push("Opinion URL: " + verification.opinionUrl);
+      }
+      parts.push(
+        "Note: a match here means the case EXISTS. It does NOT mean the case supports the proposition or that it is still good law. If the case has been abrogated or does not support the cited proposition, outcome should still be \"distinguishable\".",
+      );
+      return parts.join("\n");
+    }
+    return (
+      "## External verification (CourtListener)\n" +
+      "Status: NO MATCH — CourtListener did not find this citation in its reporter database. " +
+      (verification.notes ?? "") +
+      "\nNote: this is strong evidence the citation is fabricated. If you nonetheless recognize it as a real case CourtListener may simply lack, say so explicitly and explain why."
+    );
+  })();
+
   const userPrompt =
     "Opposing counsel cited this case:\n\n" +
     "Citation: " +
     b.citation +
     "\n\n" +
     (proposition
-      ? "For the proposition: " + proposition
-      : "(no specific proposition supplied; assess on the citation alone)");
+      ? "For the proposition: " + proposition + "\n\n"
+      : "(no specific proposition supplied; assess on the citation alone)\n\n") +
+    verificationBlock;
 
   const result = await callDemoLLM<{
     outcome: "verified" | "distinguishable" | "fabricated";
@@ -158,6 +210,7 @@ const quillHandler: Handler = async (body) => {
         chain: "base-sepolia",
         input: { citation: b.citation, proposition },
         verdict: result.data,
+        courtListener: verification,
         committedAt: new Date().toISOString(),
       },
     }),
@@ -170,6 +223,7 @@ const quillHandler: Handler = async (body) => {
       modelUsed: result.modelUsed,
       latencyMs: result.latencyMs,
       onChain,
+      courtListener: verification,
     },
   };
 };

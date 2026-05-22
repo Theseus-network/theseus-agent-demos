@@ -1,12 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adjudicateStream, type ResolutionResult } from "@/lib/adjudicator-llm";
-import { findMarket } from "@/lib/adjudicator-markets";
+import { findMarket, type PredictionMarket } from "@/lib/adjudicator-markets";
 import { commitAdjudicatorVerdict } from "@/lib/agent-onchain/adjudicator";
 import { streamWithCommit } from "@/lib/agent-onchain/stream-commit";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 export const runtime = "nodejs";
+
+/** Type guard: accept an inline market payload (for live Polymarket
+ *  picks the server didn't pre-register) only if it has the fields the
+ *  agent actually consumes. Treat strings defensively. */
+function isInlineMarket(x: unknown): x is PredictionMarket {
+  if (!x || typeof x !== "object") return false;
+  const m = x as Record<string, unknown>;
+  return (
+    typeof m.id === "string" &&
+    typeof m.marketId === "number" &&
+    typeof m.question === "string" &&
+    Array.isArray(m.options) &&
+    m.options.every((o) => typeof o === "string") &&
+    typeof m.deadline === "string" &&
+    typeof m.deadlineISO === "string" &&
+    typeof m.resolutionCriteria === "string" &&
+    typeof m.resolutionSource === "string"
+  );
+}
 
 export async function POST(req: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -16,22 +35,31 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: { marketId?: string };
+  let body: { marketId?: string; market?: unknown };
   try {
-    body = (await req.json()) as { marketId?: string };
+    body = (await req.json()) as { marketId?: string; market?: unknown };
   } catch {
     return NextResponse.json({ error: "invalid request body" }, { status: 400 });
   }
 
-  if (!body.marketId) {
-    return NextResponse.json({ error: "missing marketId" }, { status: 400 });
+  // Prefer registered markets (synthetic presets). Fall back to an
+  // inline market payload, used by the live Polymarket pick path so
+  // the client doesn't have to re-fetch on submit.
+  let market: PredictionMarket | undefined;
+  if (body.marketId) {
+    market = findMarket(body.marketId);
   }
-
-  const market = findMarket(body.marketId);
+  if (!market && isInlineMarket(body.market)) {
+    market = body.market;
+  }
   if (!market) {
     return NextResponse.json(
-      { error: `unknown market: ${body.marketId}` },
-      { status: 404 },
+      {
+        error: body.marketId
+          ? `unknown market: ${body.marketId}`
+          : "missing marketId or inline market payload",
+      },
+      { status: body.marketId ? 404 : 400 },
     );
   }
 

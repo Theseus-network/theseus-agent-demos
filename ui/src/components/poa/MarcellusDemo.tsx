@@ -7,10 +7,11 @@
 // payments, soft-coverage asks). Bibliography of four published
 // reviews at the foot, click-to-expand.
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { shortHash } from "@/lib/poa/sim-sig";
 import type { OnChainCommit } from "@/lib/agent-onchain/types";
 import { CommitBadge } from "@/components/CommitBadge";
+import type { LiveRelease } from "@/lib/music-feeds";
 
 const MARCELLUS_KEY = "5NpL3rT6eX9wK1mY4dC8bH5fJ2vA7sZ3oQ6gP1nM9hRyB2k";
 
@@ -161,11 +162,20 @@ const PRESET_ASSIGNMENTS: { label: string; text: string }[] = [
   },
 ];
 
+/** When the assignment came from a live Pitchfork pick, we hold onto
+ *  the source so the result panel can surface a "via Pitchfork" link. */
+type AssignmentSource = { kind: "pitchfork"; link: string } | null;
+
 type LiveState =
   | { kind: "idle" }
-  | { kind: "loading"; submitted: string }
-  | { kind: "no_key"; submitted: string }
-  | { kind: "error"; submitted: string; message: string }
+  | { kind: "loading"; submitted: string; source: AssignmentSource }
+  | { kind: "no_key"; submitted: string; source: AssignmentSource }
+  | {
+      kind: "error";
+      submitted: string;
+      message: string;
+      source: AssignmentSource;
+    }
   | {
       kind: "ok";
       submitted: string;
@@ -175,17 +185,18 @@ type LiveState =
       modelUsed: string;
       latencyMs: number;
       onChain: OnChainCommit | null;
+      source: AssignmentSource;
     };
 
 export default function MarcellusDemo() {
   const [draft, setDraft] = useState("");
   const [live, setLive] = useState<LiveState>({ kind: "idle" });
 
-  async function submit(text: string) {
+  async function submit(text: string, source: AssignmentSource = null) {
     const assignment = text.trim();
     if (!assignment) return;
     setDraft(assignment);
-    setLive({ kind: "loading", submitted: assignment });
+    setLive({ kind: "loading", submitted: assignment, source });
     try {
       const res = await fetch("/api/demo/marcellus", {
         method: "POST",
@@ -193,7 +204,7 @@ export default function MarcellusDemo() {
         body: JSON.stringify({ assignment }),
       });
       if (res.status === 503) {
-        setLive({ kind: "no_key", submitted: assignment });
+        setLive({ kind: "no_key", submitted: assignment, source });
         return;
       }
       if (res.status === 429) {
@@ -201,6 +212,7 @@ export default function MarcellusDemo() {
           kind: "error",
           submitted: assignment,
           message: "Rate limit hit (30 per hour per IP).",
+          source,
         });
         return;
       }
@@ -210,6 +222,7 @@ export default function MarcellusDemo() {
           kind: "error",
           submitted: assignment,
           message: err.message || "Model error",
+          source,
         });
         return;
       }
@@ -223,12 +236,14 @@ export default function MarcellusDemo() {
         modelUsed: data.modelUsed,
         latencyMs: data.latencyMs,
         onChain: data.onChain ?? null,
+        source,
       });
     } catch (err) {
       setLive({
         kind: "error",
         submitted: assignment,
         message: err instanceof Error ? err.message : String(err),
+        source,
       });
     }
   }
@@ -257,6 +272,9 @@ export default function MarcellusDemo() {
             setDraft={setDraft}
             onSubmit={() => submit(draft)}
             onPreset={(t) => submit(t)}
+            onLivePick={(text, release) =>
+              submit(text, { kind: "pitchfork", link: release.link })
+            }
           />
         ) : (
           <AssignmentResult
@@ -279,11 +297,13 @@ function AssignmentForm({
   setDraft,
   onSubmit,
   onPreset,
+  onLivePick,
 }: {
   draft: string;
   setDraft: (s: string) => void;
   onSubmit: () => void;
   onPreset: (text: string) => void;
+  onLivePick: (assignmentText: string, release: LiveRelease) => void;
 }) {
   return (
     <form
@@ -327,7 +347,121 @@ function AssignmentForm({
           submit →
         </button>
       </div>
+
+      <LiveReleasePicker onPick={onLivePick} />
     </form>
+  );
+}
+
+/** Build the assignment string Marcellus sees when the user picks a
+ *  live Pitchfork release. The shape matches the preset assignments
+ *  (publication-first, prose) so the agent's handler reads it
+ *  identically — no API changes required. */
+function buildLiveAssignment(r: LiveRelease): string {
+  const artist = r.artist || "an unnamed artist";
+  const blurb = r.pitchforkBlurb
+    ? ` Pitchfork's blurb for context: ${r.pitchforkBlurb}.`
+    : "";
+  return `Online piece for Lossless: ${artist}'s ${r.album}.${blurb} Take it or refuse it as you see fit.`;
+}
+
+function LiveReleasePicker({
+  onPick,
+}: {
+  onPick: (assignmentText: string, release: LiveRelease) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [releases, setReleases] = useState<LiveRelease[] | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    if (releases || err) return;
+    try {
+      const res = await fetch("/api/music/recent");
+      if (!res.ok) throw new Error(`http ${res.status}`);
+      const j = (await res.json()) as { releases: LiveRelease[] };
+      setReleases(j.releases);
+    } catch (e) {
+      setErr((e as Error).message);
+    }
+  }, [releases, err]);
+
+  return (
+    <details
+      className="mt-6 border-t pt-3"
+      style={{ borderColor: "var(--poa-rule)" }}
+      onToggle={(e) => {
+        const isOpen = (e.currentTarget as HTMLDetailsElement).open;
+        setOpen(isOpen);
+        if (isOpen) load();
+      }}
+    >
+      <summary className="cursor-pointer text-[10.5px] uppercase tracking-[0.18em] text-[var(--poa-ink-soft)] transition-colors hover:text-[var(--poa-ink)]">
+        or assign Marcellus a real new release ↓
+      </summary>
+      <p className="mt-3 text-[12px] leading-relaxed text-[var(--poa-ink-soft)]">
+        Pulled from{" "}
+        <a
+          href="https://pitchfork.com/reviews/albums/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="italic underline decoration-[color:var(--poa-rule)] underline-offset-[3px] transition-colors hover:text-[var(--poa-ink)] hover:decoration-[color:var(--poa-ink)]"
+        >
+          Pitchfork&apos;s albums-reviews feed
+        </a>
+        . Marcellus reads the assignment in voice and either drafts a
+        snippet or refuses.
+      </p>
+      <div className="mt-3">
+        {open && !releases && !err && (
+          <p className="text-[12px] text-[var(--poa-ink-soft)]">Loading…</p>
+        )}
+        {err && (
+          <p
+            className="text-[12px]"
+            style={{ color: "var(--poa-destructive, #e53e0c)" }}
+          >
+            Couldn&apos;t reach Pitchfork: {err}
+          </p>
+        )}
+        {releases && releases.length === 0 && (
+          <p className="text-[12px] text-[var(--poa-ink-soft)]">
+            No recent releases returned.
+          </p>
+        )}
+        {releases && releases.length > 0 && (
+          <ul
+            className="border-t"
+            style={{ borderColor: "var(--poa-rule)" }}
+          >
+            {releases.map((r) => (
+              <li
+                key={r.link}
+                className="border-b py-3 last:border-b-0"
+                style={{ borderColor: "var(--poa-rule)" }}
+              >
+                <button
+                  type="button"
+                  onClick={() => onPick(buildLiveAssignment(r), r)}
+                  className="block w-full text-left transition-colors hover:text-[var(--poa-ink)]"
+                >
+                  <p className="font-serif text-[15px] italic text-[var(--poa-ink)] leading-snug">
+                    {r.artist ? `${r.artist} — ${r.album}` : r.album}
+                  </p>
+                  {r.pitchforkBlurb && (
+                    <p className="mt-1 text-[12px] leading-[1.55] text-[var(--poa-ink-soft)]">
+                      {r.pitchforkBlurb.length > 180
+                        ? r.pitchforkBlurb.slice(0, 180) + "…"
+                        : r.pitchforkBlurb}
+                    </p>
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </details>
   );
 }
 
@@ -354,6 +488,19 @@ function AssignmentResult({
       <p className="mt-1.5 text-[14px] leading-[1.55] text-[var(--poa-ink)]">
         “{live.submitted}”
       </p>
+      {live.source?.kind === "pitchfork" && (
+        <p className="mt-1.5 text-[11px] text-[var(--poa-ink-soft)]">
+          via{" "}
+          <a
+            href={live.source.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="italic underline decoration-[color:var(--poa-rule)] underline-offset-[3px] transition-colors hover:text-[var(--poa-ink)] hover:decoration-[color:var(--poa-ink)]"
+          >
+            Pitchfork ↗
+          </a>
+        </p>
+      )}
 
       <div className="mt-5">
         {live.kind === "loading" && (
