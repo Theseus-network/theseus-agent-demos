@@ -138,13 +138,79 @@ function buildUserPrompt(dossier: ResearchDossier): string {
         (f) => (f * 100).toFixed(1) + "% of total supply",
       )}`,
     );
+
+    // GoPlus block — separate section so the kill-switch flags
+    // (honeypot, mintable, pausable) are visually grouped.
+    if (phase2.goplus) {
+      const g = phase2.goplus;
+      const flag = (b: boolean | null) =>
+        b === true ? "YES" : b === false ? "no" : "unknown";
+      lines.push(
+        "",
+        "## GoPlus Security profile",
+        `  honeypot: ${flag(g.isHoneypot)}`,
+        `  cannot buy: ${flag(g.cannotBuy)}`,
+        `  cannot sell all: ${flag(g.cannotSellAll)}`,
+        `  owner can take back ownership: ${flag(g.canTakeBackOwnership)}`,
+        `  mintable: ${flag(g.isMintable)}`,
+        `  proxy upgradeable: ${flag(g.isProxy)}`,
+        `  open source (cross-check): ${flag(g.isOpenSource)}`,
+        `  slippage modifiable: ${flag(g.slippageModifiable)}`,
+        `  transfer pausable: ${flag(g.transferPausable)}`,
+        `  trading cooldown: ${flag(g.tradingCooldown)}`,
+        `  external call in transfer: ${flag(g.externalCall)}`,
+        `  buy tax: ${
+          g.buyTaxPct === null ? "unknown" : (g.buyTaxPct * 100).toFixed(2) + "%"
+        }`,
+        `  sell tax: ${
+          g.sellTaxPct === null
+            ? "unknown"
+            : (g.sellTaxPct * 100).toFixed(2) + "%"
+        }`,
+        `  holder count: ${g.holderCount ?? "unknown"}`,
+        `  creator retained: ${
+          g.creatorPercent === null
+            ? "unknown"
+            : (g.creatorPercent * 100).toFixed(2) + "% of supply"
+        }`,
+        `  owner retained: ${
+          g.ownerPercent === null
+            ? "unknown"
+            : (g.ownerPercent * 100).toFixed(2) + "% of supply"
+        }`,
+        `  top-3 holder concentration: ${
+          g.top3HolderPct === null
+            ? "unknown"
+            : (g.top3HolderPct * 100).toFixed(1) +
+              "% (tags: " +
+              g.top3HolderTags
+                .map((t) => t ?? "unlabeled EOA")
+                .join(", ") +
+              ")"
+        }`,
+        `  LP locked: ${
+          g.lockedLpPct === null
+            ? "unknown"
+            : (g.lockedLpPct * 100).toFixed(1) + "% of LP supply locked"
+        }`,
+        `  LP unlocked: ${
+          g.unlockedLpPct === null
+            ? "unknown"
+            : (g.unlockedLpPct * 100).toFixed(1) +
+              "% of LP supply unlocked (owned by EOAs / unverified contracts)"
+        }`,
+      );
+    } else {
+      lines.push(
+        "",
+        "## GoPlus Security profile",
+        "  GoPlus lookup unavailable this pass; treat all security-pathology fields as unknown.",
+      );
+    }
   }
   lines.push(
     "",
-    "## Data still not in the dossier",
-    "  LP lock state: not in Phase 2 (would require resolving the V3 NonfungiblePositionManager NFT owner per pool)",
-    "",
-    "Apply your checklist. Use the Phase 2 signals as primary evidence; weight a missing lookup as 'unknown', not as a green light. Output strict JSON only.",
+    "Apply your checklist. Use the Phase 2 signals as primary evidence; weight a missing lookup as 'unknown', not as a green light. A GoPlus honeypot=YES or can_take_back_ownership=YES is an automatic PASS regardless of any other signal. Output strict JSON only.",
   );
   return lines.join("\n");
 }

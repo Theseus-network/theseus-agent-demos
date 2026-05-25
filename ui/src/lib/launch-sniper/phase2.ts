@@ -11,6 +11,7 @@
 
 import { type Address, type Hex } from "viem";
 import { getMainnetClient } from "./indexer";
+import { fetchGoPlusSecurity } from "./goplus";
 
 /** Etherscan V2 multi-chain API. Same module/action shape as the legacy
  *  V1 endpoints, but you pass `chainid=8453` for Base and the same key
@@ -256,10 +257,12 @@ export async function gatherPhase2(
     { verified, compilerVersion },
     mintAuthorityState,
     deployerAddress,
+    goplusRaw,
   ] = await Promise.all([
     fetchSourceVerification(candidate.token),
     readMintAuthority(candidate.token),
     resolveDeployer(candidate.txHash),
+    fetchGoPlusSecurity(candidate.token),
   ]);
 
   // Deployer-dependent lookups can only run once we have the address.
@@ -273,6 +276,8 @@ export async function gatherPhase2(
     token.decimals,
   );
 
+  const goplus = goplusRaw.unavailable ? null : goplusRaw;
+
   // If literally every lookup failed, return null so the caller can
   // surface "Phase 2 unavailable" rather than a wall of nulls.
   const everyFieldNull =
@@ -280,7 +285,8 @@ export async function gatherPhase2(
     mintAuthorityState === null &&
     deployerAddress === null &&
     deployerPriorDeploys === null &&
-    top10Concentration === null;
+    top10Concentration === null &&
+    goplus === null;
   if (everyFieldNull) return null;
 
   return {
@@ -290,6 +296,7 @@ export async function gatherPhase2(
     deployerAddress,
     deployerPriorDeploys,
     top10Concentration,
+    goplus,
     fetchedAt: new Date().toISOString(),
   };
 }

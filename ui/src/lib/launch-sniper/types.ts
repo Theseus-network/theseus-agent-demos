@@ -28,12 +28,12 @@ export interface TokenMetadata {
   totalSupply: bigint;
 }
 
+import type { GoPlusSecurity } from "./goplus";
+
 /** Phase 2 signals: external lookups that ground the agent's decision
- *  in real reporter data (Basescan source verification, on-chain mint
- *  authority, deployer history, holder concentration). Each field is
- *  best-effort; null means "the lookup ran but found nothing"; the
- *  containing object is null when the entire Phase 2 pass was skipped
- *  or failed (e.g. Basescan unreachable). */
+ *  in real reporter data. Each field is best-effort; null means "the
+ *  lookup ran but found nothing"; the containing object is null when
+ *  the entire Phase 2 pass was skipped or failed. */
 export interface Phase2Signals {
   /** True iff Basescan returns a non-empty SourceCode field. */
   sourceVerified: boolean | null;
@@ -53,6 +53,9 @@ export interface Phase2Signals {
   deployerPriorDeploys: number | null;
   /** Top-10 holder share of total supply, 0..1. null on lookup failure. */
   top10Concentration: number | null;
+  /** GoPlus Security: honeypot, mintable, taxes, LP lock, etc. Null
+   *  on lookup failure; per-field nulls inside indicate partial data. */
+  goplus: GoPlusSecurity | null;
   /** Wall-clock time the Phase 2 pass ran. */
   fetchedAt: string;
 }
