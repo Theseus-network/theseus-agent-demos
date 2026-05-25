@@ -185,10 +185,10 @@ export default function BridgePage() {
           </div>
 
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
-            The Bridge Guardian is an AI agent that gates withdrawals on a
-            cross-chain bridge. Load a Ronin, Wormhole, or Nomad attack shape
-            below and try to release — watch it refuse where a naive bridge
-            would have paid out.
+            The Bridge Guardian gates withdrawals on a cross-chain bridge.
+            Load any of the three preset attack shapes (Ronin, Wormhole,
+            Nomad), try to release, and read the verdict. A naive bridge
+            would have paid out on each one.
           </p>
 
           <div id="bridge-scenarios">

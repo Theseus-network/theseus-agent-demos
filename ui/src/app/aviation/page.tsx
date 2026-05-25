@@ -179,10 +179,10 @@ export default function AviationPage() {
           </div>
 
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
-            The Aviation Safety Reviewer is an AI agent that reads proposed
-            aircraft design changes and flags catastrophic failure shapes
-            before certification. Pick a preset below — watch it reject the
-            MCAS shape that grounded the 737 MAX.
+            The Aviation Safety Reviewer reads proposed aircraft design
+            changes and flags catastrophic failure shapes before
+            certification. Load a preset. The MCAS shape that grounded the
+            737 MAX comes back as a REJECT.
           </p>
 
           <div id="aviation-scenarios">

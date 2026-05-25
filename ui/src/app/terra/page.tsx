@@ -186,10 +186,10 @@ export default function TerraPage() {
           </div>
 
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
-            The Terra Failsafe Agent is an AI agent that refuses mint and
-            redeem when the algorithmic stablecoin vault is stressed. Load a
-            preset from the actual Terra/Luna collapse below, then try a mint
-            or redeem — watch it refuse where the original contract did not.
+            The Terra Failsafe Agent refuses mint and redeem when the
+            algorithmic stablecoin vault is stressed. Load any preset from
+            the actual Terra/Luna collapse and submit a mint or redeem. The
+            original contract didn&apos;t refuse. This one does.
           </p>
 
           <VaultPanel vault={scenario.vault} presetLabel={scenario.presetLabel} />

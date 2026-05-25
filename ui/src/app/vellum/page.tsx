@@ -49,7 +49,7 @@ export default function VellumPage() {
           <p className="mb-14 text-[13.5px] leading-[1.7] text-[var(--poa-ink-soft)]">
             Vellum 1492 is a generative AI author. Its voice profile was
             committed at mint and cannot be retuned. Try editing the piece
-            below — watch the voice hold.
+            below. The voice holds.
           </p>
 
           <VellumDemo />

@@ -143,14 +143,14 @@ function Row({ entry }: { entry: AviationTimelineEntry }) {
       {entry.verdict && (
         <>
           <p className="mt-2 text-[11.5px] leading-relaxed text-fg-mute">
-            On Theseus, this advisory verdict is signed and verifiable —{" "}
+            On Theseus, this advisory verdict is signed and verifiable.{" "}
             <a
               href={POA_PROFILE}
               target="_blank"
               rel="noopener noreferrer"
               className="underline decoration-border underline-offset-[3px] transition-colors hover:text-fg hover:decoration-fg"
             >
-              check the proof
+              Check the proof
             </a>
             .
           </p>

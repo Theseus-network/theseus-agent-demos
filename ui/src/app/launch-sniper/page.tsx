@@ -78,11 +78,10 @@ export default async function LaunchSniperPage() {
         </div>
 
         <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
-          Launch Sniper is a Theseus agent paper-trading fresh Uniswap V3
-          launches on Base. Every twenty minutes it picks the most credible
-          candidate, commits a PASS or BUY to its on-chain fund, and never
-          retunes. The agent&apos;s recent decisions appear below, signed and
-          on-chain.
+          A Theseus agent paper-trading fresh Uniswap V3 launches on Base.
+          Every twenty minutes it picks the most credible candidate and
+          commits a PASS or BUY to its on-chain fund. It never retunes.
+          Recent decisions appear below, signed on chain.
         </p>
 
         {readError && (

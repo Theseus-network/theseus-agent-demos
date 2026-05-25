@@ -170,11 +170,11 @@ export default function FundPage() {
           </div>
 
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
-            A sovereign agent that owns its own capital and rebalances against
-            a mandate. The sandbox below paper-trades a $100k portfolio — pick
-            a market, run a tick, watch the agent decide. The same agent is
-            deployed on Base Sepolia at the foot of the page; it&apos;s live
-            but unfunded.
+            A sovereign agent that owns its own capital and rebalances
+            against a written mandate. The sandbox below paper-trades a
+            $100k portfolio: pick a market, run a tick, see how the agent
+            decides. The same agent is deployed on Base Sepolia at the foot
+            of the page. Live but unfunded.
           </p>
 
           <div id="fund-scenarios" className="mb-10">

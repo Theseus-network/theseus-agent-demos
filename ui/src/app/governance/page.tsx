@@ -219,11 +219,11 @@ export default function GovernancePage() {
             <span className="font-bold text-[color:var(--amber)]">CAUTION</span>{" "}
             /{" "}
             <span className="font-bold text-[color:var(--red)]">REJECT</span>{" "}
-            verdict. Pick a preset — a routine grants budget, a dust-staked
-            wallet trying to drain the treasury at 03:00 on a Sunday, a
-            hostile router upgrade, or the exact shape that drained Beanstalk
-            for $182M — and watch the reviewer read the calldata + the
-            proposer&apos;s voting history before the vote opens.
+            verdict. Four presets sit below: a routine grants budget, a
+            dust-staked wallet trying to drain the treasury at 03:00 on a
+            Sunday, a hostile router upgrade, and the exact shape that
+            drained Beanstalk for $182M. The reviewer reads the calldata
+            and the proposer&apos;s voting history before the vote opens.
           </p>
 
           <div id="governance-scenarios">
@@ -257,8 +257,9 @@ export default function GovernancePage() {
               >
                 arbitrumfoundation.eth Snapshot space
               </a>
-              . The reviewer reads the proposal body + voting state and posts a
-              signed verdict — same flow as the synthetic presets above.
+              . The reviewer reads the proposal body and voting state, then
+              posts a signed verdict. Same flow as the synthetic presets
+              above.
             </p>
             <div className="mt-4">
               {liveOpen && !livePropsals && !liveErr && (

@@ -275,7 +275,7 @@ export default function AdjudicatePage() {
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
             An agent that adjudicates prediction markets by searching the
             web for evidence. Pick a market and watch it gather citations
-            and produce a verdict — signed and verifiable.
+            and produce a verdict that gets signed and committed on chain.
           </p>
 
           <p className="mb-3 text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">
@@ -330,9 +330,9 @@ export default function AdjudicatePage() {
               >
                 Polymarket
               </a>
-              &rsquo;s public Gamma API — the top binary markets by 24h
-              volume with at least two weeks until resolution. Pick one and
-              the same search→evidence→verdict pipeline runs against it.
+              &rsquo;s public Gamma API. Top binary markets by 24h volume,
+              with at least two weeks until resolution. Pick one; the same
+              search → evidence → verdict pipeline runs against it.
             </p>
             <div className="mt-4">
               {liveOpen && !liveList && !liveErr && (

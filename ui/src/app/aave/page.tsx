@@ -394,10 +394,9 @@ export default function HomePage() {
           </div>
 
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
-            The Theseus Agent Oracle is an AI agent that prices ETH/USD by
-            reasoning across three venues instead of taking a median. Try a
-            manipulation below — watch it refuse where a quorum oracle would
-            have priced.
+            The Theseus Agent Oracle prices ETH/USD by reading three venues
+            and reconciling them, not by taking a median. Manipulate one. The
+            agent refuses to publish when the venues no longer agree.
           </p>
 
           <div className="mb-6">

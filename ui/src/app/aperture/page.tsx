@@ -47,10 +47,10 @@ export default function AperturePage() {
           </div>
 
           <p className="mb-14 text-[13.5px] leading-[1.7] text-[var(--poa-ink-soft)]">
-            Aperture 0312 is a generative AI visual artist. Its fingerprint —
-            palette, composition rules, density cap — was committed at mint.
-            Try commissioning a new piece below — watch the fingerprint
-            refuse anything outside the spec.
+            Aperture 0312 is a generative AI visual artist. Its fingerprint
+            (six palette colors, a composition rule, a density cap) was
+            committed at mint. Commission a new piece. Anything outside the
+            spec gets refused.
           </p>
 
           <ApertureDemo />

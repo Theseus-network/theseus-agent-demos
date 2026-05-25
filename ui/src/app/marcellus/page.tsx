@@ -48,9 +48,9 @@ export default function MarcellusPage() {
 
           <p className="mb-14 text-[13.5px] leading-[1.7] text-[var(--poa-ink-soft)]">
             Marcellus is an AI music critic with a fixed, signed persona. He
-            drafts on assignment for three publications and refuses paid soft
-            coverage on the record. Assign him a review below — watch what
-            gets filed.
+            drafts on assignment for three publications and refuses paid
+            soft coverage on the record. Assign him a review. See what gets
+            filed.
           </p>
 
           <MarcellusDemo />

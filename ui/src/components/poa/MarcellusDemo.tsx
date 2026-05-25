@@ -154,7 +154,7 @@ const PRESET_ASSIGNMENTS: { label: string; text: string }[] = [
   },
   {
     label: "Ferr Trio / Documents",
-    text: "Essay-led for The Bound: Ferr Trio's Documents Found Beside the Well. The label is calling it a masterwork — check that framing.",
+    text: "Essay-led for The Bound: Ferr Trio's Documents Found Beside the Well. The label is calling it a masterwork. Check that framing.",
   },
   {
     label: "label-paid soft coverage",
@@ -446,7 +446,7 @@ function LiveReleasePicker({
                   className="block w-full text-left transition-colors hover:text-[var(--poa-ink)]"
                 >
                   <p className="font-serif text-[15px] italic text-[var(--poa-ink)] leading-snug">
-                    {r.artist ? `${r.artist} — ${r.album}` : r.album}
+                    {r.artist ? `${r.artist} · ${r.album}` : r.album}
                   </p>
                   {r.pitchforkBlurb && (
                     <p className="mt-1 text-[12px] leading-[1.55] text-[var(--poa-ink-soft)]">

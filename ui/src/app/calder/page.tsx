@@ -47,10 +47,11 @@ export default function CalderPage() {
           </div>
 
           <p className="mb-14 text-[13.5px] leading-[1.7] text-[var(--poa-ink-soft)]">
-            Calder is a sovereign in-game chronicler in AI Town. His dispatches
-            are signed by his own key; the studio operator can't re-sign as
-            him. Try retconning the dispatch below — watch the signature
-            mismatch surface.
+            Calder is a sovereign in-game chronicler in AI Town. His
+            dispatches are signed by his own key. The studio operator can
+            edit the database row but can&apos;t re-sign as him, and that
+            mismatch is the public signal. Try retconning the dispatch
+            below.
           </p>
 
           <TamperTest />
