@@ -12,6 +12,7 @@
 import { type Address, type Hex } from "viem";
 import { getMainnetClient } from "./indexer";
 import { fetchGoPlusSecurity } from "./goplus";
+import { gatherNarrative } from "./narrative";
 
 /** Etherscan V2 multi-chain API. Same module/action shape as the legacy
  *  V1 endpoints, but you pass `chainid=8453` for Base and the same key
@@ -278,6 +279,43 @@ export async function gatherPhase2(
 
   const goplus = goplusRaw.unavailable ? null : goplusRaw;
 
+  // Gate the narrative fetch behind a basic credibility check so we
+  // don't burn web-search quota on obvious-rug candidates. Skip if
+  // any of the following are unambiguously bad:
+  //   - GoPlus says honeypot or owner-can-take-back
+  //   - source unverified AND GoPlus says NOT open-source
+  //   - GoPlus reports the token doesn't exist (honeypot=null with
+  //     no other fields populated)
+  // Anything else gets the narrative pass.
+  const honeypotKill =
+    goplus?.isHoneypot === true || goplus?.canTakeBackOwnership === true;
+  const noSourceAnywhere =
+    verified === false && goplus?.isOpenSource === false;
+  const goplusBlank = goplus === null;
+  const skipNarrative = honeypotKill || noSourceAnywhere || goplusBlank;
+
+  const narrative = skipNarrative
+    ? {
+        available: false,
+        summary: skipNarrative
+          ? honeypotKill
+            ? "Narrative research skipped: GoPlus flagged this contract as a honeypot or ownership-rug."
+            : noSourceAnywhere
+              ? "Narrative research skipped: source code is unverified on Etherscan AND GoPlus reports closed-source bytecode."
+              : "Narrative research skipped: GoPlus had no record of this token."
+          : "",
+        presence: "none" as const,
+        redFlag: honeypotKill,
+        sources: [] as string[],
+      }
+    : await gatherNarrative(candidate, token).catch(() => ({
+        available: false,
+        summary: "Narrative gathering errored.",
+        presence: "unknown" as const,
+        redFlag: false,
+        sources: [] as string[],
+      }));
+
   // If literally every lookup failed, return null so the caller can
   // surface "Phase 2 unavailable" rather than a wall of nulls.
   const everyFieldNull =
@@ -286,7 +324,8 @@ export async function gatherPhase2(
     deployerAddress === null &&
     deployerPriorDeploys === null &&
     top10Concentration === null &&
-    goplus === null;
+    goplus === null &&
+    narrative.available === false;
   if (everyFieldNull) return null;
 
   return {
@@ -297,6 +336,7 @@ export async function gatherPhase2(
     deployerPriorDeploys,
     top10Concentration,
     goplus,
+    narrative,
     fetchedAt: new Date().toISOString(),
   };
 }

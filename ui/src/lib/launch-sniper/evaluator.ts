@@ -207,10 +207,27 @@ function buildUserPrompt(dossier: ResearchDossier): string {
         "  GoPlus lookup unavailable this pass; treat all security-pathology fields as unknown.",
       );
     }
+
+    // Narrative block — what the web actually says.
+    const n = phase2.narrative;
+    lines.push("", "## Web research (Brave + DeepSeek)");
+    if (!n || !n.available) {
+      lines.push(
+        `  unavailable: ${n?.summary ?? "narrative pipeline returned no data"}`,
+      );
+    } else {
+      lines.push(`  presence: ${n.presence}`);
+      lines.push(`  red flag in coverage: ${n.redFlag ? "YES" : "no"}`);
+      lines.push(`  summary: ${n.summary}`);
+      if (n.sources.length > 0) {
+        lines.push("  top sources:");
+        for (const s of n.sources) lines.push(`    - ${s}`);
+      }
+    }
   }
   lines.push(
     "",
-    "Apply your checklist. Use the Phase 2 signals as primary evidence; weight a missing lookup as 'unknown', not as a green light. A GoPlus honeypot=YES or can_take_back_ownership=YES is an automatic PASS regardless of any other signal. Output strict JSON only.",
+    "Apply your checklist. Use the Phase 2 signals as primary evidence; weight a missing lookup as 'unknown', not as a green light. A GoPlus honeypot=YES or can_take_back_ownership=YES is an automatic PASS regardless of any other signal. A narrative red_flag=YES is an automatic PASS. A narrative presence='substantial' is a meaningful upgrade to conviction; presence='none' on an otherwise-clean contract is normal for a brand-new launch and should not by itself force a PASS. Output strict JSON only.",
   );
   return lines.join("\n");
 }

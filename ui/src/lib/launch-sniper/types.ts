@@ -29,6 +29,7 @@ export interface TokenMetadata {
 }
 
 import type { GoPlusSecurity } from "./goplus";
+import type { NarrativeSignal } from "./narrative";
 
 /** Phase 2 signals: external lookups that ground the agent's decision
  *  in real reporter data. Each field is best-effort; null means "the
@@ -56,6 +57,11 @@ export interface Phase2Signals {
   /** GoPlus Security: honeypot, mintable, taxes, LP lock, etc. Null
    *  on lookup failure; per-field nulls inside indicate partial data. */
   goplus: GoPlusSecurity | null;
+  /** Web-research narrative: what the public record says about the
+   *  token. Only fetched when the candidate clears basic credibility
+   *  gates (not a honeypot, source verified or open-source); skipped
+   *  candidates have narrative.available = false with presence "none". */
+  narrative: NarrativeSignal | null;
   /** Wall-clock time the Phase 2 pass ran. */
   fetchedAt: string;
 }
