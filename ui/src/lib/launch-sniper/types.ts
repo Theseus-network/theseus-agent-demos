@@ -28,6 +28,35 @@ export interface TokenMetadata {
   totalSupply: bigint;
 }
 
+/** Phase 2 signals: external lookups that ground the agent's decision
+ *  in real reporter data (Basescan source verification, on-chain mint
+ *  authority, deployer history, holder concentration). Each field is
+ *  best-effort; null means "the lookup ran but found nothing"; the
+ *  containing object is null when the entire Phase 2 pass was skipped
+ *  or failed (e.g. Basescan unreachable). */
+export interface Phase2Signals {
+  /** True iff Basescan returns a non-empty SourceCode field. */
+  sourceVerified: boolean | null;
+  /** Compiler version reported by Basescan, when verified. */
+  compilerVersion: string | null;
+  /** Result of reading `owner()` on the token:
+   *   - "renounced"  → owner is 0x0 (mint authority renounced)
+   *   - "active"     → owner is a non-zero EOA / contract (can mint, pause, etc.)
+   *   - "no-owner"   → contract has no Ownable shape; can't tell
+   *   - null         → read errored */
+  mintAuthorityState: "renounced" | "active" | "no-owner" | null;
+  /** The deployer EOA (the `from` of the pool-creation tx), if resolvable. */
+  deployerAddress: Address | null;
+  /** Count of contract creations attributable to the deployer EOA. A
+   *  brand-new deployer is 1 (this token); a long-lived deployer might
+   *  be 10+. A serial-scammer is often 50+ with most contracts dead. */
+  deployerPriorDeploys: number | null;
+  /** Top-10 holder share of total supply, 0..1. null on lookup failure. */
+  top10Concentration: number | null;
+  /** Wall-clock time the Phase 2 pass ran. */
+  fetchedAt: string;
+}
+
 /** Live state read from the UniV3 pool. */
 export interface PoolState {
   pool: Address;
@@ -47,6 +76,9 @@ export interface ResearchDossier {
   candidate: PoolCandidate;
   token: TokenMetadata;
   pool: PoolState;
+  /** Phase 2 grounding. Null when the lookup was skipped or failed
+   *  entirely; the per-field nulls inside indicate partial misses. */
+  phase2: Phase2Signals | null;
   /** Wall-clock time the dossier was assembled, in UTC ISO format. */
   assembledAt: string;
 }

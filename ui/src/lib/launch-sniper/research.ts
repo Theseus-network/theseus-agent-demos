@@ -13,6 +13,7 @@
 import { type Address } from "viem";
 import { ERC20_ABI, UNISWAP_V3_POOL_ABI } from "./abi";
 import { getMainnetClient } from "./indexer";
+import { gatherPhase2 } from "./phase2";
 import type { PoolCandidate, PoolState, ResearchDossier, TokenMetadata } from "./types";
 
 async function readTokenMetadata(token: Address): Promise<TokenMetadata> {
@@ -158,12 +159,19 @@ async function readPoolState(
 export async function buildDossier(
   candidate: PoolCandidate,
 ): Promise<ResearchDossier> {
+  // Phase 1 reads (token + pool state) and Phase 2 lookups (source
+  // verification, mint authority, deployer history, holder concentration)
+  // are independent. Run them in parallel.
   const token = await readTokenMetadata(candidate.token);
-  const pool = await readPoolState(candidate, token.decimals);
+  const [pool, phase2] = await Promise.all([
+    readPoolState(candidate, token.decimals),
+    gatherPhase2(candidate, token).catch(() => null),
+  ]);
   return {
     candidate,
     token,
     pool,
+    phase2,
     assembledAt: new Date().toISOString(),
   };
 }

@@ -58,8 +58,15 @@ function fmtSupply(total: bigint, decimals: number): string {
   return whole.toLocaleString();
 }
 
+function fmtPhase2Field<T>(
+  v: T | null,
+  format: (x: T) => string = (x) => String(x),
+): string {
+  return v === null ? "unknown (lookup failed)" : format(v);
+}
+
 function buildUserPrompt(dossier: ResearchDossier): string {
-  const { candidate, token, pool } = dossier;
+  const { candidate, token, pool, phase2 } = dossier;
   const priceQuotePerToken = pool.initialized
     ? Number(pool.priceQuotePerToken_1e18) / 1e18
     : null;
@@ -88,15 +95,57 @@ function buildUserPrompt(dossier: ResearchDossier): string {
     `  price (${candidate.quote} per 1 ${token.symbol}): ${priceQuotePerToken !== null ? priceQuotePerToken.toExponential(4) : "n/a"}`,
     `  raw L (Uniswap V3 active-range liquidity, sqrt(token0*token1) units): ${pool.quoteSideLiquidity.toString()}`,
     "",
-    "## Data the indexer did not fetch this round",
-    "  verified source code (Basescan): not fetched in Phase 1",
-    "  mint authority / owner state: not fetched in Phase 1",
-    "  LP lock state: not fetched in Phase 1",
-    "  deployer prior history: not fetched in Phase 1",
-    "  top-10 holder concentration: not fetched in Phase 1",
-    "",
-    "Apply your checklist. Output strict JSON only.",
+    "## External signals (Phase 2)",
   ];
+  if (phase2 === null) {
+    lines.push(
+      "  Phase 2 lookups were unreachable this pass (Basescan + RPC both failed).",
+      "  Treat verified source / mint authority / deployer / concentration as unknown.",
+    );
+  } else {
+    lines.push(
+      `  verified source (Basescan): ${fmtPhase2Field(
+        phase2.sourceVerified,
+        (v) =>
+          v
+            ? `YES${phase2.compilerVersion ? " (" + phase2.compilerVersion + ")" : ""}`
+            : "NO (unverified bytecode)",
+      )}`,
+      `  mint authority: ${fmtPhase2Field(
+        phase2.mintAuthorityState,
+        (s) =>
+          s === "renounced"
+            ? "RENOUNCED (owner = 0x0)"
+            : s === "active"
+              ? "ACTIVE (owner is a non-zero address; can still mint/pause)"
+              : "no Ownable shape detected (cannot infer)",
+      )}`,
+      `  deployer address: ${fmtPhase2Field(phase2.deployerAddress)}`,
+      `  deployer prior contract deploys (last ~10k txs): ${fmtPhase2Field(
+        phase2.deployerPriorDeploys,
+        (n) =>
+          n.toString() +
+          (n === 0
+            ? " (fresh wallet — yellow flag, no track record either way)"
+            : n < 5
+              ? " (small history)"
+              : n < 30
+                ? " (active deployer)"
+                : " (serial deployer — investigate whether prior tokens were rug-pulled)"),
+      )}`,
+      `  top-10 holder concentration: ${fmtPhase2Field(
+        phase2.top10Concentration,
+        (f) => (f * 100).toFixed(1) + "% of total supply",
+      )}`,
+    );
+  }
+  lines.push(
+    "",
+    "## Data still not in the dossier",
+    "  LP lock state: not in Phase 2 (would require resolving the V3 NonfungiblePositionManager NFT owner per pool)",
+    "",
+    "Apply your checklist. Use the Phase 2 signals as primary evidence; weight a missing lookup as 'unknown', not as a green light. Output strict JSON only.",
+  );
   return lines.join("\n");
 }
 
