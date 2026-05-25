@@ -49,29 +49,24 @@ export const DEPLOYED_CONTRACTS = {
     address: "0xd14A0963D48B944463F3fE6e776C11e09101bE40",
     label: "PredictionMarketAdjudicator",
   },
-  // Five new agents below — addresses filled in after the
-  // DeployVellumAuthor / DeployApertureArtist / DeployMarcellusCritic /
-  // DeployQuillCoAuthor / DeployCalderChronicler scripts run on Base
-  // Sepolia. Until then, commits are skipped at the API layer and the
-  // live-stats indexer treats their tickCount as 0.
   vellumAuthor: {
-    address: "0x0000000000000000000000000000000000000000",
+    address: "0x3C33b1C332F4713570fbF87dB6a816d74Eef8088",
     label: "VellumAuthor",
   },
   apertureArtist: {
-    address: "0x0000000000000000000000000000000000000000",
+    address: "0xA10BAbeE86c1f1838891c549d63c49697620F98A",
     label: "ApertureArtist",
   },
   marcellusCritic: {
-    address: "0x0000000000000000000000000000000000000000",
+    address: "0xd9E4DceBb96c6361Be45a03c8ED6C8f21e5635DF",
     label: "MarcellusCritic",
   },
   quillCoAuthor: {
-    address: "0x0000000000000000000000000000000000000000",
+    address: "0x4ED9F5318354Bc044661cee3343bdBB955F78e06",
     label: "QuillCoAuthor",
   },
   calderChronicler: {
-    address: "0x0000000000000000000000000000000000000000",
+    address: "0x431D3728e3D69125fe6F3dbbDF788a2725904a3C",
     label: "CalderChronicler",
   },
 } as const satisfies Record<string, DeployedContract>;

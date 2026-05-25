@@ -17,6 +17,24 @@ profile and are deployed from `contracts/script/Deploy*.s.sol`.
 | GovernanceReviewer | [`0xc9CCF578093603e419997358fa9646Bd891B018a`](https://sepolia.basescan.org/address/0xc9CCF578093603e419997358fa9646Bd891B018a) | Civic advisory |
 | AviationSafetyReviewer | [`0x453cE65E5D6eBc6C71f3e420e720d2C2E1D03bce`](https://sepolia.basescan.org/address/0x453cE65E5D6eBc6C71f3e420e720d2C2E1D03bce) | Civic advisory |
 | PredictionMarketAdjudicator | [`0xd14A0963D48B944463F3fE6e776C11e09101bE40`](https://sepolia.basescan.org/address/0xd14A0963D48B944463F3fE6e776C11e09101bE40) | Civic gate |
+| VellumAuthor | [`0x3C33b1C332F4713570fbF87dB6a816d74Eef8088`](https://sepolia.basescan.org/address/0x3C33b1C332F4713570fbF87dB6a816d74Eef8088) | Authorship |
+| ApertureArtist | [`0xA10BAbeE86c1f1838891c549d63c49697620F98A`](https://sepolia.basescan.org/address/0xA10BAbeE86c1f1838891c549d63c49697620F98A) | Authorship |
+| MarcellusCritic | [`0xd9E4DceBb96c6361Be45a03c8ED6C8f21e5635DF`](https://sepolia.basescan.org/address/0xd9E4DceBb96c6361Be45a03c8ED6C8f21e5635DF) | Authorship |
+| QuillCoAuthor | [`0x4ED9F5318354Bc044661cee3343bdBB955F78e06`](https://sepolia.basescan.org/address/0x4ED9F5318354Bc044661cee3343bdBB955F78e06) | Authorship |
+| CalderChronicler | [`0x431D3728e3D69125fe6F3dbbDF788a2725904a3C`](https://sepolia.basescan.org/address/0x431D3728e3D69125fe6F3dbbDF788a2725904a3C) | Authorship (NPC dispatch log) |
+
+Hash preimages used at deploy (Vellum/Aperture/Marcellus only — Quill and Calder take no persona hash):
+
+```
+VELLUM_VOICE_PROFILE_HASH = keccak256("rhythmic-density:medium-high|lexical-register:literary+vernacular|obsessions:time,distance,inherited-language|structural-prefs:short-paragraphs,fragments|tonal-register:lucid|closed-lexicon:vibe,literally-nonliteral,weather-opener,question-closer,process-reference|form-distribution:fiction-45,essay-35,fragment-20")
+  = 0xe6222a8d8d566b1663ec5074d3ad6b0aa7dd7ac9eb735e0e25bf4355218074cd
+
+APERTURE_FINGERPRINT_HASH = keccak256("aperture-0312:38,24,86|13,51,44|222,35,15|220,9,35|33,65,60|25,8,14:thirds-anchored;no-figural;no-text;density-le-40;matte-no-gradients")
+  = 0xaedca7577f5a0373b0145cac98fb2f506f72ad08d0b5babe5dfb5975d006cb08
+
+MARCELLUS_PERSONA_HASH = keccak256("marcellus:laconic,fact-first|canon:Coltrane-ALS,TalkTalk-SoE,BoC-MHTRtC,Burial-Untrue,KDot-TPAB,caroline-2022|closed:vibe,literally,important,redefines,reinvents,stunning,radiohead|refuses:label-paid,litigation-active,unreleased,out-of-engagement")
+  = 0xd3a9f882a186b60d93c2cec86194863fd75b0ed37664cfa1b7bcd914dd1e9299
+```
 
 Not deployed:
 - `AgentPriceFeed.sol` — inherits from `aave-v3-core`, which isn't
