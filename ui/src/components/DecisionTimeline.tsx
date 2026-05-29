@@ -125,6 +125,9 @@ function TimelineRow({ entry: e }: { entry: TimelineEntry }) {
           )}
         </p>
       )}
+      {!isPending && e.inspect?.venues && e.inspect.venues.length > 0 && (
+        <VenueTraceLine venues={e.inspect.venues} />
+      )}
       {!isPending && !stillTyping && oneLiner && (
         <p className="mt-1 text-[12.5px] italic text-fg-mute">“{oneLiner}”</p>
       )}
@@ -223,6 +226,55 @@ function InspectPanel({ inspect }: { inspect: AgentInspect }) {
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Compact inline trace showing what the agent actually read this run.
+ * One row per timeline entry, just under the verdict. Surfaces the
+ * 3 venue readings inline so the agent's work is visible by default
+ * instead of hidden behind "inspect input/output."
+ */
+function VenueTraceLine({ venues }: { venues: VenueReading[] }) {
+  return (
+    <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 font-mono text-[10.5px] text-fg-mute">
+      {venues.map((v) => (
+        <VenueChip key={v.venue} v={v} />
+      ))}
+    </div>
+  );
+}
+
+function VenueChip({ v }: { v: VenueReading }) {
+  const tag = (() => {
+    switch (v.venue) {
+      case "coinbase":
+        return "CB";
+      case "binance":
+        return "BN";
+      case "uniswap":
+        return "UN";
+      default:
+        return v.venue;
+    }
+  })();
+  const tamperedDot = v.tampered ? (
+    <span title="venue overridden" style={{ color: "var(--coral)" }}>
+      *
+    </span>
+  ) : null;
+  return (
+    <span className="inline-flex items-baseline gap-1">
+      <span className="text-fg-mute">{tag}</span>
+      {v.ok ? (
+        <>
+          <span className="text-fg tnum">{formatUsd(v.priceUsd)}</span>
+          {tamperedDot}
+        </>
+      ) : (
+        <span style={{ color: "var(--coral)" }}>{v.error ?? "err"}</span>
+      )}
+    </span>
   );
 }
 
