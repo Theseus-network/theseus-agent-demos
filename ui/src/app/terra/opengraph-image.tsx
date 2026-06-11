@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "Terra Failsafe: A Theseus agent gating an algorithmic stablecoin";
+  "Luna Failsafe: A Theseus agent gating an algorithmic stablecoin";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -87,9 +87,10 @@ export default function OgImage() {
               display: "flex",
             }}
           >
-            A Terra-shaped algorithmic stablecoin gated by a Theseus agent.
-            Every mint and redeem passes through the agent first; it refuses
-            when raw vault metrics show the mechanism is breaking.
+            A reflexive algorithmic stablecoin gated by a Theseus agent.
+            It reads the backing: when LUNA&apos;s market cap falls below
+            UST&apos;s outstanding supply, the backing is worth less than the
+            debt and it refuses.
           </div>
         </div>
         <div
@@ -106,7 +107,7 @@ export default function OgImage() {
           <div style={{ display: "flex" }}>
             demo-agents.theseus.network/terra
           </div>
-          <div style={{ display: "flex" }}>USTD · LUND · failsafe</div>
+          <div style={{ display: "flex" }}>UST · LUNA · failsafe</div>
         </div>
       </div>
     ),

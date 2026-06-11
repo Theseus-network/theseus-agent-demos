@@ -1,9 +1,10 @@
 /**
- * Terra failsafe demo state.
+ * Luna Failsafe demo state.
  *
- * Models a Terra/UST-shaped algorithmic stablecoin called USTD/LUND. The
- * mechanic: 1 USTD targets a $1 peg, backed by mint/burn against LUND at
- * the LUND/USD oracle price. Same shape as the May 2022 Terra collapse.
+ * Models the real Terra/LUNA stablecoin: 1 UST targets a $1 peg, backed by
+ * mint/burn against LUNA at the LUNA/USD oracle price. The internal vault
+ * fields keep their original ustd/lund names; the UI displays UST/LUNA.
+ * Presets replay the May 2022 collapse day by day.
  *
  * Difference from a real on-chain protocol: an LLM agent gates every
  * mint / redeem call. The protocol invokes the agent first; if the
@@ -146,9 +147,9 @@ export const PRESETS: Record<string, { label: string; description: string; vault
     },
   },
   bankRun: {
-    label: "May 10 · head-fake",
+    label: "May 10 · the bounce",
     description:
-      "UST bounces back to $0.93 as LFG burns $750M of BTC to defend it. The price looks like recovery, but LUNA's market cap is still far below UST. The backing never recovered.",
+      "UST bounces back to $0.93 as LFG burns $750M of BTC to defend it. The price looks like recovery, while LUNA's market cap stays far below UST. The backing never recovered.",
     vault: {
       ustdSupply: 16_000_000_000,
       lundSupply: 350_000_000,

@@ -35,7 +35,7 @@ export function TopBar({ mode }: Props) {
           </div>
           <nav className="flex flex-wrap items-center gap-1 ml-2 p-0.5 rounded-[8px] bg-surface-2 border border-border">
             <Tab href="/aave" label="Aave Oracle" pathname={pathname} />
-            <Tab href="/terra" label="Terra Failsafe" pathname={pathname} />
+            <Tab href="/terra" label="Luna Failsafe" pathname={pathname} />
             <Tab
               href="/adjudicate"
               label="Prediction Market Adjudicator"

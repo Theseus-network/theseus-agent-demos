@@ -98,8 +98,8 @@ export function TerraFailsafeJsonLd() {
   return (
     <AgentJsonLd
       agentId="5DkY7e3sN2pQ9bX4hG8wRtL6vK1cM5fT9oP3jW7xZ2aV4hN6"
-      agentName="Stablecoin Failsafe"
-      agentSummary="Gates mint/redeem on a Terra-shaped algorithmic stablecoin (USTD/LUND). The protocol calls the agent before executing; the agent reasons from raw vault metrics and either allows the action or refuses to break the death-spiral feedback loop."
+      agentName="Luna Failsafe"
+      agentSummary="Gates mint/redeem on a reflexive algorithmic stablecoin (UST/LUNA). It reads the backing: when LUNA's market cap falls below UST's outstanding supply, the backing is worth less than the debt. Returns ALLOW, CAUTION, or REFUSE."
       pageUrl={`${SITE_URL}/terra`}
       intentTypes={["gate_mint", "gate_redeem", "context_update"]}
     />

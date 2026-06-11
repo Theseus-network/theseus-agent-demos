@@ -187,11 +187,11 @@ export default function TerraPage() {
 
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
             The Luna Failsafe gates mint and redeem on a reflexive
-            stablecoin. It reads the backing, not the price: when LUNA&apos;s
-            market cap falls below UST&apos;s outstanding supply, the backing
-            is worth less than the debt and no bounce in the UST price
-            recovers it. Load a day from the May 2022 collapse and submit a
-            mint or redeem.
+            stablecoin. It reads the backing. When LUNA&apos;s market cap
+            falls below UST&apos;s outstanding supply, the backing is worth
+            less than the debt, and no bounce in the UST price recovers it.
+            Load a day from the May 2022 collapse and submit a mint or
+            redeem.
           </p>
 
           <VaultPanel vault={scenario.vault} presetLabel={scenario.presetLabel} />

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-const TITLE = "Terra Failsafe · A Theseus agent gating an algorithmic stablecoin";
+const TITLE = "Luna Failsafe · A Theseus agent gating an algorithmic stablecoin";
 const DESCRIPTION =
-  "Live demo of a Terra-shaped algorithmic stablecoin (USTD/LUND) with a Theseus agent as the failsafe. The protocol calls the agent before every mint and redeem; the agent reasons from raw vault metrics and either allows or refuses. Test the death-spiral preset and watch the agent catch what a rule-based check misses.";
+  "Live demo of the Luna Failsafe, a Theseus agent that gates mint and redeem on a reflexive stablecoin. It reads the backing. When LUNA's market cap falls below UST's outstanding supply, the backing is worth less than the debt and no bounce in the price recovers it. Load a day from the May 2022 collapse and watch it return ALLOW, CAUTION, or REFUSE, signed on chain.";
 
 export const metadata: Metadata = {
   title: TITLE,

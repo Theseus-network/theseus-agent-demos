@@ -74,11 +74,11 @@ const AGENTS: AgentCard[] = [
   },
   {
     slug: "terra",
-    name: "Stablecoin Failsafe",
+    name: "Luna Failsafe",
     kind: "Mechanism gate",
-    pitch: "Gates mint/redeem on a Terra-shaped algo stable.",
+    pitch: "Gates mint/redeem on a reflexive algo stablecoin.",
     description:
-      "USTD targets $1, LUND is the volatile token, mint and redeem at oracle price. Before every action the protocol asks the agent. It reads peg, redemption velocity, LUND supply growth, and backing coverage, then decides whether running the mechanism right now stabilizes the system or amplifies the death spiral.",
+      "UST targets $1, backed by LUNA, a token the protocol mints to defend the peg. Before every mint or redeem the protocol asks the agent. It reads the backing: when LUNA's market cap falls below UST's outstanding supply, the backing is worth less than the debt, and it returns ALLOW, CAUTION, or REFUSE. The Terra/LUNA collapse, replayed day by day.",
     href: "/terra",
     poaUrl:
       "https://theseus.network/poa/5DkY7e3sN2pQ9bX4hG8wRtL6vK1cM5fT9oP3jW7xZ2aV4hN6",

@@ -11,7 +11,7 @@ export default function DemoCTA() {
         keys and sign their own decisions.
       </p>
       <a
-        href="#"
+        href="mailto:eric@theseus.network?subject=Theseus%20%E2%80%94%20saw%20the%20agent%20demos"
         className="mt-5 inline-block font-mono text-[12px] uppercase tracking-[0.18em] text-fg underline decoration-border underline-offset-[6px] transition-colors hover:decoration-coral"
       >
         Talk to the founder →
