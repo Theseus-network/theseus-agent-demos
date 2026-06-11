@@ -594,6 +594,7 @@ export default function AdjudicatePage() {
                 commit={run.commit}
                 error={run.commitError}
                 className="mt-5"
+                slug="adjudicate"
               />
 
               {market.actualResolution && (

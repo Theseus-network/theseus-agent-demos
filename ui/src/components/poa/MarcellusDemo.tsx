@@ -546,7 +546,7 @@ function AssignmentResult({
             <p className="mt-4 font-mono text-[10.5px] text-[var(--poa-ink-soft)]">
               signed {shortHash(MARCELLUS_KEY)} · {live.latencyMs}ms
             </p>
-            {live.onChain && <CommitBadge commit={live.onChain} />}
+            {live.onChain && <CommitBadge commit={live.onChain} slug="marcellus" />}
           </>
         )}
       </div>

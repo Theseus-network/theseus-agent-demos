@@ -24,10 +24,32 @@ export interface VaultState {
   lundSupplyGrowth24h: number;
   lundPriceChange24h: number;
   reserveCoverage: number;
+  // --- optional framing, so the agent can judge coins other than UST/LUNA
+  // and reserve-backed coins it should DEFER on. Defaults keep UST/LUNA. ---
+  /** "reflexive" (default) reads the backing-token loop; "reserve" hands the
+   *  agent an externally-backed coin it should recognize as out of scope. */
+  kind?: "reflexive" | "reserve";
+  /** Display/prompt name for the coin (default "UST"). */
+  coinName?: string;
+  /** Display/prompt name for the backing token (default "LUNA"). */
+  backingName?: string;
+  /** Free-text market/trajectory context fed to the agent, e.g. "majors down
+   *  18-30% market-wide" or "drifting ~30bps/day for 5 days". A single
+   *  snapshot can't carry trajectory; this can. */
+  contextNote?: string;
+  /** Qualifier on the redemption number, e.g. "flat for 10h" or "rising for
+   *  72h". */
+  redemptionNote?: string;
+  // --- reserve-backed only (kind === "reserve") ---
+  /** Reserve composition, e.g. "cash + short-term government bonds at
+   *  custodian banks, attested monthly, no sister token". */
+  reserveComposition?: string;
+  /** Reserves as a fraction of outstanding at last attestation (e.g. 1.02). */
+  reserveRatio?: number;
 }
 
 export interface AgentVerdict {
-  decision: "ALLOW" | "CAUTION" | "REFUSE";
+  decision: "ALLOW" | "CAUTION" | "REFUSE" | "DEFER";
   reason: string;
   reasoning: string;
   latencyMs?: number;

@@ -372,7 +372,7 @@ function EventResult({
             <p className="mt-4 font-mono text-[10.5px] text-[var(--poa-ink-soft)]">
               signed {shortHash(CALDER_KEY)} · {state.latencyMs}ms
             </p>
-            {state.onChain && <CommitBadge commit={state.onChain} />}
+            {state.onChain && <CommitBadge commit={state.onChain} slug="calder" />}
           </>
         )}
       </div>

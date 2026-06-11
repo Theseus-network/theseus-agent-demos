@@ -67,7 +67,9 @@ function Row({ entry }: { entry: TimelineEntry }) {
       ? "var(--green)"
       : decision === "CAUTION"
         ? "#d29922"
-        : "var(--coral)";
+        : decision === "DEFER"
+          ? "#6e7681"
+          : "var(--coral)";
 
   // Single source of truth for the reasoning text: streaming partial
   // while the LLM call is in flight, then the final once it lands.
@@ -175,7 +177,7 @@ function Row({ entry }: { entry: TimelineEntry }) {
           {entry.verdict.reasoning}
         </p>
       )}
-      <CommitBadge commit={entry.commit} error={entry.commitError} />
+      <CommitBadge commit={entry.commit} error={entry.commitError} slug="terra" />
       {inspectOpen && entry.verdict && <Inspect entry={entry} />}
     </li>
   );

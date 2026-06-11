@@ -406,7 +406,7 @@ function EditResult({
               {live.clauseViolated && <>clause {live.clauseViolated} · </>}
               signed {shortHash(VELLUM_KEY)} · {live.latencyMs}ms
             </p>
-            {live.onChain && <CommitBadge commit={live.onChain} />}
+            {live.onChain && <CommitBadge commit={live.onChain} slug="vellum" />}
           </>
         )}
       </div>

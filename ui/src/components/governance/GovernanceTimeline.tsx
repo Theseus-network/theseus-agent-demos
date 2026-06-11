@@ -165,7 +165,7 @@ function Row({ entry }: { entry: GovernanceTimelineEntry }) {
         </p>
       )}
 
-      <CommitBadge commit={entry.commit} error={entry.commitError} />
+      <CommitBadge commit={entry.commit} error={entry.commitError} slug="governance" />
 
       {inspectOpen && entry.verdict?.prompt && (
         <div className="mt-3 border-l-2 border-border pl-4 text-[11.5px] text-fg-mute">

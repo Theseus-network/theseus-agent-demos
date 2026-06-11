@@ -8,9 +8,9 @@ export const maxDuration = 60;
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  if (!process.env.DEEPSEEK_API_KEY) {
+  if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json(
-      { error: "DEEPSEEK_API_KEY not configured on the server" },
+      { error: "ANTHROPIC_API_KEY not configured on the server" },
       { status: 503 },
     );
   }
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       const encoder = new TextEncoder();
-      let finalOutput: { decision: "ALLOW" | "CAUTION" | "REFUSE"; reason: string; reasoning: string; latencyMs?: number; model?: string } | null = null;
+      let finalOutput: { decision: "ALLOW" | "CAUTION" | "REFUSE" | "DEFER"; reason: string; reasoning: string; latencyMs?: number; model?: string } | null = null;
       try {
         for await (const event of decideTerraStream(input)) {
           controller.enqueue(encoder.encode(sse(event)));
