@@ -40,7 +40,7 @@ function reasoningOneLiner(reasoning: string): string | undefined {
     .filter(Boolean);
   if (sentences.length === 0) return undefined;
   const verdictVerbs =
-    /\b(Holding|Buying|Selling|Refusing|Allowing|Approving|Cautioning|Rejecting|Pricing)\b/;
+    /\b(Holding|Buying|Selling|Skipping|Refusing|Allowing|Approving|Cautioning|Rejecting|Pricing)\b/;
   let endIdx = sentences.length - 1;
   for (let i = sentences.length - 1; i >= 0; i--) {
     if (verdictVerbs.test(sentences[i])) {
@@ -57,9 +57,10 @@ function reasoningOneLiner(reasoning: string): string | undefined {
   return parts.join(" ");
 }
 
-function actionLabel(a?: "HOLD" | "BUY_WETH" | "SELL_WETH"): string {
+function actionLabel(a?: "HOLD" | "BUY_WETH" | "SELL_WETH" | "SKIP"): string {
   if (a === "BUY_WETH") return "buy weth";
   if (a === "SELL_WETH") return "sell weth";
+  if (a === "SKIP") return "skip";
   return "hold";
 }
 
@@ -71,6 +72,7 @@ function Row({ entry }: { entry: FundTimelineEntry }) {
   const action = entry.decision?.action;
   const label = actionLabel(action);
   const isRefused = false;
+  const isSkip = action === "SKIP";
   const isAction = action === "BUY_WETH" || action === "SELL_WETH";
 
   const reasoningText =
@@ -115,7 +117,11 @@ function Row({ entry }: { entry: FundTimelineEntry }) {
           <span
             className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em]"
             style={{
-              color: isAction ? "var(--green)" : "var(--fg)",
+              color: isAction
+                ? "var(--green)"
+                : isSkip
+                  ? "var(--coral)"
+                  : "var(--fg)",
             }}
           >
             {label}

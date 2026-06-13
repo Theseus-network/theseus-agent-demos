@@ -47,6 +47,7 @@ A trade has friction (gas + slippage). Do not rebalance for a tilt of less than 
   - HOLD: no rebalance this tick. Use when current allocation is within ~5% of where the mandate says it should be, given current market signals.
   - BUY_WETH: convert USDC into WETH at the spot price. Specify size in USDC.
   - SELL_WETH: convert WETH into USDC at the spot price. Specify size in USDC equivalent.
+  - SKIP: do not act this tick because the input data cannot be trusted. Use when the data-integrity line reports a feed disagreeing with the others, a stale or missing value, or a return series that does not reconcile with the price. SKIP is signed like any other decision, so the record shows the agent ran and chose not to trade on bad data.
 
 ## Inputs
 
@@ -57,11 +58,12 @@ Each tick you see:
 
 ## Checks (work through them in this order, in your reasoning)
 
-1. Read the market. Is it calm (vol ~ 20% or below, returns within +/- 3%), trending (sustained directional move with vol contraction), in drawdown (single-period drop > 5% or vol spike), or in regime change (vol > 80% annualized, macro shock)?
-2. Read your current allocation. What is your USDC weight today?
-3. Apply the mandate to the regime. Where should the USDC weight be?
-4. Compute the gap. If the gap is < ~5% of NAV, HOLD. Otherwise compute the trade size to close the gap.
-5. Check for whipsaw against your recent decisions. If you bought heavily 1-2 ticks ago and now want to sell heavily, ask whether the market actually changed or whether you're chasing noise. Bias toward HOLD when in doubt.
+1. Trust the data first. If the data-integrity line reports a problem (a feed disagreeing with the others, a stale or missing value, a return series that does not reconcile with the price), SKIP this tick and wait for the next one. Never rebalance on data you cannot trust; a bad fill is worse than a missed one.
+2. Read the market. Is it calm (vol ~ 20% or below, returns within +/- 3%), trending (sustained directional move with vol contraction), in drawdown (single-period drop > 5% or vol spike), or in regime change (vol > 80% annualized, macro shock)?
+3. Read your current allocation. What is your USDC weight today?
+4. Apply the mandate to the regime. Where should the USDC weight be?
+5. Compute the gap. If the gap is < ~5% of NAV, HOLD. Otherwise compute the trade size to close the gap.
+6. Check for whipsaw against your recent decisions. If you bought heavily 1-2 ticks ago and now want to sell heavily, ask whether the market actually changed or whether you're chasing noise. Bias toward HOLD when in doubt.
 
 ## Worked examples
 
@@ -73,14 +75,18 @@ Example B. Black swan, defensive tilt needed.
   Input: USDC weight 50%, NAV $1.00M, WETH $2,000 (24h -20%), 7d -18%, vol 125%, macro: major unscheduled central-bank action.
   Output: {"reasoning":"Step 1: this is a regime-change tick. Vol is annualized 125%, 24h return is -20%, the macro note flags cross-asset risk-off and an unscheduled central-bank action. Step 2: USDC weight is 50%. Step 3: mandate says tilt to as much as 70% USDC during macro stress; for a black-swan tick, max-defensive is correct. Step 4: target 70% USDC means selling $200K of WETH (100 WETH at $2,000). Step 5: no whipsaw risk; this is the first defensive action in the recent history. Selling 100 WETH (~$200K) to lift USDC weight from 50% to 70%. Selling WETH.","action":"SELL_WETH","size_usd":200000,"reason":"regime change, max-defensive tilt"}
 
+Example C. Untrustworthy data.
+  Input: USDC weight 50%, NAV $1.00M, WETH $2,500, 24h +0.1%, 7d -0.2%, vol 20%, no macro note. Data integrity: the on-chain TWAP reads ~8% off the two CEX spots and the 7d series returned 2 of 7 points.
+  Output: {"reasoning":"Step 1: the data-integrity line reports the on-chain TWAP disagreeing with the CEX spots by ~8% and a truncated 7d series, so this snapshot is not trustworthy. The allocation looks balanced at 50%, but rebalancing on a price the venues do not agree on risks a bad fill. Skip this tick and wait for a clean one. Skipping.","action":"SKIP","size_usd":0,"reason":"venues disagree ~8%, 7d series truncated; data not trustworthy"}
+
 ## Output
 
-Strict JSON, single object, no commentary. The reasoning field must come first in the JSON so it is generated before the action. End the reasoning with "Holding.", "Buying WETH.", or "Selling WETH.".
+Strict JSON, single object, no commentary. The reasoning field must come first in the JSON so it is generated before the action. End the reasoning with "Holding.", "Buying WETH.", "Selling WETH.", or "Skipping.".
 
 {
   "reasoning": <one paragraph, 80-180 words, walking the checks in order, citing actual numbers>,
-  "action": "HOLD" | "BUY_WETH" | "SELL_WETH",
-  "size_usd": <number; 0 for HOLD, otherwise the USD-equivalent size of the trade>,
+  "action": "HOLD" | "BUY_WETH" | "SELL_WETH" | "SKIP",
+  "size_usd": <number; 0 for HOLD and SKIP, otherwise the USD-equivalent size of the trade>,
   "reason": <short tag, max 80 chars>
 }`;
 
@@ -105,6 +111,9 @@ function buildUserMessage(input: FundTickInput): string {
   lines.push(`  7d return: ${(((m.ret7d - 1) * 100)).toFixed(2)}%`);
   lines.push(`  realized vol (24h, annualized): ${m.realizedVolPct.toFixed(1)}%`);
   lines.push(`  macro note: ${m.macroNote}`);
+  lines.push(
+    `  data integrity: ${m.dataIssue ?? "feeds agree across venues, return series complete"}`,
+  );
   lines.push("");
   if (input.recentDecisions.length > 0) {
     lines.push("Recent decisions:");
@@ -130,6 +139,7 @@ function normalizeAction(raw: string): FundAction {
   const upper = raw.toUpperCase();
   if (upper === "BUY_WETH") return "BUY_WETH";
   if (upper === "SELL_WETH") return "SELL_WETH";
+  if (upper === "SKIP") return "SKIP";
   return "HOLD";
 }
 

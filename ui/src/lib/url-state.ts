@@ -71,7 +71,7 @@ export type AviationUrlState = {
   preset?: AviationPreset;
 };
 
-export type FundPreset = "calm" | "bullTrend" | "drawdown" | "blackSwan" | "live";
+export type FundPreset = "calm" | "bullTrend" | "drawdown" | "blackSwan" | "feedGlitch" | "live";
 
 export type FundUrlState = {
   preset?: FundPreset;
@@ -207,7 +207,7 @@ export function writeAviationUrl(state: AviationUrlState): string {
 export function readFundUrl(search: string): FundUrlState {
   const p = new URLSearchParams(search);
   const presetRaw = p.get("preset");
-  const valid: FundPreset[] = ["calm", "bullTrend", "drawdown", "blackSwan", "live"];
+  const valid: FundPreset[] = ["calm", "bullTrend", "drawdown", "blackSwan", "feedGlitch", "live"];
   const preset = valid.includes(presetRaw as FundPreset)
     ? (presetRaw as FundPreset)
     : undefined;

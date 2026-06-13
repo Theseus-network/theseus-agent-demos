@@ -17,7 +17,7 @@
  * would wire the execute() function to a DEX router.
  */
 
-export type FundAction = "HOLD" | "BUY_WETH" | "SELL_WETH";
+export type FundAction = "HOLD" | "BUY_WETH" | "SELL_WETH" | "SKIP";
 
 export interface FundPortfolio {
   /** USDC held by the fund (6 decimals abstracted as a regular number). */
@@ -37,6 +37,10 @@ export interface MarketSnapshot {
   realizedVolPct: number;
   /** Macro-context note. Free text; agent reads it. */
   macroNote: string;
+  /** Set when the feed for this tick is untrustworthy (a venue disagreeing,
+   *  a stale or missing value, a return series that does not reconcile with
+   *  the price). The agent reads this and SKIPs rather than trade on it. */
+  dataIssue?: string;
 }
 
 export interface FundAgentDecision {
@@ -156,6 +160,20 @@ export const FUND_PRESETS: Record<
         "Major unscheduled central-bank action; cross-asset volatility everywhere. Treat as regime change until proven otherwise.",
     },
   },
+  feedGlitch: {
+    label: "Feed glitch",
+    description:
+      "The venue feed is internally inconsistent this tick: the on-chain TWAP is ~8% off the two CEX spots and the 7d series came back truncated. No trustworthy price to act on; the agent should SKIP.",
+    market: {
+      wethPriceUsd: 2500,
+      ret24h: 1.001,
+      ret7d: 0.998,
+      realizedVolPct: 20,
+      macroNote: "Quiet tape, but the price feed is suspect this tick.",
+      dataIssue:
+        "On-chain Uniswap TWAP reads ~$2,720, about 8% above the Coinbase/Binance spot near $2,500; the 7d return series returned only 2 of 7 daily points. Spot and the venue median disagree beyond tolerance.",
+    },
+  },
   live: {
     label: "Live ETH",
     description:
@@ -189,7 +207,11 @@ function applyDecisionToPortfolio(
   decision: FundAgentDecision,
   price: number,
 ): FundPortfolio {
-  if (decision.action === "HOLD" || decision.sizeUsd <= 0) {
+  if (
+    decision.action === "HOLD" ||
+    decision.action === "SKIP" ||
+    decision.sizeUsd <= 0
+  ) {
     return { ...portfolio };
   }
   const sizeUsd = decision.sizeUsd;

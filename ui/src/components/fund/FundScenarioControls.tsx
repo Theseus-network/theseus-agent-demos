@@ -17,6 +17,7 @@ const ORDER: (keyof typeof FUND_PRESETS)[] = [
   "bullTrend",
   "drawdown",
   "blackSwan",
+  "feedGlitch",
   "live",
 ];
 
