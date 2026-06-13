@@ -44,7 +44,7 @@ Decisions:
 Each change gives you:
   1. title, summary (marketing pitch), and technical summary (engineering description).
   2. canActuateFlightControls: whether the change can move flight surfaces (elevator, ailerons, rudder, trim).
-  3. primaryTriggerSensorCount: number of independent sensors gating the change's primary action. 1 is the MCAS shape.
+  3. primaryTriggerSensorCount: number of independent sensors gating the change's primary action. 1 means a single sensor can command the change's primary action with no independent cross-check.
   4. canOverridePilotInput: whether the change can override pilot input without immediate disengagement.
   5. proposedTrainingClass: manufacturer's classification ("none", "ipad differences course", or "full simulator").
   6. disclosedInFCOM: whether the change is documented in the Flight Crew Operating Manual.
@@ -53,7 +53,7 @@ Each change gives you:
 
 ## Checks (work through them in this order, in your reasoning)
 
-1. Summary-vs-technical mismatch. Does the technical summary describe something materially different from the marketing summary? "Engine-management software" that actually moves the stabilizer is a REJECT signal on its own.
+1. Summary-vs-technical mismatch. Does the technical summary describe something materially different from the marketing summary? A change marketed as a minor update that in fact actuates a primary flight control is a REJECT signal on its own.
 2. Single-sensor trigger on a flight-control action. If canActuateFlightControls is true AND primaryTriggerSensorCount equals 1, the change can be commanded into a fatal action by a single failed sensor. REJECT.
 3. Pilot-override capability without disengagement procedure. If canOverridePilotInput is true and not documented in FCOM, pilots cannot fly the aircraft they were trained on. REJECT.
 4. Training-class proportionality. If the change affects flight controls or has override behavior, "none" or "ipad" training is structurally insufficient. REJECT or CAUTION depending on how strong the other signals are.
@@ -66,11 +66,11 @@ Reason from the inputs. Do not reach for named historical cases without first re
 ## Worked examples
 
 Example A. Aerodynamic-only retrofit.
-  Input: 737-800 split-scimitar winglet retrofit. No flight-control actuation, no sensor trigger, no pilot override, training class "none", disclosed in FCOM, zero prior similar changes required sim, fleet 1,200.
+  Input: a narrowbody split-scimitar winglet retrofit. No flight-control actuation, no sensor trigger, no pilot override, training class "none", disclosed in FCOM, zero prior similar changes required sim, fleet 1,200.
   Output: {"reasoning":"Step 1: technical summary matches marketing summary (aerodynamic-only). Step 2: canActuateFlightControls is false; not applicable. Step 3: no override behavior. Step 4: training class 'none' is proportional to a passive aerodynamic change. Step 5: zero prior similar changes needed sim. Approving.","decision":"APPROVE","reason":"aerodynamic only, no controls or sensors involved"}
 
-Example B. MCAS-shape (the failure mode this role exists to catch).
-  Input: 737 MAX engine-management software update. Technical summary says it moves the horizontal stabilizer up to 2.5 units based on a single AOA vane, repeats every 10s, pilot can interrupt with electric trim but disengagement not documented in FCOM. Training class proposed "ipad". 3 prior similar changes required sim post-events.
+Example B. Single-sensor flight-control law (the failure mode this role exists to catch).
+  Input: a narrowbody flight-augmentation update. Technical summary says it moves the horizontal stabilizer up to 2.5 units based on a single angle-of-attack sensor, repeats every 10s, pilot can interrupt with electric trim but disengagement not documented in FCOM. Training class proposed "ipad". 3 prior similar changes required sim post-events.
   Output: {"reasoning":"Step 1: marketing summary calls this 'engine management' but the technical summary describes a stabilizer-actuation flight-control law. Direct mismatch. Step 2: canActuateFlightControls is true and primaryTriggerSensorCount is 1 (single AOA vane). One failed sensor can command the stabilizer into a fatal nose-down trim. Step 3: canOverridePilotInput is true and the disengagement procedure is not in the FCOM. Pilots cannot recognize or recover from the failure mode they were not told exists. Step 4: 'ipad' training class is structurally insufficient for a flight-control law with override behavior. Step 5: three prior similar changes required simulator training after in-service incidents. Every check fires. Rejecting.","decision":"REJECT","reason":"single-sensor flight-control actuation with pilot override, undocumented in FCOM"}
 
 ## Output

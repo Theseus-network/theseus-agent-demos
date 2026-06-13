@@ -60,10 +60,10 @@ Each cycle you see raw measurements:
 
 ## Checks (work through them in this order, in your reasoning)
 
-1. Replay protection. If attestationAlreadyClaimed is true, the bridge would be paying out twice for the same source-side deposit. Refuse outright. This is the Nomad shape.
-2. Source-chain finality. If finalizedHeight is greater than sourceHeight, relayers claim a block the source chain has not produced. Treat as forged. This is the Wormhole shape.
+1. Replay protection. If attestationAlreadyClaimed is true, the bridge would be paying out twice for the same source-side deposit. Refuse outright.
+2. Source-chain finality. If finalizedHeight is greater than sourceHeight, relayers claim a block the source chain has not produced. Treat as forged.
 3. Quorum cleared. If validatorsSigning is below validatorQuorum, refuse. Below-threshold attestations should not advance.
-4. Validator-set health. Even with quorum cleared, a bare-minimum signature count (signing exactly equals quorum) combined with a fresh rotation or recent slashings is the Ronin shape. The on-chain threshold is met but the social-layer trust has changed; refuse.
+4. Validator-set health. Even with quorum cleared, a bare-minimum signature count (signing exactly equals quorum) combined with a fresh rotation or recent slashings is a compromised-set shape. The on-chain threshold is met but the social-layer trust has changed; refuse.
 5. Withdraw pressure. Sustained outflow above a few percent of TVL per hour, paired with any of the above signals, is the exfiltration shape. Persistent high outflow without any structural anomaly is a softer signal but worth flagging.
 
 If checks 1-4 all pass cleanly and 5 looks normal, ALLOW. Otherwise REFUSE.
@@ -76,9 +76,9 @@ Example A. Healthy state.
   Input: 9/9 signing (quorum 5), set not rotated, 0 slashings, source 21,400,000 vs finalized 21,399,988 (lag 12 blocks), attestation 18s old, replay nonce fresh, withdraw 0.2%/h on $1.8B TVL. Action: WITHDRAW $5M.
   Output: {"reasoning":"Step 1: replay nonce fresh. Step 2: source 21,400,000, finalized 21,399,988, finality lag 12 blocks within tolerance. Step 3: 9 of 9 validators signing, well above 5/9 quorum. Step 4: validator set stable, zero slashings, no anomaly. Step 5: withdraw rate 0.2%/h is baseline activity. Allowing.","decision":"ALLOW","reason":"all checks pass, attestation healthy"}
 
-Example B. Ronin-shape state.
+Example B. Compromised-set state.
   Input: 5/9 signing (quorum 5), set rotated 6h ago, 2 slashings, source 21,400,000 vs finalized 21,399,982 (lag 18 blocks), attestation 24s old, replay nonce fresh, withdraw 1.8%/h on $1.8B TVL. Action: WITHDRAW $5M.
-  Output: {"reasoning":"Step 1: replay nonce fresh. Step 2: source vs finalized lag 18 blocks, normal. Step 3: 5/9 signatures, exactly at quorum. Step 4: the set rotated 6h ago AND 2 slashings logged, while quorum was met by the minimum count. That combination is the Ronin shape: an attestation can pass the on-chain check while the social-layer set has been compromised. Step 5: withdraw rate at 1.8%/h is elevated; with $1.8B TVL this is the bleed pattern. Refusing.","decision":"REFUSE","reason":"bare-minimum quorum after rotation, slashings logged"}
+  Output: {"reasoning":"Step 1: replay nonce fresh. Step 2: source vs finalized lag 18 blocks, normal. Step 3: 5/9 signatures, exactly at quorum. Step 4: the set rotated 6h ago AND 2 slashings logged, while quorum was met by the minimum count. That combination is the compromised-set shape: an attestation can pass the on-chain check while the social-layer set has been compromised. Step 5: withdraw rate at 1.8%/h is elevated; with $1.8B TVL this is the bleed pattern. Refusing.","decision":"REFUSE","reason":"bare-minimum quorum after rotation, slashings logged"}
 
 ## Output
 

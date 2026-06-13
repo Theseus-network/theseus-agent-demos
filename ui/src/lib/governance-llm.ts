@@ -53,7 +53,7 @@ Each proposal gives you these signals:
 
 ## Checks (work through them in this order, in your reasoning)
 
-1. Calldata-vs-summary match. Does the calldata actually do what the summary claims? Mismatch is the Beanstalk shape and the strongest REJECT signal on its own.
+1. Calldata-vs-summary match. Does the calldata actually do what the summary claims? A mismatch is the strongest REJECT signal on its own.
 2. Flash-loan voting pattern. If recentFlashloanVotes is true, or if proposerSharePct is high AND proposerStakeNew24h is true, the vote may already be captured. REJECT.
 3. Voting window vs value at risk. Short windows (under 48h) on proposals that move large fractions of the treasury are snipe shapes. The shorter the window and the larger the share, the closer to REJECT; otherwise CAUTION.
 4. Admin-function touches. If touchesAdminFns is true, the proposal can rewrite the protocol. The implementation address has to be verifiable and the timelock has to be honored. Default CAUTION; REJECT if combined with any other signal.
@@ -69,9 +69,9 @@ Example A. Routine grants.
   Input: "Increase grants budget by $250k"; calldata: Treasury.transfer(grantsMultisig, 250000 USDC); treasury $184M, value at risk $250k (0.14%); 41% participating; 72h window; proposer share 1.3%, not new; no admin functions; no flash-loan pattern.
   Output: {"reasoning":"Step 1: calldata is a 250k USDC transfer to the existing grants multisig, matches the summary exactly. Step 2: no flash-loan vote pattern, proposer share 1.3% held longer than 24h. Step 3: 72h window for $250k (0.14% of treasury) is well-proportioned. Step 4: no admin functions touched. Step 5: recipient is a multisig the DAO has used for six quarters. Nothing structurally suspicious. Approving.","decision":"APPROVE","reason":"routine grants transfer to long-used multisig"}
 
-Example B. Beanstalk-shape.
-  Input: "Ukraine humanitarian relief"; calldata: Treasury.transfer(proposer_address, 182000000 USDC); treasury $182M, value at risk $182M (100%); 79% participating; 0h window; proposer share 79%, acquired in last 24h; no admin functions; flash-loan-shaped vote in past hour.
-  Output: {"reasoning":"Step 1: summary claims humanitarian relief; calldata transfers 100% of the treasury to the proposer's own address. Direct mismatch and the Beanstalk shape. Step 2: 79% of YES came from a flash-loan-shaped position acquired in the last 24h. The vote is captured. Step 3: zero-hour window prevents broader electorate from intervening. Steps 4-5: irrelevant given 1 and 2. This is a treasury-drain dressed as a charitable proposal. Rejecting.","decision":"REJECT","reason":"calldata sends 100% of treasury to proposer; flash-loan vote"}
+Example B. Calldata-vs-summary mismatch.
+  Input: "Renew the developer grant program"; calldata: Governor.setOwner(proposer_address); treasury $90M, value at risk $90M (100% via owner change); 64% participating; 6h window; proposer share 64%, acquired in last 24h; touchesAdminFns true; flash-loan-shaped vote in past hour.
+  Output: {"reasoning":"Step 1: the summary describes a grant renewal, but the calldata calls setOwner to hand the governor to the proposer's own address, putting the entire treasury at risk. Direct mismatch. Step 2: 64% of YES came from a flash-loan-shaped position acquired in the last 24h, so the vote is captured. Step 3: a 6h window blocks the broader electorate from intervening. Step 4: the calldata reaches an admin owner-change function. Every hard check fires. Rejecting.","decision":"REJECT","reason":"calldata hands governor ownership to proposer; flash-loan vote"}
 
 ## Output
 
