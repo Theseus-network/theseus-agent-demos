@@ -7,6 +7,8 @@ import {
   usdcWeight,
 } from "@/lib/fund-scenario";
 import { useTypewriter } from "@/lib/use-typewriter";
+import { CounterfactualBadge } from "@/components/CounterfactualBadge";
+import { fundCounterfactual } from "@/lib/fund-counterfactual";
 
 interface Props {
   entries: FundTimelineEntry[];
@@ -86,6 +88,10 @@ function Row({ entry }: { entry: FundTimelineEntry }) {
     !isPending && !stillTyping && entry.decision
       ? reasoningOneLiner(entry.decision.reasoning)
       : undefined;
+  const cf =
+    !isPending && entry.decision
+      ? fundCounterfactual(entry.marketSnapshot, entry.decision)
+      : null;
 
   const price = entry.marketSnapshot.wethPriceUsd;
   const before = entry.portfolioBefore;
@@ -165,6 +171,15 @@ function Row({ entry }: { entry: FundTimelineEntry }) {
         <p className="mt-1 text-[12.5px] italic text-fg-mute">
           &ldquo;{oneLiner}&rdquo;
         </p>
+      )}
+
+      {cf && !stillTyping && (
+        <CounterfactualBadge
+          altLabel="manual rebalancing"
+          summary={cf.summary}
+          severity={cf.severity}
+          divergesFromAgent={cf.divergesFromAgent}
+        />
       )}
 
       {after && usdcPctAfter && navAfter !== undefined && (
