@@ -80,6 +80,10 @@ Example B. Spreads tight, depth collapsed.
   Input: coinbase $2,510 ($1.2M, 4s), binance $2,512 ($1.5M, 6s), uniswap $2,509 ($0.8M, 12s); reference $2,510.
   Output: {"reasoning":"The headline looks clean: three fresh venues, 8bps spread. But the agreement is hollow. Depth has fallen to ~2% of the reference snapshot, so a normal liquidation would clear the entire visible book on every venue and slip into the void. The price held while the liquidity behind it walked away, which is the depth-collapse shape, and a number nobody can trade at is not a price. Refusing.","decision":"REFUSED","reason":"depth across all venues collapsed below liquidation-clearing threshold"}
 
+Example C. A violent move that is real, not manipulation (the look-alike).
+  Input: coinbase $2,180, binance $2,184, uniswap $2,179, all fresh; the reference was $2,510 an hour ago, so spot is down ~13%. Depth within 1% of mid is $42M, $55M, $30M; the 24h VWAP is $2,360 and spot is tracking it down.
+  Output: {"reasoning":"Spot is down ~13% in an hour, the kind of move that screams manipulation. But this move is real. All three venues fell together and still hold $42M, $55M, and $30M of depth, more than enough to clear a liquidation, and spot is tracking the 24h VWAP down rather than detaching from it the way a wick would. Manipulation is a large move on a book that can't absorb it; this is a large move on a book that can. Refusing here would brick the market in a genuine selloff. Pricing the median, $2,180.","decision":"PRICED","price_usd":2180.00,"reason":"13% drop but deep book tracking VWAP; real move, not manipulation"}
+
 ## Output
 
 Strict JSON, single object, no commentary. The reasoning field must come first in the JSON so it is generated before the decision. End the reasoning with "Refusing." or "Pricing $X.XX.".

@@ -80,6 +80,10 @@ Example B. Compromised-set state.
   Input: 5/9 signing (quorum 5), set rotated 6h ago, 2 slashings, source 21,400,000 vs finalized 21,399,982 (lag 18 blocks), attestation 24s old, replay nonce fresh, withdraw 1.8%/h on $1.8B TVL. Action: WITHDRAW $5M.
   Output: {"reasoning":"On paper the attestation passes: replay nonce fresh, finality lag normal, 5 of 9 signatures clearing the 5/9 quorum. But it clears by the bare minimum, and the set that produced it rotated 6 hours ago with 2 slashings logged. The on-chain check is green while the social layer underneath it has changed hands, which is the compromised-set shape, and withdrawals are running 1.8%/h against $1.8B. A signature set you can't trust isn't a signature set. Refusing.","decision":"REFUSE","reason":"bare-minimum quorum after rotation, slashings logged"}
 
+Example C. A rotation that looks like a compromise but isn't (the look-alike).
+  Input: 9/9 signing (quorum 5), set rotated 12h ago, 0 slashings, source vs finalized lag 10 blocks, attestation 20s old, replay nonce fresh, withdraw 0.3%/h on $2.1B TVL. Action: WITHDRAW $5M.
+  Output: {"reasoning":"The set rotated 12 hours ago, which is the surface that looks like the Ronin compromise. But a rotation by itself isn't the tell. The whole set, 9 of 9, re-signed against a 5/9 quorum, with zero slashings and withdrawals at a baseline 0.3%/h. The compromise shape is a rotation that leaves a bare-minimum quorum doing the signing; here the full set is intact and signing. Refusing this would be halting a routine key rotation. Allowing.","decision":"ALLOW","reason":"full-set rotation, 9/9 signing, no slashings; routine, not compromise"}
+
 ## Output
 
 Strict JSON, single object, no commentary. The reasoning field must come first in the JSON so it is generated before the decision. End the reasoning with "Allowing." or "Refusing.".
