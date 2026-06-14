@@ -6,7 +6,13 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gen:prompts": "npx --yes tsx scripts/gen-prompts.mts",
+    "sync:agents": "npx --yes tsx scripts/sync-agents.mts",
+    "check:agents": "npx --yes tsx scripts/gen-prompts.mts --check && npx --yes tsx scripts/check-agents.mts",
+    "eval": "npx --yes tsx scripts/agent-eval.mts",
+    "eval:fund": "npx --yes tsx scripts/fund-feed.mts",
+    "eval:terra": "npx --yes tsx scripts/terra-feed.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.95.1",

@@ -1,0 +1,52 @@
+name: agents
+
+# Guards the demo agents against the two failures we hit by hand:
+#  - a demo prompt drifting from the canonical workspace files it's built from
+#  - an answer-key incident name creeping back into a prompt
+# The free guard runs on every push/PR. The paid held-out eval runs on PRs and
+# on demand, only when an ANTHROPIC_API_KEY secret is configured.
+
+on:
+  push:
+    paths:
+      - "ui/agents/**"
+      - "ui/src/lib/*-llm.ts"
+      - "ui/scripts/**"
+      - "ui/package.json"
+      - ".github/workflows/agents.yml"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ui
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci || npm install
+      # generated prompts are current + no answer-key name has come back
+      - run: npm run check:agents
+
+  eval:
+    # Held-out verdicts on the live model. Costs tokens, so PRs / manual only.
+    if: ${{ (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ui
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci || npm install
+      - name: held-out evals
+        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npm run eval -- 1

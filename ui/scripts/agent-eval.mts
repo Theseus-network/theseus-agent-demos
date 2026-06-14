@@ -26,8 +26,10 @@ if (!process.env.ANTHROPIC_API_KEY && fs.existsSync(envPath)) {
   }
 }
 
-const DEMOS =
-  "/Users/ericwang/Documents/eric_theseus_delivery/scratch/md-only-demos";
+// Read the vendored canonical workspace files (kept in sync with the website
+// repo via scripts/check-agents.mts), so the harness is self-contained and
+// runnable in CI without the website checkout.
+const DEMOS = path.join(here, "..", "agents");
 const MODEL = "claude-sonnet-4-6";
 
 function stripFrontmatter(md: string): { name?: string; body: string } {
