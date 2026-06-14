@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { CommitBadge } from "@/components/CommitBadge";
+import { CounterfactualBadge } from "@/components/CounterfactualBadge";
 import { GovernanceTimelineEntry } from "@/lib/governance-scenario";
+import { governanceCounterfactual } from "@/lib/governance-counterfactual";
 import { useTypewriter } from "@/lib/use-typewriter";
 
 interface Props {
@@ -80,6 +82,10 @@ function Row({ entry }: { entry: GovernanceTimelineEntry }) {
     !isPending && !stillTyping && entry.verdict
       ? reasoningOneLiner(entry.verdict.reasoning)
       : undefined;
+  const cf =
+    !isPending && entry.verdict
+      ? governanceCounterfactual(entry.proposalSnapshot, entry.verdict)
+      : null;
 
   return (
     <li className="border-b border-border py-4 last:border-b-0">
@@ -136,6 +142,15 @@ function Row({ entry }: { entry: GovernanceTimelineEntry }) {
       )}
       {!isPending && !stillTyping && oneLiner && (
         <p className="mt-1 text-[12.5px] italic text-fg-mute">“{oneLiner}”</p>
+      )}
+
+      {cf && !stillTyping && (
+        <CounterfactualBadge
+          altLabel="DAO vote"
+          summary={cf.summary}
+          severity={cf.severity}
+          divergesFromAgent={cf.divergesFromAgent}
+        />
       )}
 
       {!isPending && entry.verdict && (
