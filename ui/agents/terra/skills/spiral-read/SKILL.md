@@ -43,17 +43,6 @@ A dormant loop has a slipping peg but a backing token still near its normal
 price and supply, with coverage well above 1. A turning loop has the backing
 token inflating into a falling price with coverage at or under 1.
 
-## The same shape elsewhere
-
-The sister-token loop is the sharpest case, but the pattern is general: the
-backing loses value exactly as it is drawn down, and the drawdown feeds
-itself. Watch for it wherever collateral can decouple from what it realizes.
-A liquid-staking or restaking token below its redeemable value, with a
-growing withdrawal queue and a thinning exit bid, is the same read. A looped
-position where each liquidation moves the price into the next one is the same
-read. The signals do not change: realizable backing against the debt, the
-exit trajectory, and whether the move is feeding itself.
-
 ## Discipline
 
 The precondition is reflexivity. If the backing is external (reserves the
