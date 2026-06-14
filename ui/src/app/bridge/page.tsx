@@ -40,10 +40,11 @@ export default function BridgePage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = readBridgeUrl(window.location.search);
-    if (url.preset) {
-      setPresetKey(url.preset);
-      setScenario((s) => applyBridgePreset(s, url.preset!));
-    }
+    const preset = url.preset ?? "wormhole";
+    // Lead with the money scenario: a fill faster than physics allows, the
+    // Wormhole-shape release the guardian exists to hold.
+    setPresetKey(preset);
+    setScenario((s) => applyBridgePreset(s, preset));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

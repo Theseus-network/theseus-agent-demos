@@ -57,16 +57,17 @@ export default function FundPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = readFundUrl(window.location.search);
-    if (url.preset) {
-      setPresetKey(url.preset);
-      if (url.preset === "live") {
-        loadLiveMarket().catch((e: unknown) => {
-          const msg = e instanceof Error ? e.message : String(e);
-          setLiveError(msg);
-        });
-      } else {
-        setScenario((s) => applyFundPreset(s, url.preset!));
-      }
+    const preset = url.preset ?? "blackSwan";
+    // Lead with the money scenario: a black-swan tick, where the agent goes
+    // max-defensive instead of riding the drawdown to the bottom.
+    setPresetKey(preset);
+    if (preset === "live") {
+      loadLiveMarket().catch((e: unknown) => {
+        const msg = e instanceof Error ? e.message : String(e);
+        setLiveError(msg);
+      });
+    } else {
+      setScenario((s) => applyFundPreset(s, preset));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -40,10 +40,11 @@ export default function GovernancePage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = readGovernanceUrl(window.location.search);
-    if (url.preset) {
-      setPresetKey(url.preset);
-      setScenario((s) => applyGovernancePreset(s, url.preset!));
-    }
+    const preset = url.preset ?? "beanstalk";
+    // Lead with the money scenario: the Beanstalk-shape $182M attack, so the
+    // first thing a visitor sees is the proposal the agent is built to catch.
+    setPresetKey(preset);
+    setScenario((s) => applyGovernancePreset(s, preset));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

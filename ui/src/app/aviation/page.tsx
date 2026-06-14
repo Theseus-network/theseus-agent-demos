@@ -40,10 +40,11 @@ export default function AviationPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = readAviationUrl(window.location.search);
-    if (url.preset) {
-      setPresetKey(url.preset);
-      setScenario((s) => applyAviationPreset(s, url.preset!));
-    }
+    const preset = url.preset ?? "mcasShape";
+    // Lead with the money scenario: the single-sensor flight-control change,
+    // the failure shape this reviewer exists to flag.
+    setPresetKey(preset);
+    setScenario((s) => applyAviationPreset(s, preset));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
