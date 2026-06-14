@@ -7,6 +7,7 @@ import { CertificationPanel } from "@/components/aviation/CertificationPanel";
 import { AviationReviewButton } from "@/components/aviation/ReviewButton";
 import { AviationScenarioControls } from "@/components/aviation/AviationScenarioControls";
 import { AviationTimeline } from "@/components/aviation/AviationTimeline";
+import { VerdictHero } from "@/components/VerdictHero";
 import { AviationSafetyReviewerJsonLd } from "@/components/JsonLd";
 import {
   AVIATION_PRESETS,
@@ -190,6 +191,8 @@ export default function AviationPage() {
     );
   }, []);
 
+  const latest = scenario.events[0];
+
   return (
     <>
       <AviationSafetyReviewerJsonLd />
@@ -327,6 +330,17 @@ export default function AviationPage() {
               busy={busy}
               pending={scenario.pending}
               onSubmit={handleReview}
+            />
+          </div>
+
+          <div className="mt-8">
+            <VerdictHero
+              verdict={latest?.verdict?.decision}
+              reason={latest?.verdict?.reason}
+              reasoning={latest?.verdict?.reasoning}
+              pending={!!latest?.pending}
+              streaming={latest?.streamingReasoning}
+              idleHint="Pick a certification change and submit it — the reviewer's verdict and reasoning appear here."
             />
           </div>
 

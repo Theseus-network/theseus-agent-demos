@@ -7,6 +7,7 @@ import { ProposalPanel } from "@/components/governance/ProposalPanel";
 import { ReviewButton } from "@/components/governance/ReviewButton";
 import { GovernanceScenarioControls } from "@/components/governance/GovernanceScenarioControls";
 import { GovernanceTimeline } from "@/components/governance/GovernanceTimeline";
+import { VerdictHero } from "@/components/VerdictHero";
 import { GovernanceReviewerJsonLd } from "@/components/JsonLd";
 import {
   GOVERNANCE_PRESETS,
@@ -189,6 +190,8 @@ export default function GovernancePage() {
     );
   }, []);
 
+  const latest = scenario.events[0];
+
   return (
     <>
       <GovernanceReviewerJsonLd />
@@ -335,6 +338,17 @@ export default function GovernancePage() {
               busy={busy}
               pending={scenario.pending}
               onSubmit={handleReview}
+            />
+          </div>
+
+          <div className="mt-8">
+            <VerdictHero
+              verdict={latest?.verdict?.decision}
+              reason={latest?.verdict?.reason}
+              reasoning={latest?.verdict?.reasoning}
+              pending={!!latest?.pending}
+              streaming={latest?.streamingReasoning}
+              idleHint="Load a proposal and submit it — the reviewer's verdict and reasoning appear here."
             />
           </div>
 

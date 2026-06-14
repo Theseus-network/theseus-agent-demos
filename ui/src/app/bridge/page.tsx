@@ -7,6 +7,7 @@ import { BridgePanel } from "@/components/bridge/BridgePanel";
 import { WithdrawForm } from "@/components/bridge/WithdrawForm";
 import { BridgeScenarioControls } from "@/components/bridge/BridgeScenarioControls";
 import { BridgeTimeline } from "@/components/bridge/BridgeTimeline";
+import { VerdictHero } from "@/components/VerdictHero";
 import { BridgeGuardianJsonLd } from "@/components/JsonLd";
 import {
   BridgeAgentVerdict,
@@ -189,6 +190,8 @@ export default function BridgePage() {
     setScenario((s) => applyBridgeLiveFill(s, fill));
   }, []);
 
+  const latest = scenario.events[0];
+
   return (
     <>
       <BridgeGuardianJsonLd />
@@ -340,6 +343,17 @@ export default function BridgePage() {
               busy={busy}
               pending={scenario.pending}
               onSubmit={handleAction}
+            />
+          </div>
+
+          <div className="mt-8">
+            <VerdictHero
+              verdict={latest?.verdict?.decision}
+              reason={latest?.verdict?.reason}
+              reasoning={latest?.verdict?.reasoning}
+              pending={!!latest?.pending}
+              streaming={latest?.streamingReasoning}
+              idleHint="Load a withdrawal and submit it — the guardian's verdict and reasoning appear here."
             />
           </div>
 

@@ -7,6 +7,7 @@ import { VaultPanel } from "@/components/terra/VaultPanel";
 import { MintRedeemForm } from "@/components/terra/MintRedeemForm";
 import { TerraScenarioControls } from "@/components/terra/TerraScenarioControls";
 import { TerraTimeline } from "@/components/terra/TerraTimeline";
+import { VerdictHero } from "@/components/VerdictHero";
 import { TerraFailsafeJsonLd } from "@/components/JsonLd";
 import {
   ActionKind,
@@ -162,6 +163,8 @@ export default function TerraPage() {
     setScenario(initialTerraScenario());
   }, []);
 
+  const latest = scenario.events[0];
+
   return (
     <>
       <TerraFailsafeJsonLd />
@@ -208,6 +211,17 @@ export default function TerraPage() {
             pending={scenario.pending}
             onSubmit={handleAction}
           />
+
+          <div className="mt-8">
+            <VerdictHero
+              verdict={latest?.verdict?.decision}
+              reason={latest?.verdict?.reason}
+              reasoning={latest?.verdict?.reasoning}
+              pending={!!latest?.pending}
+              streaming={latest?.streamingReasoning}
+              idleHint="Load a vault state and submit a mint or redeem — the failsafe's verdict and reasoning appear here."
+            />
+          </div>
 
           <div className="mt-10 border-t pt-6" style={{ borderColor: "var(--border)" }}>
             <p className="mb-3 text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">
