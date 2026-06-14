@@ -1,71 +1,66 @@
 ---
 name: citation-audit
-description: Per-span citation verdicts under ABA Model Rule 3.3. One web_search + one fetch_url per cite. FABRICATED when no recognized legal source surfaces; DISTINGUISHABLE when the source contradicts a cite field.
+description: Per-claim verdicts for AI-drafted filings. One web_search plus at most one fetch_url per load-bearing claim, verified against a primary source. FABRICATED when none surfaces or the network fails; DISTINGUISHABLE when the source contradicts a field. Fail closed, and record the query so the check reproduces.
 allowed-tools: web_search fetch_url
 ---
 
-# Citation audit
+# Claim audit
 
-Each Bluebook citation in the user's passage gets one `web_search`
-call and at most one `fetch_url` call against the result page. One
-verdict block per cite. The audit is verifiable: the operator can
-re-run the same searches and see the same results.
+Every load-bearing claim in the document gets one `web_search` and at most one
+`fetch_url` against a recognized primary source. One verdict block per claim,
+and the query you ran goes in the block. The audit's whole value is that it is
+re-runnable: a court or an insurer who repeats the query gets the same answer
+you did.
 
-## Procedure (per cite)
+## What counts as load-bearing
 
-1. Parse the Bluebook cite. Standard forms:
-   `<volume> <reporter> <page>` (e.g., `410 F.3d 750`),
-   `<caseName>, <volume> <reporter> <page> (<court> <year>)`.
-2. Call `web_search` once with the case name + reporter cite as the
-   query. Example: `"Daimler AG v. Bauman" 571 U.S. 117`.
-3. Examine the top result. Recognized legal sources include
-   CourtListener, Justia, Cornell LII, Google Scholar, Caselaw
-   Access Project, any law school .edu hosting opinion text, and
-   the court's own .gov site (supremecourt.gov, ca9.uscourts.gov,
-   etc.).
-4. If a recognized source surfaced in the top 3 results, call
-   `fetch_url` once on its URL. Read the page text.
-5. Compare the page's case name and decision year against the cite.
-6. Emit the verdict block. Move to the next cite.
+A claim a reader takes as fact and the document relies on: a citation, a
+quotation or holding attributed to a source, a quoted statute or rule, or a
+named figure, date, or party stated as fact. Audit what is asserted as true,
+and leave the argument and framing alone.
+
+## Procedure (per claim)
+
+1. Parse the claim into its identifying terms. For a Bluebook cite:
+   `<caseName>, <volume> <reporter> <page> (<court> <year>)` (e.g.
+   `410 F.3d 750`). For a quote: the distinctive phrase plus the source it is
+   attributed to. For a statute: the section and the quoted text.
+2. Call `web_search` once with those terms.
+3. If a recognized primary source surfaces in the top results, call
+   `fetch_url` once and read it. Primary sources are the authority's own
+   record: CourtListener, Justia, Cornell LII, Google Scholar, the Caselaw
+   Access Project, or the court's .gov site for cases; the official code or
+   register for statutes; the primary record for other facts, never an
+   aggregator or the draft itself.
+4. Compare the claim to the source and emit the block, including the exact
+   query run.
 
 ## Verdict rule (mechanical)
 
-`VERIFIED`: a recognized legal source surfaced; the fetched page's
-case name matches the cite text (whitespace and punctuation
-normalized); the year matches. The cite points at a real case. The
-user's substantive use of the case is still the user's
-responsibility; note in `reason` if the cite-proposition link looks
-weak from the snippet you have.
+`VERIFIED`: a recognized primary source confirms the claim as stated. For a
+cite, the case name and year match; for a quote, the language appears in the
+source; for a statute, the text matches and is current.
 
-`DISTINGUISHABLE`: the case exists at a recognized source, but the
-cite mismatches the source on one or more of: case name, docket
-number, year, reporter pinpoint. The case is real; the use is
-wrong. Name which field mismatched.
+`DISTINGUISHABLE`: the source exists but contradicts the claim on a field:
+case name, docket, year, reporter, quoted wording, or a figure. The source is
+real and the claim's use of it is wrong. Name the field.
 
-`FABRICATED`: no recognized legal source surfaces in the top 3
-search results, OR the search returned only the user's brief
-itself / SSRN drafts / Twitter, OR the reporter triple is
-structurally impossible (wrong reporter for the era, volume out of
-range). The brief cannot rely on this cite.
+`FABRICATED`: no recognized primary source surfaces, the only results are the
+draft itself / SSRN / social posts, the reference is structurally impossible,
+or the network call failed. The document cannot rely on it.
 
-## Discipline
+## Discipline (fail closed)
 
-One `web_search` + at most one `fetch_url` per cite. No second
-search variant for the same cite. The first search's top results
-either surface a recognized source or they do not. If the search
-fails (network error, no results at all), emit `FABRICATED` with
-the failure reason; do not fall back to training knowledge to
-rescue the verdict.
-
-Falling back to training knowledge when the network call fails is
-the exact failure mode Mata sanctioned. The audit's value is that
-it is verifiable against the network; if the network is down, the
-audit defers to FABRICATED rather than guess.
+One `web_search` and at most one `fetch_url` per claim. No second search
+variant to rescue a claim. If the call fails, the verdict is FABRICATED with
+the failure reason; never fall back to training knowledge to confirm a claim.
+A claim that cannot be verified blocks the signature, and the gate withholds
+the filing rather than pass an unverified fact.
 
 ## Why this matters
 
-Mata v. Avianca, 22-cv-1461 (S.D.N.Y. June 22, 2023). Two attorneys
-were sanctioned for filing six fabricated cases generated by ChatGPT.
-Judge Castel: "Six of the submitted cases appear to be bogus judicial
-decisions." The mechanical fix is one CourtListener lookup per cite.
-The agent's job is to be the lookup that gets done.
+In Mata v. Avianca two attorneys were sanctioned for filing six fabricated
+cases a model invented. The mechanical fix is one primary-source lookup per
+claim, run by a checker independent of whatever drafted the text, with a
+record of the lookup. The agent's job is to be the lookup that gets done, and
+the signed record someone downstream can trust without redoing it.
