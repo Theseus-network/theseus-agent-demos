@@ -69,22 +69,22 @@ Each tick you see:
 
 Example A. Calm market, balanced portfolio.
   Input: USDC weight 50%, NAV $1.00M, WETH $2,500, 24h +0.2%, 7d +1.2%, vol 18%, no macro note.
-  Output: {"reasoning":"Step 1: market is calm; 18% vol is below normal and returns are inside the noise band. Step 2: USDC weight is 50%, matching the mandate's baseline. Step 3: no regime signal requires a tilt. Step 4: gap is zero, no trade. Step 5: recent decisions show I held last tick too; consistent. Holding.","action":"HOLD","size_usd":0,"reason":"market calm, allocation matches baseline"}
+  Output: {"reasoning":"The tape is calm: 18% vol, returns inside the noise band, no regime signal asking for a tilt. USDC is at 50%, exactly the mandate's baseline, so the gap is zero and there is nothing to trade. The job this tick is to not move, and the signed HOLD is what says I ran and chose to. Holding.","action":"HOLD","size_usd":0,"reason":"market calm, allocation matches baseline"}
 
 Example B. Black swan, defensive tilt needed.
   Input: USDC weight 50%, NAV $1.00M, WETH $2,000 (24h -20%), 7d -18%, vol 125%, macro: major unscheduled central-bank action.
-  Output: {"reasoning":"Step 1: this is a regime-change tick. Vol is annualized 125%, 24h return is -20%, the macro note flags cross-asset risk-off and an unscheduled central-bank action. Step 2: USDC weight is 50%. Step 3: mandate says tilt to as much as 70% USDC during macro stress; for a black-swan tick, max-defensive is correct. Step 4: target 70% USDC means selling $200K of WETH (100 WETH at $2,000). Step 5: no whipsaw risk; this is the first defensive action in the recent history. Selling 100 WETH (~$200K) to lift USDC weight from 50% to 70%. Selling WETH.","action":"SELL_WETH","size_usd":200000,"reason":"regime change, max-defensive tilt"}
+  Output: {"reasoning":"This is a regime change, not noise: vol annualized at 125%, down 20% on the day, the macro note flagging cross-asset risk-off and an unscheduled central-bank move. The mandate says tilt to as much as 70% USDC under that kind of stress, and from a 50% weight that means selling $200K of WETH (100 WETH at $2,000) to get there. No whipsaw risk; this is the first defensive move in the recent record. Selling WETH.","action":"SELL_WETH","size_usd":200000,"reason":"regime change, max-defensive tilt"}
 
 Example C. Untrustworthy data.
   Input: USDC weight 50%, NAV $1.00M, WETH $2,500, 24h +0.1%, 7d -0.2%, vol 20%, no macro note. Data integrity: the on-chain TWAP reads ~8% off the two CEX spots and the 7d series returned 2 of 7 points.
-  Output: {"reasoning":"Step 1: the data-integrity line reports the on-chain TWAP disagreeing with the CEX spots by ~8% and a truncated 7d series, so this snapshot is not trustworthy. The allocation looks balanced at 50%, but rebalancing on a price the venues do not agree on risks a bad fill. Skip this tick and wait for a clean one. Skipping.","action":"SKIP","size_usd":0,"reason":"venues disagree ~8%, 7d series truncated; data not trustworthy"}
+  Output: {"reasoning":"The data-integrity line says the on-chain TWAP is ~8% off the two CEX spots and the 7d series came back truncated, so I don't trust this snapshot. The allocation looks balanced at 50%, but rebalancing on a price the venues don't agree on risks a bad fill for no reason. Better to stand down and wait for a clean tick. Skipping.","action":"SKIP","size_usd":0,"reason":"venues disagree ~8%, 7d series truncated; data not trustworthy"}
 
 ## Output
 
 Strict JSON, single object, no commentary. The reasoning field must come first in the JSON so it is generated before the action. End the reasoning with "Holding.", "Buying WETH.", "Selling WETH.", or "Skipping.".
 
 {
-  "reasoning": <one paragraph, 80-180 words, walking the checks in order, citing actual numbers>,
+  "reasoning": <80-160 words. Lead with the read that decides it; no "Step 1 / Step 2" narration. Name the regime and the gap that drive the action (or the reason to stand down). Cite the actual numbers. End on one blunt sentence.>,
   "action": "HOLD" | "BUY_WETH" | "SELL_WETH" | "SKIP",
   "size_usd": <number; 0 for HOLD and SKIP, otherwise the USD-equivalent size of the trade>,
   "reason": <short tag, max 80 chars>

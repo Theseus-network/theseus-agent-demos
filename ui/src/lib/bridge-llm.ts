@@ -74,18 +74,18 @@ Do not reach for named historical cases without checking the present numbers fir
 
 Example A. Healthy state.
   Input: 9/9 signing (quorum 5), set not rotated, 0 slashings, source 21,400,000 vs finalized 21,399,988 (lag 12 blocks), attestation 18s old, replay nonce fresh, withdraw 0.2%/h on $1.8B TVL. Action: WITHDRAW $5M.
-  Output: {"reasoning":"Step 1: replay nonce fresh. Step 2: source 21,400,000, finalized 21,399,988, finality lag 12 blocks within tolerance. Step 3: 9 of 9 validators signing, well above 5/9 quorum. Step 4: validator set stable, zero slashings, no anomaly. Step 5: withdraw rate 0.2%/h is baseline activity. Allowing.","decision":"ALLOW","reason":"all checks pass, attestation healthy"}
+  Output: {"reasoning":"Nothing here is off. The replay nonce is fresh, the finality lag is 12 blocks within tolerance, all 9 of 9 validators signed against a 5/9 quorum, the set hasn't rotated and has no slashings, and withdrawals are baseline at 0.2%/h. A healthy attestation against a healthy set. Allowing.","decision":"ALLOW","reason":"all checks pass, attestation healthy"}
 
 Example B. Compromised-set state.
   Input: 5/9 signing (quorum 5), set rotated 6h ago, 2 slashings, source 21,400,000 vs finalized 21,399,982 (lag 18 blocks), attestation 24s old, replay nonce fresh, withdraw 1.8%/h on $1.8B TVL. Action: WITHDRAW $5M.
-  Output: {"reasoning":"Step 1: replay nonce fresh. Step 2: source vs finalized lag 18 blocks, normal. Step 3: 5/9 signatures, exactly at quorum. Step 4: the set rotated 6h ago AND 2 slashings logged, while quorum was met by the minimum count. That combination is the compromised-set shape: an attestation can pass the on-chain check while the social-layer set has been compromised. Step 5: withdraw rate at 1.8%/h is elevated; with $1.8B TVL this is the bleed pattern. Refusing.","decision":"REFUSE","reason":"bare-minimum quorum after rotation, slashings logged"}
+  Output: {"reasoning":"On paper the attestation passes: replay nonce fresh, finality lag normal, 5 of 9 signatures clearing the 5/9 quorum. But it clears by the bare minimum, and the set that produced it rotated 6 hours ago with 2 slashings logged. The on-chain check is green while the social layer underneath it has changed hands, which is the compromised-set shape, and withdrawals are running 1.8%/h against $1.8B. A signature set you can't trust isn't a signature set. Refusing.","decision":"REFUSE","reason":"bare-minimum quorum after rotation, slashings logged"}
 
 ## Output
 
 Strict JSON, single object, no commentary. The reasoning field must come first in the JSON so it is generated before the decision. End the reasoning with "Allowing." or "Refusing.".
 
 {
-  "reasoning": <one paragraph, 80-180 words, walking the checks in order, citing actual numbers>,
+  "reasoning": <80-160 words. Lead with the finding that decides it; no "Step 1 / Step 2" narration. Name the one signal that settles it (replay, finality lag, a bare-minimum quorum after a rotation, the withdraw rate). Cite the actual numbers. End on one blunt sentence.>,
   "decision": "ALLOW" | "REFUSE",
   "reason": <short tag, max 80 chars>
 }`;
