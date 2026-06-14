@@ -42,58 +42,61 @@ export function FundScenarioControls({
   };
 
   return (
-    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2 text-[12px]">
-      <span className="text-fg-mute">load a market:</span>
-      {ORDER.map((key, i) => {
-        const p = FUND_PRESETS[key];
-        const active = p.label === presetLabel;
-        return (
-          <span key={key}>
+    <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
+      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span className="rounded-md bg-coral px-2 py-1 font-mono text-[10.5px] font-medium uppercase tracking-[0.16em] text-white">
+          Try it
+        </span>
+        <span className="text-[13.5px] text-fg-dim">
+          Load a market and run a tick &mdash; watch the agent hold its mandate.
+        </span>
+        {agentPending && (
+          <span
+            className="font-mono text-[10.5px] uppercase tracking-[0.16em]"
+            style={{ color: "var(--coral)" }}
+          >
+            agent reasoning&hellip;
+          </span>
+        )}
+        <span className="ml-auto flex items-center gap-3">
+          <ShareLinkButton disabled={disabled} />
+          <button
+            type="button"
+            onClick={wrap(onReset)}
+            disabled={disabled}
+            className="text-[12px] text-fg-mute transition-colors hover:text-fg hover:underline disabled:opacity-30"
+          >
+            reset &rarr;
+          </button>
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {ORDER.map((key) => {
+          const p = FUND_PRESETS[key];
+          const active = p.label === presetLabel;
+          return (
             <button
+              key={key}
               type="button"
               onClick={wrap(() => onPreset(key))}
               disabled={disabled}
-              className={`italic underline underline-offset-[3px] transition-colors hover:text-fg hover:decoration-fg disabled:opacity-30 disabled:hover:no-underline ${
-                active
-                  ? "text-fg decoration-fg"
-                  : "decoration-border"
-              }`}
               title={p.description}
+              className={`btn !text-[12px] disabled:cursor-not-allowed disabled:opacity-30 ${
+                active ? "!border-coral !text-coral" : ""
+              }`}
             >
               {p.label.toLowerCase()}
             </button>
-            {i < ORDER.length - 1 && (
-              <span className="ml-4 text-border">·</span>
-            )}
-          </span>
-        );
-      })}
-      <span className="ml-auto flex items-baseline gap-3">
-        <ShareLinkButton disabled={disabled} />
-        <button
-          type="button"
-          onClick={wrap(onReset)}
-          disabled={disabled}
-          className="text-fg-mute transition-colors hover:text-fg hover:underline disabled:opacity-30"
-        >
-          reset →
-        </button>
-      </span>
-      {agentPending && (
-        <span
-          className="basis-full font-mono text-[10.5px] uppercase tracking-[0.16em]"
-          style={{ color: "var(--coral)" }}
-        >
-          agent reasoning…
-        </span>
-      )}
+          );
+        })}
+      </div>
       {liveError && (
-        <span
-          className="basis-full font-mono text-[10.5px] uppercase tracking-[0.16em]"
+        <p
+          className="mt-3 font-mono text-[10.5px] uppercase tracking-[0.16em]"
           style={{ color: "var(--coral)" }}
         >
           live feed unavailable: {liveError}. synthetic presets still work.
-        </span>
+        </p>
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { TopBar } from "@/components/TopBar";
 import DemoCTA from "@/components/DemoCTA";
 import { PortfolioPanel } from "@/components/fund/PortfolioPanel";
+import { LpPanel } from "@/components/fund/LpPanel";
 import { FundTickButton } from "@/components/fund/TickButton";
 import { FundScenarioControls } from "@/components/fund/FundScenarioControls";
 import { FundTimeline } from "@/components/fund/FundTimeline";
@@ -14,6 +15,7 @@ import {
   FundAgentDecision,
   FundScenarioState,
   MarketSnapshot,
+  navUsd,
   applyFundDecision,
   applyFundLiveMarket,
   applyFundPendingTick,
@@ -182,6 +184,8 @@ export default function FundPage() {
     setScenario(initialFundScenario());
   }, []);
 
+  const nav = navUsd(scenario.portfolio, scenario.market.wethPriceUsd);
+
   return (
     <>
       <SovereignFundJsonLd />
@@ -205,13 +209,18 @@ export default function FundPage() {
             </a>
           </div>
 
-          <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
-            A sovereign agent that owns its own capital and rebalances
-            against a written mandate. The sandbox below paper-trades a
-            $100k portfolio: pick a market, run a tick, see how the agent
-            decides. The same agent is deployed on Base Sepolia at the foot
-            of the page. Live but unfunded.
+          <p className="mb-8 text-[13.5px] leading-[1.7] text-fg-mute">
+            A hedge fund with no GP to trust. The agent owns the capital and
+            trades a written mandate that&rsquo;s signed on chain — it can&rsquo;t
+            exceed its risk limits, move funds off-mandate, or be ordered to
+            rug. Be an LP below: deposit, watch the agent manage it through
+            whatever the market does, and redeem against NAV anytime. The same
+            agent is live on Base Sepolia at the foot of the page.
           </p>
+
+          <div className="mb-10">
+            <LpPanel nav={nav} scenarioKey={scenario.presetLabel} />
+          </div>
 
           <div id="fund-scenarios" className="mb-10">
             <FundScenarioControls
