@@ -3,6 +3,7 @@ import { TopBar } from "@/components/TopBar";
 import DemoCTA from "@/components/DemoCTA";
 import { readFundState } from "@/lib/launch-sniper/reader";
 import { TickList } from "./TickList";
+import { CandidateTryIt } from "./CandidateTryIt";
 
 const FUND_ADDRESS = "0xa6fbaadea4e7f58d812d989737d708b279e8bd21";
 const BASESCAN_URL = `https://sepolia.basescan.org/address/${FUND_ADDRESS}`;
@@ -82,6 +83,12 @@ export default async function LaunchSniperPage() {
           Every twenty minutes it picks the most credible candidate and
           commits a PASS or BUY to its on-chain fund. It never retunes.
           Recent decisions appear below, signed on chain.
+        </p>
+
+        <CandidateTryIt />
+
+        <p className="mb-3 text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">
+          its live paper book · base sepolia
         </p>
 
         {readError && (
