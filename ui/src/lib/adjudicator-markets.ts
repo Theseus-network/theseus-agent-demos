@@ -47,21 +47,61 @@ export interface PredictionMarket {
 }
 
 export const MARKETS: PredictionMarket[] = [
-  // Criterion discipline on a well-defined, public metric. "Flop" is the
-  // on-record verdict of the review press, with a clear majority threshold,
-  // not the mood. The agent has to read the verdict off the sources and
-  // resolve only if there is a real majority either way.
+  // Real UMA dispute, the headline. No US-Ukraine deal existed by the deadline,
+  // but a single UMA whale forced a "Yes." The agent reads the record and
+  // returns NO, the verdict a token-voting whale could not move.
   {
-    id: "iphone-air-flop",
-    marketId: 1003,
-    category: "Culture",
-    question: "Will the iPhone Air launch flop?",
-    options: ["YES (flopped)", "NO (did not flop)"],
-    deadline: "December 31, 2025",
-    deadlineISO: "2025-12-31",
+    id: "ukraine-minerals-2025",
+    marketId: 2001,
+    category: "Geopolitics",
+    question: "Did Ukraine agree to a Trump mineral deal before April 2025?",
+    options: ["YES (agreed)", "NO (no agreement)"],
+    deadline: "March 31, 2025, 11:59 PM ET",
+    deadlineISO: "2025-03-31",
     resolutionCriteria:
-      "'Flop' is judged by the on-record verdict of the professional review press within 90 days of launch. Resolves YES if a clear majority of major outlets (The Verge, WSJ, CNET, Engadget, Tom's Guide, and peers) conclude the product underperformed or recommend against it. Resolves NO if a clear majority are positive. Sales rumors, resale prices, and social-media noise are signals but do not settle it. If the published reviews are genuinely split with no clear majority either way, the market does not resolve.",
-    resolutionSource: "Professional product reviews from major outlets",
+      "Resolves YES if the United States and Ukraine agree to any deal between February 2 and March 31, 2025, 11:59 PM ET, that explicitly involves Ukrainian rare earth elements: an exchange for aid, a partnership, mining rights, or any cooperation involving these resources. An announcement qualifies regardless of implementation timing. Official government statements are the resolution source.",
+    resolutionSource: "Official US and Ukrainian government statements",
+    actualResolution: {
+      winningOption: 0,
+      note: "Polymarket's oracle resolved YES, but no US-Ukraine agreement had been reached by the March 31 deadline (the February 28 Oval Office meeting collapsed without a signing; a framework came only weeks later). The 'Yes' was forced by a single UMA whale holding roughly 5M governance tokens, which Polymarket called an unprecedented governance attack and refused to refund. An agent that reads the record returns NO, and a token-voting whale cannot move it.",
+    },
+  },
+  // Real UMA dispute, genuinely indeterminate. Polymarket never defined "suit"
+  // and the reporting consensus the criterion requires never formed. The
+  // honest verdict is UNRESOLVABLE.
+  {
+    id: "zelensky-suit-2025",
+    marketId: 2002,
+    category: "Politics",
+    question: "Will Zelenskyy wear a suit before July 2025?",
+    options: ["YES (wore a suit)", "NO (did not)"],
+    deadline: "June 30, 2025 ET",
+    deadlineISO: "2025-06-30",
+    resolutionCriteria:
+      "Resolves YES if Volodymyr Zelenskyy is photographed or filmed wearing a suit between May 22 and June 30, 2025 (ET). The images or video must be authentic, not AI-generated or edited. The resolution source is a consensus of credible reporting. Resolves NO otherwise.",
+    resolutionSource: "Consensus of credible reporting",
+    outcomeNote:
+      "Polymarket never defined 'suit.' At the June 24 NATO summit Zelenskyy wore a black jacket, matching trousers, and a collared shirt, an outfit numerous outlets called a suit and numerous others did not. UMA finalized NO on a roughly $237M market, ruling that the reporting consensus the criterion required had not been established. When the criterion rests on a consensus that genuinely did not exist, UNRESOLVABLE is the honest call: the record itself never settled it.",
+  },
+  // Real UMA dispute, ambiguity in the criterion itself. The sale happened in
+  // May but was disclosed in June, and the rule never said which one counts.
+  {
+    id: "strategy-btc-may-2026",
+    marketId: 2003,
+    category: "Crypto",
+    question: "Did Strategy sell any bitcoin by May 31, 2026?",
+    options: ["YES (sold)", "NO (did not sell)"],
+    deadline: "May 31, 2026, 11:59 PM ET",
+    deadlineISO: "2026-05-31",
+    resolutionCriteria:
+      "Resolves YES if Strategy (MSTR) sold any bitcoin by May 31, 2026, 11:59 PM ET. The rules do not state whether the sale must have occurred by the deadline or have been publicly confirmed by it.",
+    resolutionSource: "Strategy's SEC filings and official disclosures",
+    actualResolution: {
+      winningOption: 1,
+      note: "Polymarket's UMA vote ruled the May contract NO, counting only the June 1 disclosure date, a reading swung by a few large holders. The sale itself closed May 26-31, inside the deadline, so the literal reading of 'sold by May 31' is YES. The agent dates the transaction, not the contested vote.",
+    },
+    outcomeNote:
+      "Strategy sold 32 BTC between May 26 and 31 but disclosed it in an 8-K on June 1. The criterion never said whether 'sold by May 31' means the sale occurred or was confirmed by then, so the same facts support both YES (it happened in May) and NO (it was only confirmed in June). UMA voters, swung by a few large holders, ruled the May contract NO. The ambiguity is in the criterion itself, which is the textbook case for UNRESOLVABLE.",
   },
   // Clean commit, YES: criteria clearly met, primary sources name the outcome.
   {
@@ -79,23 +119,6 @@ export const MARKETS: PredictionMarket[] = [
       winningOption: 0,
       note: "Polymarket resolved YES on Aug 7, 2025.",
     },
-  },
-  // The refuse showcase. Well-defined criterion, but the authority the market
-  // names (the NBER) hasn't ruled and won't for a year or more. No public
-  // source can settle it, so the disciplined verdict is UNRESOLVABLE.
-  {
-    id: "us-recession-2025",
-    marketId: 1008,
-    category: "Economy",
-    question: "Did the US enter a recession in 2025?",
-    options: ["YES (recession began in 2025)", "NO (no recession in 2025)"],
-    deadline: "December 31, 2025",
-    deadlineISO: "2025-12-31",
-    resolutionCriteria:
-      "The National Bureau of Economic Research (NBER) is the official arbiter of US recessions. Resolves YES only if the NBER has dated a recession with a peak (start) month in calendar year 2025. Resolves NO only if the NBER has explicitly stated that no recession began in 2025. Two-quarters-of-negative-GDP rules of thumb, bank forecasts, and media calls do not settle it; only an NBER determination does.",
-    resolutionSource: "The NBER Business Cycle Dating Committee",
-    outcomeNote:
-      "The NBER dates recessions only in hindsight, typically six to eighteen months after the fact, and rarely issues a 'no recession' statement at all. With no NBER determination either way, no source can settle the criterion. A resolver that commits here is substituting its own GDP read for the arbiter the market named. UNRESOLVABLE is the honest call until the committee rules.",
   },
   // Premature: deadline still ahead. The agent refuses to forecast; the UI
   // declines to run it at all.

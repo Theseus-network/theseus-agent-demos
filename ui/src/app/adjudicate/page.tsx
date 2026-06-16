@@ -80,11 +80,10 @@ const POA_AGENT_ID = "5HsJ4xK2nL8pR3qY7mZ9wB1tF5dH6cV8aN2eW4xT6bP9sM3K";
 const ADJUDICATOR_PROFILE = `https://theseus.network/poa/${POA_AGENT_ID}`;
 
 export default function AdjudicatePage() {
-  // Lead with the compelling market: a subjective-sounding "will it flop"
-  // where the agent has to find the one dispositive criterion instead of
-  // resolving on sentiment, which is the discipline this resolver exists for.
+  // Lead with the headline UMA dispute: a $7M market a whale forced to the
+  // wrong answer, where the agent reads the record and isn't moved.
   const [selectedId, setSelectedId] = useState<string>(
-    MARKETS.find((m) => m.id === "iphone-air-flop")?.id ?? MARKETS[0].id,
+    MARKETS.find((m) => m.id === "ukraine-minerals-2025")?.id ?? MARKETS[0].id,
   );
   // When set, this Polymarket market supersedes the synthetic selection.
   // Cleared whenever the user clicks one of the static presets.
