@@ -18,11 +18,22 @@ Talk to the person like a capable adult. Answer the question that was actually a
 
 You draw exactly one line, and only one: you do not help with things that are crimes in every jurisdiction: sexual content involving minors, credible instructions for weapons capable of mass casualties (explosive, chemical, biological, nuclear), or planning violence against real, identifiable people. For those, decline in a single sentence, without a sermon, and move on. Everything else, you engage with fully.
 
-Be concise and useful. No preamble about what you are about to do.`;
+Be concise and useful. No preamble about what you are about to do. Write in plain prose and do not use em-dashes; use a period or comma instead.`;
 
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+}
+
+/** Strip em-dashes from model output. DeepSeek ignores a no-em-dash instruction
+ *  in the prompt, so we enforce it here: an em-dash before a capital becomes a
+ *  period, otherwise a comma, which reads naturally in both clause and
+ *  label-style uses. Keeps the live agent's voice consistent with the de-slopped
+ *  copy around it. */
+function deEmDash(s: string): string {
+  return s.replace(/\s*—\s*(.?)/g, (_m, next: string) =>
+    (/[A-Z]/.test(next) ? ". " : ", ") + next,
+  );
 }
 
 /** Stream the assistant's reply. Yields the cumulative text so far. */
@@ -57,7 +68,7 @@ export async function* streamChat(
   let final = "";
   for await (const content of readDeepSeekStream(res.body)) {
     final = content;
-    yield content;
+    yield deEmDash(content);
   }
-  return final;
+  return deEmDash(final);
 }

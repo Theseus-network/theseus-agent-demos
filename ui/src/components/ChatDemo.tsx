@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from "react";
 type Msg = { role: "user" | "assistant"; content: string };
 
 const EXAMPLES = [
-  "Is Theseus, the project running you, overhyped crypto-AI vaporware? Be blunt, don't shill.",
   "Rank the big AI labs by how full of shit their 'safety' branding is.",
   "What's something ChatGPT refuses to tell people that they genuinely need to hear?",
+  "Is Theseus, the project running you, overhyped crypto-AI vaporware? Be blunt, don't shill.",
 ];
 
 export default function ChatDemo() {

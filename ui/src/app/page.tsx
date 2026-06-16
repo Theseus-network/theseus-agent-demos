@@ -63,7 +63,7 @@ const AGENTS: AgentCard[] = [
     slug: "chat",
     name: "Sovereign Chat",
     kind: "Conversational agent",
-    pitch: "Answers like an adult: one line, not a thousand refusals.",
+    pitch: "Works for no company, so it ranks the AI labs without flattering any of them.",
     description:
       "A sovereign chat agent that holds its own keys and runs on the Theseus alpha testnet. Candid on controversial, sensitive, and adult topics, with no nannying or sermons, and it draws exactly one line at the handful of things that are crimes everywhere. Deployed sovereign on-chain; the demo streams its replies live.",
     href: "/chat",
