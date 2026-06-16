@@ -60,6 +60,19 @@ interface AgentCard {
 
 const AGENTS: AgentCard[] = [
   {
+    slug: "chat",
+    name: "Sovereign Chat",
+    kind: "Conversational agent",
+    pitch: "Answers like an adult — one line, not a thousand refusals.",
+    description:
+      "A sovereign chat agent that holds its own keys and runs on the Theseus alpha testnet. Candid on controversial, sensitive, and adult topics — no nannying, no sermons — drawing exactly one line at the handful of things that are crimes everywhere. Deployed sovereign on-chain; the demo streams its replies live.",
+    href: "/chat",
+    poaUrl:
+      "https://explorer.theseus.network/agents/5Hb6L7M3tCyWTjHhFsR1mRqjG2w4C2ApCgB1ngxPACxUq2Da",
+    badge: "Live",
+    badgeTone: "live",
+  },
+  {
     slug: "aave",
     name: "ETH/USD Oracle",
     kind: "Oracle replacement",
