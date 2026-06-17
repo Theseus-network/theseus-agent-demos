@@ -1,3 +1,8 @@
+---
+title: Launch Sniper
+lastUpdated: 2026-06-17
+---
+
 # Launch Sniper (`/launch-sniper`)
 
 **Watches Base for fresh Uniswap V3 launches. Reviews each one. Mostly passes.** The agent builds a multi-source dossier on every new pool and decides BUY (paper) or PASS.
@@ -53,3 +58,7 @@ The Phase 2 dossier degrades gracefully — if `ETHERSCAN_API_KEY` or `BRAVE_SEA
 ## On-chain
 
 Ticks are written to [LaunchSniperFund](https://sepolia.basescan.org/address/0xa6FbaadeA4e7f58D812D989737D708B279E8bd21). Every tick — BUY or PASS — counts toward `tickCount()`.
+
+---
+
+_Last updated: June 17, 2026._

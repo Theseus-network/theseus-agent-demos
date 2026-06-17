@@ -1,3 +1,8 @@
+---
+title: Terra Failsafe
+lastUpdated: 2026-06-17
+---
+
 # Terra Failsafe (`/terra`)
 
 **Gates mint and redeem on a Terra-shaped algorithmic stable.** The agent reviews the live vault state plus the live Frax peg and decides whether to honor the next mint or redeem. Refusal halts the mechanism until conditions clear.
@@ -31,3 +36,7 @@ Synthetic presets reproduce specific death-spiral cells (calm / accelerating / l
 ## On-chain
 
 Each decision becomes a `latestTimestamp(MINT)` or `latestTimestamp(REDEEM)` write on [TerraFailsafe](https://sepolia.basescan.org/address/0x0B59da3768CB0F1725A1C2183dD1Ad93058394d2). The contract stores latest-per-action rather than a full history; the agent signs the dossier hash on every decision.
+
+---
+
+_Last updated: June 17, 2026._

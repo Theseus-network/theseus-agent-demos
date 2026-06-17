@@ -1,3 +1,8 @@
+---
+title: Governance Reviewer
+lastUpdated: 2026-06-17
+---
+
 # Governance Reviewer (`/governance`)
 
 **Reads DAO proposals before voting opens.** The agent pulls a live Arbitrum DAO Snapshot proposal, reads the calldata + the rationale, and emits a verdict (APPROVE / CAUTION / REJECT).
@@ -31,3 +36,7 @@ Traffic-light: APPROVE (green), CAUTION (amber), REJECT (red). The verdict block
 ## On-chain
 
 Proposals reviewed are written to [GovernanceReviewer](https://sepolia.basescan.org/address/0xc9CCF578093603e419997358fa9646Bd891B018a). `touchedProposalCount()` increments per proposal reviewed.
+
+---
+
+_Last updated: June 17, 2026._

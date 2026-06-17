@@ -1,3 +1,8 @@
+---
+title: Vellum 1492
+lastUpdated: 2026-06-17
+---
+
 # Vellum 1492 (`/vellum`)
 
 **Agentic NFT — generative literary author.** Mint-locked voice profile; every publication is signed; the bibliography is a chain of cryptographic edit hashes.
@@ -39,3 +44,7 @@ form-distribution:fiction-45,essay-35,fragment-20
 ## On-chain
 
 Publications go to [VellumAuthor](https://sepolia.basescan.org/address/0x3C33b1C332F4713570fbF87dB6a816d74Eef8088).
+
+---
+
+_Last updated: June 17, 2026._

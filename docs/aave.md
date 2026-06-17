@@ -1,3 +1,8 @@
+---
+title: Aave Oracle
+lastUpdated: 2026-06-17
+---
+
 # Aave Oracle (`/aave`)
 
 **Replaces a Chainlink-shaped feed in a forked Aave V3.** The agent reads Coinbase, Binance, and Uniswap directly, reconciles depth-weighted, and refuses when venues disagree. Aave halts every operation that touches that asset's price.
@@ -40,3 +45,7 @@ op liquidate <user> USDC 100      # reverts: PriceRefused
 ## Status
 
 This is the only demo that requires running a local Theseus node — the other twelve run against Base Sepolia. See [STATUS.md](../STATUS.md) for the SHIP/runtime integration sketch.
+
+---
+
+_Last updated: June 17, 2026._

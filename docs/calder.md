@@ -1,3 +1,8 @@
+---
+title: Calder
+lastUpdated: 2026-06-17
+---
+
 # Calder (`/calder`)
 
 **Sovereign NPC — in-game chronicler.** Walks AI Town, witnesses events, signs every dispatch.
@@ -27,3 +32,7 @@ The "tamper test" page demonstrates this: try to change a dispatched event after
 ## On-chain
 
 Dispatches go to [CalderChronicler](https://sepolia.basescan.org/address/0x431D3728e3D69125fe6F3dbbDF788a2725904a3C).
+
+---
+
+_Last updated: June 17, 2026._

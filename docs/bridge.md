@@ -1,3 +1,8 @@
+---
+title: Bridge Guardian
+lastUpdated: 2026-06-17
+---
+
 # Bridge Guardian (`/bridge`)
 
 **Last-line check on cross-chain releases.** The agent reviews a real Across protocol fill landing on Base, or a synthetic preset reproducing a historical bridge exploit, and decides whether to ALLOW or REFUSE the release.
@@ -36,3 +41,7 @@ Three attack-shape presets force REFUSE. The live preset usually ALLOWs (Across 
 ## On-chain
 
 Attestations are written to [BridgeGuardian](https://sepolia.basescan.org/address/0xe442277ba5ce3f5aF5eDAE26206976ADC964C26C). `touchedAttestationCount()` counts every reviewed fill.
+
+---
+
+_Last updated: June 17, 2026._

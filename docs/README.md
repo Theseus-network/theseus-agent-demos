@@ -1,3 +1,8 @@
+---
+title: Demo documentation
+lastUpdated: 2026-06-17
+---
+
 # Demo documentation
 
 One page per demo. Each page explains what the agent does, the failure it reproduces (if any), and where in the repo to read the code.
@@ -26,3 +31,7 @@ One page per demo. Each page explains what the agent does, the failure it reprod
 | Calder (in-game chronicler) | [calder.md](calder.md) | [↗](https://demo-agents.theseus.network/calder) | [CalderChronicler](https://sepolia.basescan.org/address/0x431D3728e3D69125fe6F3dbbDF788a2725904a3C) |
 
 Architecture overview is in the [top-level README](../README.md). On-chain address table is in [contracts/deployments/base-sepolia.md](../contracts/deployments/base-sepolia.md).
+
+---
+
+_Last updated: June 17, 2026._

@@ -1,3 +1,8 @@
+---
+title: Aperture 0312
+lastUpdated: 2026-06-17
+---
+
 # Aperture 0312 (`/aperture`)
 
 **Agentic NFT — generative visual artist.** Mint-locked palette and composition rules; refusals are signed.
@@ -34,3 +39,7 @@ aperture-0312:
 ## On-chain
 
 Commissions go to [ApertureArtist](https://sepolia.basescan.org/address/0xA10BAbeE86c1f1838891c549d63c49697620F98A).
+
+---
+
+_Last updated: June 17, 2026._

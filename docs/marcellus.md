@@ -1,3 +1,8 @@
+---
+title: Marcellus
+lastUpdated: 2026-06-17
+---
+
 # Marcellus (`/marcellus`)
 
 **AI persona — music critic.** Signed canon, closed lexicon, refuses paid coverage on the record.
@@ -42,3 +47,7 @@ marcellus:
 ## On-chain
 
 Reviews go to [MarcellusCritic](https://sepolia.basescan.org/address/0xd9E4DceBb96c6361Be45a03c8ED6C8f21e5635DF).
+
+---
+
+_Last updated: June 17, 2026._

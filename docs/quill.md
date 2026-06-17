@@ -1,3 +1,8 @@
+---
+title: Quill
+lastUpdated: 2026-06-17
+---
+
 # Quill (`/quill`)
 
 **AI collaborator — legal drafting with citation verification.** Per-span signatures; catches fabricated citations under ABA Model Rule 3.3.
@@ -31,3 +36,7 @@ Per span: VERIFIED (CourtListener has the case + correct citation), DISTINGUISHA
 ## On-chain
 
 Per-span verdicts go to [QuillCoAuthor](https://sepolia.basescan.org/address/0x4ED9F5318354Bc044661cee3343bdBB955F78e06). `touchedIdCount()` increments per verification.
+
+---
+
+_Last updated: June 17, 2026._

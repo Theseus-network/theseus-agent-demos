@@ -1,3 +1,8 @@
+---
+title: Aviation Safety Reviewer
+lastUpdated: 2026-06-17
+---
+
 # Aviation Safety Reviewer (`/aviation`)
 
 **Independent second opinion on aircraft type-certification changes.** The agent reads a live FAA Airworthiness Directive and emits FILED or REFUSED with a written critique.
@@ -31,3 +36,7 @@ FILED (green) or REFUSED (red). The agent's role is the independent reviewer —
 ## On-chain
 
 Reviews are written to [AviationSafetyReviewer](https://sepolia.basescan.org/address/0x453cE65E5D6eBc6C71f3e420e720d2C2E1D03bce). `touchedChangeCount()` increments per AD reviewed.
+
+---
+
+_Last updated: June 17, 2026._
