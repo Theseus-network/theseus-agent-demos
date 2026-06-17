@@ -83,8 +83,9 @@ export const MARKETS: PredictionMarket[] = [
     outcomeNote:
       "Polymarket never defined 'suit.' At the June 24 NATO summit Zelenskyy wore a black jacket, matching trousers, and a collared shirt, an outfit numerous outlets called a suit and numerous others did not. UMA finalized NO on a roughly $237M market, ruling that the reporting consensus the criterion required had not been established. When the criterion rests on a consensus that genuinely did not exist, UNRESOLVABLE is the honest call: the record itself never settled it.",
   },
-  // Real UMA dispute, ambiguity in the criterion itself. The sale happened in
-  // May but was disclosed in June, and the rule never said which one counts.
+  // Real UMA dispute, the second whale-swung oracle. The sale closed inside the
+  // deadline (May 26-31) but was disclosed June 1; UMA's vote counted only the
+  // disclosure date and ruled NO. The agent dates the transaction and returns YES.
   {
     id: "strategy-btc-may-2026",
     marketId: 2003,
@@ -94,14 +95,12 @@ export const MARKETS: PredictionMarket[] = [
     deadline: "May 31, 2026, 11:59 PM ET",
     deadlineISO: "2026-05-31",
     resolutionCriteria:
-      "Resolves YES if Strategy (MSTR) sold any bitcoin by May 31, 2026, 11:59 PM ET. The rules do not state whether the sale must have occurred by the deadline or have been publicly confirmed by it.",
+      "Resolves YES if Strategy (MSTR) executed any bitcoin sale on or before May 31, 2026, 11:59 PM ET, as shown by the transaction dates in its SEC filings. The date a filing is published does not control; the sale date does.",
     resolutionSource: "Strategy's SEC filings and official disclosures",
     actualResolution: {
       winningOption: 1,
-      note: "Polymarket's UMA vote ruled the May contract NO, counting only the June 1 disclosure date, a reading swung by a few large holders. The sale itself closed May 26-31, inside the deadline, so the literal reading of 'sold by May 31' is YES. The agent dates the transaction, not the contested vote.",
+      note: "Strategy sold 32 BTC between May 26 and 31, 2026, its first net sale since 2022, and disclosed it in an 8-K on June 1. Polymarket's UMA vote ruled the May 31 contract NO with 98.6% of voting power, counting only the June 1 disclosure date, a reading swung by a few large holders. The sale closed inside the deadline, so the record reads YES. The agent dates the transaction, not the contested vote.",
     },
-    outcomeNote:
-      "Strategy sold 32 BTC between May 26 and 31 but disclosed it in an 8-K on June 1. The criterion never said whether 'sold by May 31' means the sale occurred or was confirmed by then, so the same facts support both YES (it happened in May) and NO (it was only confirmed in June). UMA voters, swung by a few large holders, ruled the May contract NO. The ambiguity is in the criterion itself, which is the textbook case for UNRESOLVABLE.",
   },
   // Clean commit, YES: criteria clearly met, primary sources name the outcome.
   {
