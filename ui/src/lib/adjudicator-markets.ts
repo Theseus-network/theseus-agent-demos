@@ -66,9 +66,11 @@ export const MARKETS: PredictionMarket[] = [
       note: "Polymarket's oracle resolved YES, but no US-Ukraine agreement had been reached by the March 31 deadline (the February 28 Oval Office meeting collapsed without a signing; a framework came only weeks later). The 'Yes' was forced by a single UMA whale holding roughly 5M governance tokens, which Polymarket called an unprecedented governance attack and refused to refund. An agent that reads the record returns NO, and a token-voting whale cannot move it.",
     },
   },
-  // Real UMA dispute, genuinely indeterminate. Polymarket never defined "suit"
-  // and the reporting consensus the criterion requires never formed. The
-  // honest verdict is UNRESOLVABLE.
+  // Real UMA dispute, the UNRESOLVABLE showcase. Credible reporting split on
+  // whether the NATO-summit outfit (jacket, trousers, collared shirt, no tie)
+  // counted as a suit. The criterion's source is a consensus of credible
+  // reporting, and that consensus never formed, so the agent's confidence lands
+  // below the 80 bar and it returns UNRESOLVABLE. UMA's whale-swung vote ruled NO.
   {
     id: "zelensky-suit-2025",
     marketId: 2002,
@@ -81,7 +83,7 @@ export const MARKETS: PredictionMarket[] = [
       "This market will resolve YES if Volodymyr Zelenskyy is photographed or videotaped wearing a suit between May 22 and June 30, 2025 ET. The images or video must be taken and released within the market's timeframe, and must be authentic, not the result of AI or video editing. The resolution source is a consensus of credible reporting.",
     resolutionSource: "Consensus of credible reporting",
     outcomeNote:
-      "Polymarket never defined 'suit.' At the June 24 NATO summit Zelenskyy wore a black jacket, matching trousers, and a collared shirt, an outfit numerous outlets called a suit and numerous others did not. UMA finalized NO on a roughly $237M market, ruling that the reporting consensus the criterion required had not been established. When the criterion rests on a consensus that genuinely did not exist, UNRESOLVABLE is the honest call: the record itself never settled it.",
+      "At the June 24 NATO summit Zelenskyy wore a jacket, matching trousers, and a collared shirt. Some credible outlets called it a suit and others did not, and UMA finalized the roughly $237M market NO on a no-consensus reading swung by a few large holders. The criterion's source is a consensus of credible reporting, and that consensus never formed. With the record this split, the agent's confidence sits below the 80 bar, so it returns UNRESOLVABLE and sends the question to human dispute rather than committing on a contested call.",
   },
   // Real UMA dispute, run on Polymarket's original (deliberately un-tightened)
   // rule. Strategy sold 32 BTC May 26-31, 2026 but disclosed it June 1; the rule

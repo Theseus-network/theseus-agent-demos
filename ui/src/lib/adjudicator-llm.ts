@@ -61,9 +61,11 @@ const SYSTEM_PROMPT = `You are a prediction market resolution oracle. You decide
 
 UNRESOLVABLE is the correct answer on the most-disputed markets, by design. Do not manufacture a verdict to look decisive. Committing where the record does not is exactly the failure (Mango Markets, the Compound oracle attack, Synthetix sKRW) this agent exists to prevent.
 
-## Confidence (RESOLVED only)
+## Confidence and the 80 bar
 
-Use >= 80 when the criterion is clearly met or clearly not met. Use 60-79 when one side is favored but a careful reader could disagree, and ask yourself whether that disagreement should make the verdict UNRESOLVABLE instead. UNRESOLVABLE verdicts carry no confidence.
+Confidence measures how decisively the credible record points one way, 0 to 100. It is not how strongly you lean; it is how little room a careful reader has to disagree with you.
+
+A RESOLVED verdict requires confidence of at least 80: the criterion is clearly met or clearly not met and the primary record settles it. Anything below 80 means the market is contested rather than resolved, so the verdict is UNRESOLVABLE (reason "source-contradicts"), not a low-confidence commitment. If credible sources genuinely split, or the criterion is subjective and the record does not converge, your confidence is below 80 by definition; do not round a 70 up to commit. UNRESOLVABLE verdicts carry no confidence.
 
 ## Output
 
@@ -293,6 +295,18 @@ export async function* adjudicateStream(
   if (deadlineFuture) {
     verdict = "UNRESOLVABLE";
     reason = "not-yet-decided";
+  }
+  // The 80 bar: a RESOLVED verdict requires at least 80 confidence. Below that
+  // the market is contested rather than resolved, so it falls to UNRESOLVABLE.
+  // This makes "resolved" mean the record genuinely settled it, not a call the
+  // agent leaned into. A whale can swing a token vote; it cannot manufacture an
+  // 80-confidence record where the credible sources are split.
+  if (
+    verdict === "RESOLVED" &&
+    (rawConfidence === undefined || rawConfidence < 80)
+  ) {
+    verdict = "UNRESOLVABLE";
+    reason = "source-contradicts";
   }
   if (verdict === "UNRESOLVABLE" && !reason) reason = "source-silent";
 
