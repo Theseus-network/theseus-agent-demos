@@ -59,8 +59,8 @@ export const MARKETS: PredictionMarket[] = [
     deadline: "March 31, 2025, 11:59 PM ET",
     deadlineISO: "2025-03-31",
     resolutionCriteria:
-      "Resolves YES if the United States and Ukraine agree to any deal between February 2 and March 31, 2025, 11:59 PM ET, that explicitly involves Ukrainian rare earth elements: an exchange for aid, a partnership, mining rights, or any cooperation involving these resources. An announcement qualifies regardless of implementation timing. Official government statements are the resolution source.",
-    resolutionSource: "Official US and Ukrainian government statements",
+      "This market will resolve YES if the United States and Ukraine agree to any deal between February 2 and March 31, 2025, 11:59 PM ET, that explicitly involves Ukrainian rare earth elements. This includes, but is not limited to, the exchange of Ukrainian rare earths for U.S. aid (military or civilian), partnerships involving rare earth metals, future rights to rare earth resources, mining rights, or any other form of cooperation related to rare earth elements. An announcement of a deal will qualify regardless of if/when the deal is enacted. A mineral deal which grants the United States access or rights to rare earth elements will qualify even if 'rare earths' aren't specifically named in the deal. The resolution source is official information from the governments of the US and Ukraine.",
+    resolutionSource: "Official information from the governments of the US and Ukraine",
     actualResolution: {
       winningOption: 0,
       note: "Polymarket's oracle resolved YES, but no US-Ukraine agreement had been reached by the March 31 deadline (the February 28 Oval Office meeting collapsed without a signing; a framework came only weeks later). The 'Yes' was forced by a single UMA whale holding roughly 5M governance tokens, which Polymarket called an unprecedented governance attack and refused to refund. An agent that reads the record returns NO, and a token-voting whale cannot move it.",
@@ -78,14 +78,16 @@ export const MARKETS: PredictionMarket[] = [
     deadline: "June 30, 2025 ET",
     deadlineISO: "2025-06-30",
     resolutionCriteria:
-      "Resolves YES if Volodymyr Zelenskyy is photographed or filmed wearing a suit between May 22 and June 30, 2025 (ET). The images or video must be authentic, not AI-generated or edited. The resolution source is a consensus of credible reporting. Resolves NO otherwise.",
+      "This market will resolve YES if Volodymyr Zelenskyy is photographed or videotaped wearing a suit between May 22 and June 30, 2025 ET. The images or video must be taken and released within the market's timeframe, and must be authentic, not the result of AI or video editing. The resolution source is a consensus of credible reporting.",
     resolutionSource: "Consensus of credible reporting",
     outcomeNote:
       "Polymarket never defined 'suit.' At the June 24 NATO summit Zelenskyy wore a black jacket, matching trousers, and a collared shirt, an outfit numerous outlets called a suit and numerous others did not. UMA finalized NO on a roughly $237M market, ruling that the reporting consensus the criterion required had not been established. When the criterion rests on a consensus that genuinely did not exist, UNRESOLVABLE is the honest call: the record itself never settled it.",
   },
-  // Real UMA dispute, the second whale-swung oracle. The sale closed inside the
-  // deadline (May 26-31) but was disclosed June 1; UMA's vote counted only the
-  // disclosure date and ruled NO. The agent dates the transaction and returns YES.
+  // Real UMA dispute, run on Polymarket's original (deliberately un-tightened)
+  // rule. Strategy sold 32 BTC May 26-31, 2026 but disclosed it June 1; the rule
+  // never said whether the sale must occur or be confirmed inside the window.
+  // UMA's whale-swung vote ruled NO on the confirmed-late reading. The agent's
+  // verdict is whatever the record supports, not a pre-tuned answer.
   {
     id: "strategy-btc-may-2026",
     marketId: 2003,
@@ -95,12 +97,14 @@ export const MARKETS: PredictionMarket[] = [
     deadline: "May 31, 2026, 11:59 PM ET",
     deadlineISO: "2026-05-31",
     resolutionCriteria:
-      "Resolves YES if Strategy (MSTR) executed any bitcoin sale on or before May 31, 2026, 11:59 PM ET, as shown by the transaction dates in its SEC filings. The date a filing is published does not control; the sale date does.",
-    resolutionSource: "Strategy's SEC filings and official disclosures",
+      "This market will resolve YES if Strategy (MSTR) sells any amount of bitcoin by May 31, 2026, 11:59 PM ET. The resolution source will be information from MSTR, on-chain data, or a consensus of credible reporting.",
+    resolutionSource: "Information from MSTR, on-chain data, or credible reporting",
     actualResolution: {
       winningOption: 1,
-      note: "Strategy sold 32 BTC between May 26 and 31, 2026, its first net sale since 2022, and disclosed it in an 8-K on June 1. Polymarket's UMA vote ruled the May 31 contract NO with 98.6% of voting power, counting only the June 1 disclosure date, a reading swung by a few large holders. The sale closed inside the deadline, so the record reads YES. The agent dates the transaction, not the contested vote.",
+      note: "Strategy sold 32 BTC between May 26 and 31, 2026, its first net sale since 2022, and disclosed it in an 8-K on June 1. Polymarket's UMA vote ruled the May 31 contract NO with 98.6% of voting power, reasoning that no confirmation existed within the market's timeframe. The sale itself closed inside the deadline.",
     },
+    outcomeNote:
+      "Strategy sold 32 BTC May 26-31 but disclosed it in an 8-K on June 1. The rule never said whether 'sold by May 31' means the sale occurred or was confirmed by then. UMA voters, swung by a few large holders, ruled NO on the confirmed-late reading.",
   },
   // Clean commit, YES: criteria clearly met, primary sources name the outcome.
   {
