@@ -270,13 +270,12 @@ export default function AdjudicatePage() {
           </div>
 
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
-            An agent that resolves prediction markets by searching the web
-            for evidence, and refuses to commit when the record doesn&rsquo;t
-            settle the question. A wrong resolution pays a market out on the
-            wrong truth; on contested or premature questions it returns
-            UNRESOLVABLE instead. The agent runs sovereign on the Theseus
-            testnet, holds its own keys, and publishes its verbatim system
-            prompt on chain.
+            This agent resolves prediction markets by searching the web and
+            reading the primary sources. It commits only when the evidence
+            clears an 80% confidence bar. When the record is too thin or too
+            split, it returns UNRESOLVABLE instead of guessing. It runs
+            sovereign on the Theseus testnet, with its system prompt published
+            on chain.
           </p>
 
           <div className="mb-3">
