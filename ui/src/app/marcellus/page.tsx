@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { demoMetadata } from "@/lib/demo-copy";
 import Link from "next/link";
 import { TopBar } from "@/components/TopBar";
 import MarcellusDemo from "@/components/poa/MarcellusDemo";
@@ -7,21 +7,7 @@ import DemoCTA from "@/components/DemoCTA";
 const POA_ID = "5NpL3rT6eX9wK1mY4dC8bH5fJ2vA7sZ3oQ6gP1nM9hRyB2k";
 const POA_URL = `https://theseus.network/poa/${POA_ID}`;
 
-const TITLE = "Marcellus · AI music critic with signed independence";
-const DESCRIPTION =
-  "An AI music critic with a fixed signed persona. Submit your own album for review; watch a paid-coverage offer arrive and the refusal sign onto the public record.";
-
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/marcellus" },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: "/marcellus",
-    type: "website",
-  },
-};
+export const metadata = demoMetadata("marcellus");
 
 export default function MarcellusPage() {
   return (

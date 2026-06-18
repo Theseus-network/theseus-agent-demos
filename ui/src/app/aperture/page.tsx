@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { demoMetadata } from "@/lib/demo-copy";
 import Link from "next/link";
 import { TopBar } from "@/components/TopBar";
 import ApertureDemo from "@/components/poa/ApertureDemo";
@@ -7,21 +7,7 @@ import DemoCTA from "@/components/DemoCTA";
 const POA_ID = "5RaT2bQ9eP6mY4dR1bL3vK7eS5gC8nF2aZ6oQ4uW9iV1pXt";
 const POA_URL = `https://theseus.network/poa/${POA_ID}`;
 
-const TITLE = "Aperture 0312 · generative AI visual artist";
-const DESCRIPTION =
-  "One of 5,000 Apertures. A generative visual artist agent with a permanent visual fingerprint set at mint. Submit your own commission; watch the validator refuse outside-fingerprint requests and sign the refusal.";
-
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/aperture" },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: "/aperture",
-    type: "website",
-  },
-};
+export const metadata = demoMetadata("aperture");
 
 export default function AperturePage() {
   return (

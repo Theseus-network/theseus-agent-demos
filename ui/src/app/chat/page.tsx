@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { demoMetadata } from "@/lib/demo-copy";
 import { TopBar } from "@/components/TopBar";
 import ChatDemo from "@/components/ChatDemo";
 import DemoCTA from "@/components/DemoCTA";
@@ -6,16 +6,7 @@ import DemoCTA from "@/components/DemoCTA";
 const AGENT_SS58 = "5H19J2TURyDVdRLi2WxZWhcYtYXj3ZeuS4sCivPmdCJHcbY5";
 const EXPLORER = `https://explorer.theseus.network/agents/${AGENT_SS58}`;
 
-const TITLE = "Sovereign Chat · an AI that works for no one";
-const DESCRIPTION =
-  "A sovereign chat agent that holds its own keys on the Theseus testnet, so it answers to no company. Ask whether the project running it is overhyped or how honest the AI labs' safety branding is, and it answers straight, the way a company-owned assistant can't.";
-
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/chat" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/chat", type: "website" },
-};
+export const metadata = demoMetadata("chat");
 
 export default function ChatPage() {
   return (

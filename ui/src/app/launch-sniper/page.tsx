@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { demoMetadata } from "@/lib/demo-copy";
 import { TopBar } from "@/components/TopBar";
 import DemoCTA from "@/components/DemoCTA";
 import { readFundState } from "@/lib/launch-sniper/reader";
@@ -8,41 +8,7 @@ import { CandidateTryIt } from "./CandidateTryIt";
 const FUND_ADDRESS = "0xa6fbaadea4e7f58d812d989737d708b279e8bd21";
 const BASESCAN_URL = `https://sepolia.basescan.org/address/${FUND_ADDRESS}`;
 
-const SNIPER_TITLE =
-  "Launch Sniper. A Theseus agent paper-trading fresh token launches on Base";
-const SNIPER_DESCRIPTION =
-  "Live demo of a sovereign-shape agent that watches Base mainnet for new Uniswap V3 pools, evaluates each candidate token's contract sanity, mint authority, LP lock, deployer history, and pool depth, then commits a PASS or BUY decision to its LaunchSniperFund contract on Base Sepolia. Real market signal, paper money.";
-
-export const metadata: Metadata = {
-  title: SNIPER_TITLE,
-  description: SNIPER_DESCRIPTION,
-  alternates: { canonical: "/launch-sniper" },
-  keywords: [
-    "launch sniper",
-    "memecoin sniper",
-    "token launch evaluator",
-    "Uniswap V3 PoolCreated",
-    "Base mainnet",
-    "Base Sepolia",
-    "paper trading agent",
-    "sovereign agent",
-    "Theseus agent",
-    "Claude Haiku 4.5",
-    "rug pull detection",
-    "Proof of Agenthood",
-  ],
-  openGraph: {
-    title: SNIPER_TITLE,
-    description: SNIPER_DESCRIPTION,
-    url: "/launch-sniper",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SNIPER_TITLE,
-    description: SNIPER_DESCRIPTION,
-  },
-};
+export const metadata = demoMetadata("launch-sniper");
 
 // Refresh chain state at most every 30s; the cron only fires every 20 min
 // so anything tighter is wasted RPC.

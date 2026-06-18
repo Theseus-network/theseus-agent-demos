@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { demoMetadata } from "@/lib/demo-copy";
 import Link from "next/link";
 import { TopBar } from "@/components/TopBar";
 import QuillDemo from "@/components/poa/QuillDemo";
@@ -7,21 +7,7 @@ import DemoCTA from "@/components/DemoCTA";
 const POA_ID = "5PqW7xY4vK9bN2cR5tM8eA1dJ3fG6hL9oP4sZ7uX2wV5nQ";
 const POA_URL = `https://theseus.network/poa/${POA_ID}`;
 
-const TITLE = "Quill · signed legal co-author with citation verification";
-const DESCRIPTION =
-  "An AI co-author for legal drafting. Read a signed brief, throw a fabricated citation at Quill, watch verify_citation flag it under Rule 11 / Rule 3.3.";
-
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/quill" },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: "/quill",
-    type: "website",
-  },
-};
+export const metadata = demoMetadata("quill");
 
 export default function QuillPage() {
   return (

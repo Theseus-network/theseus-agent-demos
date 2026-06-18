@@ -1,11 +1,7 @@
-import type { Metadata } from "next";
+import { demoMetadata } from "@/lib/demo-copy";
 import PredictNav from "@/components/predict/PredictNav";
 
-export const metadata: Metadata = {
-  title: "Theseus Predict · agent-settled prediction markets",
-  description:
-    "A prediction market where an AI agent reads the primary record and settles each market, instead of a token vote a few large holders can swing. Play-money testnet demo.",
-};
+export const metadata = demoMetadata("predict");
 
 export default function PredictLayout({
   children,

@@ -1,43 +1,18 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { TopBar } from "@/components/TopBar";
+import { demoMetadata } from "@/lib/demo-copy";
 
-const DIRECTORY_TITLE = "Theseus demo agents · thirteen autonomous agents";
-const DIRECTORY_DESCRIPTION =
-  "Thirteen Theseus agents you can run in a browser tab. Eight adjudication agents (price oracles, mechanism gates, governance and aviation reviewers, sovereign fund, launch sniper). Five non-adjudication agents (an NFT-shaped author and visual artist, a music-critic persona, a signed legal co-author, and a sovereign in-game chronicler). Each reasons from raw inputs, signs every step, and publishes its verbatim system prompt on Proof of Agenthood.";
-
-export const metadata: Metadata = {
-  title: DIRECTORY_TITLE,
-  description: DIRECTORY_DESCRIPTION,
-  alternates: { canonical: "/" },
+export const metadata = {
+  ...demoMetadata("home"),
   keywords: [
     "Theseus demo agents",
     "AI agent demos",
     "autonomous agents",
     "verifiable AI",
     "agent oracle",
-    "DeFi failsafe",
-    "Aave oracle",
-    "Terra Luna failsafe",
-    "Bridge guardian",
-    "DAO governance reviewer",
-    "aviation safety reviewer",
-    "sovereign fund",
-    "launch sniper",
     "prediction market resolver",
     "Proof of Agenthood",
   ],
-  openGraph: {
-    title: DIRECTORY_TITLE,
-    description: DIRECTORY_DESCRIPTION,
-    url: "/",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: DIRECTORY_TITLE,
-    description: DIRECTORY_DESCRIPTION,
-  },
 };
 
 interface AgentCard {

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { demoMetadata } from "@/lib/demo-copy";
 import Link from "next/link";
 import { TopBar } from "@/components/TopBar";
 import TamperTest from "@/components/poa/TamperTest";
@@ -7,21 +7,7 @@ import DemoCTA from "@/components/DemoCTA";
 const POA_ID = "5SbV3eF8nP2qL7mR1xY4kJ9wT6vG3bC8aZ5oH2dN4uV9iW";
 const POA_URL = `https://theseus.network/poa/${POA_ID}`;
 
-const TITLE = "Calder · sovereign in-game chronicler for AI Town";
-const DESCRIPTION =
-  "A sovereign in-game NPC. The resident chronicler of AI Town. Watch what happens when an operator tries to rewrite a dispatch; submit your own AI Town event and watch Calder file a signed dispatch.";
-
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/calder" },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: "/calder",
-    type: "website",
-  },
-};
+export const metadata = demoMetadata("calder");
 
 export default function CalderPage() {
   return (
