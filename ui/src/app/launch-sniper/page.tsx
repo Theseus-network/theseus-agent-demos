@@ -16,7 +16,7 @@ const SNIPER_DESCRIPTION =
 export const metadata: Metadata = {
   title: SNIPER_TITLE,
   description: SNIPER_DESCRIPTION,
-  alternates: { canonical: "/launch-sniper" },
+  alternates: { canonical: "https://theseus.network/demos/launch-sniper" },
   keywords: [
     "launch sniper",
     "memecoin sniper",

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: {
-    canonical: "/bridge",
+    canonical: "https://theseus.network/demos/bridge",
   },
   keywords: [
     "cross-chain bridge",

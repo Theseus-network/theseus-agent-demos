@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: {
-    canonical: "/aave",
+    canonical: "https://theseus.network/demos/aave",
   },
   keywords: [
     "Aave V3",

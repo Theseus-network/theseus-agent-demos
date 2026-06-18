@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: {
-    canonical: "/adjudicate",
+    canonical: "https://theseus.network/demos/adjudicate",
   },
   keywords: [
     "Polymarket",

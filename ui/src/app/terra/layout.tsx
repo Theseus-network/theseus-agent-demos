@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: {
-    canonical: "/terra",
+    canonical: "https://theseus.network/demos/terra",
   },
   keywords: [
     "Terra Luna",

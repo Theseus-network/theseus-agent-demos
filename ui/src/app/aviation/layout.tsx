@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: {
-    canonical: "/aviation",
+    canonical: "https://theseus.network/demos/aviation",
   },
   keywords: [
     "aviation safety",
