@@ -71,6 +71,18 @@ export const DEPLOYED_CONTRACTS = {
   },
 } as const satisfies Record<string, DeployedContract>;
 
+/**
+ * AgentEscrow: a real custody contract (not just a commitment surface).
+ * It holds eUSDC for two-party deals and pays out on the agent's verdict.
+ * `usdc` is a public-mint mock token so the demo faucet can dispense it.
+ */
+export const ESCROW = {
+  address: "0x7b1d5D2709334168A452955f378c6C20062249b6",
+  usdc: "0x6aaBC0dBC77Bb5F79781D42E2F58F1312bEf607B",
+  usdcDecimals: 6,
+  usdcSymbol: "eUSDC",
+} as const;
+
 /** True iff a contract has been deployed (non-zero address). Used to
  *  gate the on-chain commit step on the five new agent routes. */
 export function isContractDeployed(c: DeployedContract): boolean {

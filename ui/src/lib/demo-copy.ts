@@ -42,6 +42,20 @@ export const DEMO_COPY = {
       tag: "LIVE ODDS · AGENT-SETTLED",
     },
   },
+  escrow: {
+    path: "/escrow",
+    title: "Theseus Escrow · deals an agent settles",
+    description:
+      "On-chain escrow for two-party deals on Base Sepolia. Funds lock against a written brief; when the two sides disagree, a Theseus agent reads the deliverable and decides where the money goes.",
+    og: {
+      section: "theseus escrow",
+      headline: "Escrow an agent settles.",
+      blurb:
+        "Funds lock against a written brief. When the two sides disagree, an agent reads the work and decides where the money goes.",
+      url: "demo-agents.theseus.network/escrow",
+      tag: "RELEASE · REFUND · UNRESOLVABLE",
+    },
+  },
   adjudicate: {
     path: "/adjudicate",
     title: "Polymarket Adjudicator · a Theseus oracle that reads the record",

@@ -22,6 +22,15 @@ profile and are deployed from `contracts/script/Deploy*.s.sol`.
 | MarcellusCritic | [`0xd9E4DceBb96c6361Be45a03c8ED6C8f21e5635DF`](https://sepolia.basescan.org/address/0xd9E4DceBb96c6361Be45a03c8ED6C8f21e5635DF) | Authorship |
 | QuillCoAuthor | [`0x4ED9F5318354Bc044661cee3343bdBB955F78e06`](https://sepolia.basescan.org/address/0x4ED9F5318354Bc044661cee3343bdBB955F78e06) | Authorship |
 | CalderChronicler | [`0x431D3728e3D69125fe6F3dbbDF788a2725904a3C`](https://sepolia.basescan.org/address/0x431D3728e3D69125fe6F3dbbDF788a2725904a3C) | Authorship (NPC dispatch log) |
+| AgentEscrow | [`0x7b1d5D2709334168A452955f378c6C20062249b6`](https://sepolia.basescan.org/address/0x7b1d5D2709334168A452955f378c6C20062249b6) | Sovereign (real custody — holds funds) |
+| Escrow eUSDC (faucet token) | [`0x6aaBC0dBC77Bb5F79781D42E2F58F1312bEf607B`](https://sepolia.basescan.org/address/0x6aaBC0dBC77Bb5F79781D42E2F58F1312bEf607B) | Mock ERC-20 |
+
+`AgentEscrow` differs from the other surfaces: it is a real custody contract,
+not a commitment record. A buyer funds a deal against a written brief; the
+agent's `resolve()` moves the escrowed eUSDC to the side the record supports
+(or refunds the buyer on UNRESOLVABLE). Verified end to end on chain: a funded
+deal, disputed and settled RELEASE at 99%, paid the seller the full amount.
+Deployed from `script/DeployAgentEscrow.s.sol`; the app lives at `/escrow`.
 
 Hash preimages used at deploy (Vellum/Aperture/Marcellus only — Quill and Calder take no persona hash):
 

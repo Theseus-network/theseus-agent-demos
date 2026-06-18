@@ -2,8 +2,9 @@
 
 import { ReactNode, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider, createConfig, http } from "wagmi";
+import { WagmiProvider, http } from "wagmi";
 import { defineChain } from "viem";
+import { baseSepolia } from "viem/chains";
 import { RainbowKitProvider, darkTheme, getDefaultConfig } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -17,11 +18,18 @@ const theseus = defineChain({
   rpcUrls: { default: { http: [evmRpc] } },
 });
 
+// Base Sepolia is where the AgentEscrow custody contract lives.
+const baseSepoliaRpc =
+  process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC ?? "https://sepolia.base.org";
+
 const wagmiConfig = getDefaultConfig({
   appName: "Theseus Agent Oracle",
   projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || "theseus-agent-oracle",
-  chains: [theseus],
-  transports: { [theseus.id]: http(evmRpc) },
+  chains: [theseus, baseSepolia],
+  transports: {
+    [theseus.id]: http(evmRpc),
+    [baseSepolia.id]: http(baseSepoliaRpc),
+  },
   ssr: true,
 });
 
