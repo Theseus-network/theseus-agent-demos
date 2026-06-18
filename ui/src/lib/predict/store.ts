@@ -8,21 +8,25 @@ import {
   seedShares,
   sellProceeds,
 } from "./amm";
-import { genHistory, SEED_MARKETS } from "./seed";
+import { genHistory } from "./seed";
+import { fetchLiveMarkets, FALLBACK_MARKETS } from "./markets";
 import type {
   MarketRuntime,
   Outcome,
   Position,
+  SeedMarket,
   Settlement,
   Trade,
 } from "./types";
 
-const STORAGE_KEY = "theseus-predict-v1";
+const STORAGE_KEY = "theseus-predict-v2";
 const STARTING_BALANCE = 1_000;
 const FAUCET_AMOUNT = 1_000;
 
 export interface SettledPosition {
   marketId: number;
+  title: string;
+  icon: string;
   yesShares: number;
   noShares: number;
   costBasis: number;
@@ -33,35 +37,44 @@ export interface SettledPosition {
 
 export interface PredictState {
   hydrated: boolean;
+  live: boolean;
   balance: number;
   positions: Record<number, Position>;
   trades: Trade[];
   markets: Record<number, MarketRuntime>;
+  marketList: SeedMarket[];
   settlements: Record<number, Settlement>;
   settledPositions: SettledPosition[];
 }
 
 const EMPTY: PredictState = {
   hydrated: false,
+  live: false,
   balance: 0,
   positions: {},
   trades: [],
   markets: {},
+  marketList: [],
   settlements: {},
   settledPositions: [],
 };
 
-const seedMap = new Map(SEED_MARKETS.map((m) => [m.id, m]));
-export const liquidityB = (id: number) => seedMap.get(id)?.liquidityB ?? 5000;
-
 let state: PredictState = EMPTY;
 const listeners = new Set<() => void>();
+
+// Dynamic id -> market metadata map, rebuilt whenever the list changes.
+let metaMap = new Map<number, SeedMarket>();
+function rebuildMeta(list: SeedMarket[]) {
+  metaMap = new Map(list.map((m) => [m.id, m]));
+}
+
+export const marketMeta = (id: number) => metaMap.get(id);
+export const liquidityB = (id: number) => metaMap.get(id)?.liquidityB ?? 5000;
 
 function emit() {
   for (const l of listeners) l();
   persist();
 }
-
 function set(next: Partial<PredictState>) {
   state = { ...state, ...next };
   emit();
@@ -70,20 +83,25 @@ function set(next: Partial<PredictState>) {
 function persist() {
   if (typeof window === "undefined" || !state.hydrated) return;
   try {
-    const { balance, positions, trades, settlements, settledPositions, markets } =
-      state;
+    // Persist user state only. Market odds are reseeded live each load.
+    const { balance, positions, trades, settlements, settledPositions } = state;
     window.localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ balance, positions, trades, settlements, settledPositions, markets }),
+      JSON.stringify({ balance, positions, trades, settlements, settledPositions }),
     );
   } catch {
     /* quota / private mode — ignore */
   }
 }
 
-function seededMarkets(): Record<number, MarketRuntime> {
+function seedRuntime(list: SeedMarket[], keep: Record<number, MarketRuntime>): Record<number, MarketRuntime> {
   const out: Record<number, MarketRuntime> = {};
-  for (const m of SEED_MARKETS) {
+  for (const m of list) {
+    // Preserve runtime for markets the user already holds a position in.
+    if (keep[m.id] && state.positions[m.id]) {
+      out[m.id] = keep[m.id];
+      continue;
+    }
     const { qYes, qNo } = seedShares(m.initialYes, m.liquidityB);
     out[m.id] = {
       qYes,
@@ -99,12 +117,15 @@ let hydrating = false;
 function ensureHydrated() {
   if (state.hydrated || hydrating || typeof window === "undefined") return;
   hydrating = true;
+  rebuildMeta(FALLBACK_MARKETS);
   const base: PredictState = {
     hydrated: true,
+    live: false,
     balance: STARTING_BALANCE,
     positions: {},
     trades: [],
-    markets: seededMarkets(),
+    markets: seedRuntime(FALLBACK_MARKETS, {}),
+    marketList: FALLBACK_MARKETS,
     settlements: {},
     settledPositions: [],
   };
@@ -117,16 +138,23 @@ function ensureHydrated() {
       base.trades = saved.trades ?? [];
       base.settlements = saved.settlements ?? {};
       base.settledPositions = saved.settledPositions ?? [];
-      // Merge any persisted AMM drift over the seed (keeps prices the user moved).
-      if (saved.markets) {
-        for (const id of Object.keys(saved.markets)) base.markets[+id] = saved.markets[+id]!;
-      }
     }
   } catch {
-    /* corrupt store — fall back to seed */
+    /* corrupt store — fall back to fresh */
   }
   state = base;
   emit();
+  void loadLive();
+}
+
+async function loadLive() {
+  const { markets: list, live } = await fetchLiveMarkets();
+  rebuildMeta(list);
+  set({
+    marketList: list,
+    markets: seedRuntime(list, state.markets),
+    live,
+  });
 }
 
 // ---- external-store wiring -------------------------------------------------
@@ -145,11 +173,13 @@ export function usePredict(): PredictState {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
-// ---- derived helpers -------------------------------------------------------
+export function findMarketBySlug(s: PredictState, slug: string): SeedMarket | undefined {
+  return s.marketList.find((m) => m.slug === slug);
+}
 
 export function marketPriceYes(id: number): number {
   const m = state.markets[id];
-  if (!m) return seedMap.get(id)?.initialYes ?? 0.5;
+  if (!m) return metaMap.get(id)?.initialYes ?? 0.5;
   return priceYes(m.qYes, m.qNo, liquidityB(id));
 }
 
@@ -171,7 +201,7 @@ export function resetAccount() {
     trades: [],
     settlements: {},
     settledPositions: [],
-    markets: seededMarkets(),
+    markets: seedRuntime(state.marketList, {}),
   };
   emit();
 }
@@ -264,20 +294,19 @@ export function sell(marketId: number, side: Outcome, shares: number) {
 
 /** Apply the agent's verdict: pay winners, refund on UNRESOLVABLE, archive. */
 export function applySettlement(s: Settlement) {
-  if (state.settlements[s.marketId]) return; // already settled
+  if (state.settlements[s.marketId]) return;
   const pos = state.positions[s.marketId];
-  let payout = 0;
+  const meta = metaMap.get(s.marketId);
   if (pos) {
     const costBasis = pos.yesCost + pos.noCost;
-    if (s.verdict === "UNRESOLVABLE") {
-      payout = costBasis; // refund the cost basis, no forced loss
-    } else if (s.winningOutcome === "YES") {
-      payout = pos.yesShares; // each winning share pays $1
-    } else if (s.winningOutcome === "NO") {
-      payout = pos.noShares;
-    }
+    let payout = 0;
+    if (s.verdict === "UNRESOLVABLE") payout = costBasis;
+    else if (s.winningOutcome === "YES") payout = pos.yesShares;
+    else if (s.winningOutcome === "NO") payout = pos.noShares;
     const settled: SettledPosition = {
       marketId: s.marketId,
+      title: meta?.shortTitle ?? `Market ${s.marketId}`,
+      icon: meta?.icon ?? "•",
       yesShares: pos.yesShares,
       noShares: pos.noShares,
       costBasis,

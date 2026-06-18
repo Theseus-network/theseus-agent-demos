@@ -235,7 +235,7 @@ export const SEED_MARKETS: SeedMarket[] = [
       "Resolves YES if the BTC/USD daily close on June 15, 2026 was at or above $100,000.00, per a consensus of major exchange spot prices (Coinbase, Binance, Kraken). Resolves NO otherwise.",
     resolutionSource: "Consensus of major exchange spot prices",
     deadlineISO: "2026-06-15",
-    initialYes: 0.74,
+    initialYes: 0.23,
     liquidityB: 7000,
     volumeUsd: 12_800_000,
     resolvable: true,
@@ -253,12 +253,15 @@ export const SEED_MARKETS: SeedMarket[] = [
       "Resolves YES if the ETH/USD daily close on June 15, 2026 was at or above $2,500.00, per a consensus of major exchange spot prices (Coinbase, Binance, Kraken). Resolves NO otherwise.",
     resolutionSource: "Consensus of major exchange spot prices",
     deadlineISO: "2026-06-15",
-    initialYes: 0.63,
+    initialYes: 0.48,
     liquidityB: 6000,
     volumeUsd: 8_900_000,
     resolvable: true,
   },
 ];
+
+/** The just-closed markets, kept around so the agent settlement is demoable now. */
+export const DEMO_MARKETS: SeedMarket[] = SEED_MARKETS.filter((m) => m.resolvable);
 
 export function findSeed(slug: string): SeedMarket | undefined {
   return SEED_MARKETS.find((m) => m.slug === slug);

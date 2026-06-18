@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { priceYes as priceYesFn } from "@/lib/predict/amm";
 import { liquidityB, resetAccount, usePredict } from "@/lib/predict/store";
-import { findSeed, SEED_MARKETS } from "@/lib/predict/seed";
 import {
   cents,
   shares as fmtShares,
@@ -13,10 +12,12 @@ import {
   usd,
 } from "@/lib/predict/format";
 
-const byId = new Map(SEED_MARKETS.map((m) => [m.id, m]));
-
 export default function PortfolioPage() {
   const state = usePredict();
+  const byId = useMemo(
+    () => new Map(state.marketList.map((m) => [m.id, m])),
+    [state.marketList],
+  );
 
   const open = useMemo(() => {
     const rows: {
@@ -41,7 +42,7 @@ export default function PortfolioPage() {
         rows.push({ id: seed.id, slug: seed.slug, title: seed.shortTitle, icon: seed.icon, side: "NO", shares: pos.noShares, cost: pos.noCost, value: pos.noShares * (1 - pYes), price: 1 - pYes });
     }
     return rows;
-  }, [state]);
+  }, [state, byId]);
 
   const openValue = open.reduce((s, r) => s + r.value, 0);
   const openCost = open.reduce((s, r) => s + r.cost, 0);
@@ -131,7 +132,6 @@ export default function PortfolioPage() {
         <Section title="Resolved">
           <div className="overflow-hidden rounded-xl border border-border">
             {state.settledPositions.map((p, i) => {
-              const seed = byId.get(p.marketId);
               const realized = p.payout - p.costBasis;
               return (
                 <div
@@ -139,10 +139,10 @@ export default function PortfolioPage() {
                   className={`flex items-center gap-3 px-3 py-3 sm:px-4 ${i > 0 ? "border-t border-border" : ""}`}
                 >
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-border bg-surface/40 text-[15px]">
-                    {seed?.icon ?? "•"}
+                    {p.icon}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13.5px] text-fg">{seed?.shortTitle ?? `Market ${p.marketId}`}</p>
+                    <p className="truncate text-[13.5px] text-fg">{p.title}</p>
                     <p className="font-mono text-[11px] text-fg-mute">
                       {p.winningOutcome ? `Resolved ${p.winningOutcome}` : "Unresolvable · refunded"} · {timeAgo(p.settledAt)}
                     </p>

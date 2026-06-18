@@ -2,13 +2,9 @@
 
 export type Outcome = "YES" | "NO";
 
-export type MarketCategory =
-  | "Crypto"
-  | "Politics"
-  | "Tech"
-  | "Science"
-  | "Economy"
-  | "Culture";
+// Known buckets get a curated icon/filter; live Polymarket markets may carry
+// other strings, so the type stays open.
+export type MarketCategory = string;
 
 export type MarketStatus = "open" | "closed" | "resolving" | "resolved";
 

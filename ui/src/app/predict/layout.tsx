@@ -28,8 +28,9 @@ export default function PredictLayout({
           >
             Theseus adjudicator agent
           </a>
-          , which reads the public record rather than a token vote. Nothing here
-          is financial advice or an offer to trade.
+          , which reads the public record rather than a token vote. Odds and
+          volume are pulled live from Polymarket; the price-history charts are
+          illustrative. Nothing here is financial advice or an offer to trade.
         </div>
       </footer>
     </div>

@@ -3,52 +3,49 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import MarketCard from "@/components/predict/MarketCard";
-import { SEED_MARKETS } from "@/lib/predict/seed";
 import { liquidityB, usePredict } from "@/lib/predict/store";
 import { priceYes as priceYesFn } from "@/lib/predict/amm";
-import { compactUsd } from "@/lib/predict/format";
-import type { MarketCategory } from "@/lib/predict/types";
-import { isPast } from "@/lib/predict/format";
+import { compactUsd, isPast } from "@/lib/predict/format";
 
-const CATEGORIES: (MarketCategory | "All")[] = [
-  "All",
-  "Crypto",
-  "Politics",
-  "Tech",
-  "Economy",
-  "Science",
-  "Culture",
-];
+const CAT_ORDER = ["Crypto", "Politics", "Economy", "Tech", "Science", "Sports", "Trending"];
 type Sort = "volume" | "ending" | "new";
 
 export default function MarketsIndex() {
   const state = usePredict();
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<(typeof CATEGORIES)[number]>("All");
+  const [cat, setCat] = useState<string>("All");
   const [sort, setSort] = useState<Sort>("volume");
 
+  const categories = useMemo(() => {
+    const present = new Set(state.marketList.map((m) => m.category));
+    const ordered = CAT_ORDER.filter((c) => present.has(c));
+    const extra = [...present].filter((c) => !CAT_ORDER.includes(c));
+    return ["All", ...ordered, ...extra];
+  }, [state.marketList]);
+
   const rows = useMemo(() => {
-    const list = SEED_MARKETS.filter((m) => {
-      if (cat !== "All" && m.category !== cat) return false;
-      if (q && !m.question.toLowerCase().includes(q.toLowerCase())) return false;
-      return true;
-    }).map((seed) => {
-      const rt = state.markets[seed.id];
-      const price = rt
-        ? priceYesFn(rt.qYes, rt.qNo, liquidityB(seed.id))
-        : seed.initialYes;
-      return {
-        seed,
-        price,
-        history: rt?.history ?? [],
-        volume: rt?.volumeUsd ?? seed.volumeUsd,
-        settlement: state.settlements[seed.id],
-      };
-    });
+    const list = state.marketList
+      .filter((m) => {
+        if (cat !== "All" && m.category !== cat) return false;
+        if (q && !m.question.toLowerCase().includes(q.toLowerCase())) return false;
+        return true;
+      })
+      .map((seed) => {
+        const rt = state.markets[seed.id];
+        const price = rt
+          ? priceYesFn(rt.qYes, rt.qNo, liquidityB(seed.id))
+          : seed.initialYes;
+        return {
+          seed,
+          price,
+          history: rt?.history ?? [],
+          volume: rt?.volumeUsd ?? seed.volumeUsd,
+          settlement: state.settlements[seed.id],
+        };
+      });
     list.sort((a, b) => {
       if (sort === "volume") return b.volume - a.volume;
       if (sort === "new") return b.seed.id - a.seed.id;
-      // ending soon: open markets by nearest deadline, settled last
       const ap = isPast(a.seed.deadlineISO) ? 1 : 0;
       const bp = isPast(b.seed.deadlineISO) ? 1 : 0;
       if (ap !== bp) return ap - bp;
@@ -59,7 +56,7 @@ export default function MarketsIndex() {
 
   const totalVol = useMemo(
     () =>
-      SEED_MARKETS.reduce(
+      state.marketList.reduce(
         (s, m) => s + (state.markets[m.id]?.volumeUsd ?? m.volumeUsd),
         0,
       ),
@@ -83,8 +80,17 @@ export default function MarketsIndex() {
           watch the agent settle live.
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[12px] text-fg-mute">
+          {state.hydrated && (
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ background: state.live ? "var(--green)" : "var(--amber)" }}
+              />
+              {state.live ? "Live odds from Polymarket" : "Sample odds (Polymarket unavailable)"}
+            </span>
+          )}
           <span>
-            <span className="text-fg">{SEED_MARKETS.length}</span> markets
+            <span className="text-fg">{state.marketList.length}</span> markets
           </span>
           <span>
             <span className="text-fg">{compactUsd(totalVol)}</span> volume
@@ -104,7 +110,7 @@ export default function MarketsIndex() {
           className="w-full rounded-lg border border-border bg-surface/40 px-3 py-2 text-[14px] text-fg outline-none placeholder:text-fg-mute focus:border-coral sm:max-w-xs"
         />
         <div className="flex flex-1 items-center gap-2 overflow-x-auto pb-1">
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <button
               key={c}
               onClick={() => setCat(c)}

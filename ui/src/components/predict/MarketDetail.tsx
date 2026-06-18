@@ -5,15 +5,14 @@ import Link from "next/link";
 import PriceChart from "./PriceChart";
 import TradePanel from "./TradePanel";
 import ResolvePanel from "./ResolvePanel";
-import { findSeed } from "@/lib/predict/seed";
-import { liquidityB, usePredict } from "@/lib/predict/store";
+import { findMarketBySlug, liquidityB, usePredict } from "@/lib/predict/store";
 import { priceYes as priceYesFn } from "@/lib/predict/amm";
 import { cents, compactUsd, fmtDate, isPast, pct, untilDeadline } from "@/lib/predict/format";
 import type { Outcome } from "@/lib/predict/types";
 
 export default function MarketDetail({ slug }: { slug: string }) {
-  const seed = findSeed(slug);
   const state = usePredict();
+  const seed = findMarketBySlug(state, slug);
   const [initialSide, setInitialSide] = useState<Outcome>("YES");
 
   useEffect(() => {
@@ -21,7 +20,23 @@ export default function MarketDetail({ slug }: { slug: string }) {
     if (s === "NO") setInitialSide("NO");
   }, []);
 
-  if (!seed) return null;
+  if (!state.hydrated) {
+    return (
+      <main className="mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-5">
+        <div className="mt-10 h-64 animate-pulse rounded-xl border border-border bg-surface/30" />
+      </main>
+    );
+  }
+  if (!seed) {
+    return (
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-16 text-center">
+        <p className="text-fg-mute">This market isn&rsquo;t available right now.</p>
+        <Link href="/predict" className="mt-3 inline-block text-coral hover:underline">
+          ← Back to markets
+        </Link>
+      </main>
+    );
+  }
 
   const rt = state.markets[seed.id];
   const pYes = rt ? priceYesFn(rt.qYes, rt.qNo, liquidityB(seed.id)) : seed.initialYes;

@@ -10,9 +10,12 @@ import { fetchActiveMarkets } from "@/lib/polymarket";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const markets = await fetchActiveMarkets();
+    const sp = new URL(req.url).searchParams;
+    const take = Number(sp.get("take")) || undefined;
+    const limit = Number(sp.get("limit")) || undefined;
+    const markets = await fetchActiveMarkets({ take, limit });
     return NextResponse.json(
       { markets },
       {
