@@ -68,16 +68,17 @@ export default function MarketsIndex() {
       {/* Hero */}
       <section className="rounded-2xl border border-border bg-surface/40 p-6 sm:p-8">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">
-          Agent-settled prediction markets
+          Theseus Predict
         </p>
         <h1 className="mt-2 max-w-2xl font-serif text-[28px] leading-[1.1] tracking-tight text-fg sm:text-[38px]">
-          Markets settled by the record, not a token vote.
+          Prediction markets settled by an AI that reads the sources.
         </h1>
         <p className="mt-3 max-w-2xl text-[14.5px] leading-relaxed text-fg-dim">
-          Every market resolves when a sovereign Theseus agent reads the primary
-          source and commits a verdict, only when the evidence clears an 80%
-          confidence bar. No whale can outvote it. Trade with play-money USDC and
-          watch the agent settle live.
+          Most markets let a token vote decide the outcome, which a handful of
+          big holders can swing. Here, when a market closes, a Theseus agent reads
+          what actually happened and settles it. If the sources don&rsquo;t clearly
+          answer, it refuses to guess and refunds everyone. The questions and odds
+          are live from Polymarket; the money is play money. Try one.
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[12px] text-fg-mute">
           {state.hydrated && (

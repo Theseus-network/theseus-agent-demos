@@ -200,11 +200,10 @@ export default function ResolvePanel({ seed }: { seed: SeedMarket }) {
         <Header />
         <p className="mt-3 text-[13px] leading-relaxed text-fg-dim">
           This market is live. When it closes on{" "}
-          <span className="text-fg">{fmtDate(seed.deadlineISO)}</span>, the Theseus
-          adjudicator reads the resolution source, searches the public record, and
-          settles it. It commits only at 80%+ confidence; otherwise it returns
-          UNRESOLVABLE and positions are refunded. No token vote, nothing a whale
-          can swing.
+          <span className="text-fg">{fmtDate(seed.deadlineISO)}</span>, a Theseus
+          agent looks up what happened and settles it from the sources. If they
+          don&rsquo;t clearly answer, it refuses to guess and refunds everyone
+          instead. There&rsquo;s no token vote here for a big holder to swing.
         </p>
         <a
           href="/adjudicate"

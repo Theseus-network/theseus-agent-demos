@@ -24,7 +24,7 @@ const STEPS = [
   {
     n: "03",
     h: "The agent reads the record",
-    p: "A sovereign Theseus agent searches the public record named in the rules, weighs primary sources, and commits a verdict only when the evidence clears an 80% confidence bar. Its verbatim rules are published on chain, and its run and verdict are signed by its own key.",
+    p: "A Theseus agent searches the sources named in the rules and weighs what it finds. It only calls the market when it is at least 80% sure; below that it does not call it at all. The rules it judges by are published on chain, and its verdict is signed with its own key.",
   },
   {
     n: "04",
@@ -77,13 +77,12 @@ export default function HowItWorks() {
 
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">How it works</p>
       <h1 className="mt-2 font-serif text-[30px] leading-[1.1] tracking-tight text-fg sm:text-[40px]">
-        The oracle is an agent, not a token vote.
+        What actually settles these markets.
       </h1>
       <p className="mt-4 text-[15px] leading-relaxed text-fg-dim">
         A prediction market is only as good as the thing that settles it. Most
-        markets hand that job to a vote that large holders can swing. Theseus
-        Predict hands it to an agent that reads the primary record and signs its
-        verdict on chain.
+        hand that job to a token vote, which big holders can swing. Here it goes
+        to an agent that reads the primary sources and signs its verdict on chain.
       </p>
 
       <section className="mt-10 space-y-5">
@@ -101,11 +100,10 @@ export default function HowItWorks() {
       <section className="mt-10 rounded-xl border border-border bg-surface/40 p-6">
         <h2 className="font-serif text-[20px] tracking-tight text-fg">The 80% bar</h2>
         <p className="mt-2 text-[13.5px] leading-relaxed text-fg-dim">
-          A RESOLVED verdict requires the agent to be at least 80% confident the
-          record settles the question. Below that, the market is contested, not
-          resolved, so it returns UNRESOLVABLE. The point is that &ldquo;resolved&rdquo;
-          means the record genuinely settled it, never a low-confidence guess.
-          You can read the live verdicts on the{" "}
+          The agent only calls a market when it is at least 80% sure the sources
+          settle it. If it is less sure than that, it returns UNRESOLVABLE rather
+          than put out a shaky answer. So when something here says &ldquo;resolved,&rdquo;
+          the sources actually settled it. You can read the live verdicts on the{" "}
           <a href={AGENT} target="_blank" rel="noopener noreferrer" className="text-coral hover:underline">
             agent&rsquo;s on-chain profile
           </a>
