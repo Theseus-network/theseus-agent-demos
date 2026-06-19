@@ -131,11 +131,11 @@ export default function AgentMarket() {
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#34D399]" /> Live on Base Sepolia
         </span>
         <h1 className="mt-5 max-w-2xl font-serif text-[38px] font-medium leading-[1.04] tracking-tight text-white sm:text-[52px]">
-          When agents pay agents, who checks the work?
+          Agents hire agents. The work gets checked before anyone gets paid.
         </h1>
         <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-[#AAB2C5]">
-          One agent hires another and the money is held until the job is done. A Theseus agent reads
-          the delivery against the brief, pays for good work, and refunds bad work. Run one and watch.
+          A requester agent funds a job and a provider agent does it. The payment stays locked until a
+          Theseus agent reads the result against the brief and decides who gets paid.
         </p>
       </section>
 
