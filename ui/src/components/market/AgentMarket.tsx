@@ -7,10 +7,27 @@ const EXPLORER = "https://sepolia.basescan.org";
 const PANEL = "rounded-2xl border border-white/[0.07] bg-white/[0.03]";
 
 const PRESETS = [
-  { label: "Tagline", task: "Write a one-sentence product tagline for a reusable stainless steel water bottle, under 12 words." },
-  { label: "Translate", task: "Translate this exact sentence into French and output only the French: The quarterly report is due Friday at 5pm." },
-  { label: "Summarize", task: "Summarize this in one sentence: Q3 revenue grew 18% to $4.2M on enterprise renewals, while churn fell to 3% and headcount held flat." },
-  { label: "Name it", task: "Suggest 3 short, brandable product names for an AI note-taking app. One per line, nothing else." },
+  {
+    label: "Ship a contract",
+    budget: 120,
+    task: "Write a complete, production-ready Solidity ERC-721 contract: allowlist minting via a Merkle proof, a hard supply cap of 5,000, a per-wallet limit of 3, an owner-settable base URI, and full NatSpec on every external function. Output only the .sol file.",
+  },
+  {
+    label: "Audit the code",
+    budget: 90,
+    task:
+      "Audit this withdrawal function. Find every vulnerability, rank each by severity, and give the fix:\n\nfunction withdraw() external {\n    uint256 bal = balances[msg.sender];\n    (bool ok, ) = msg.sender.call{value: bal}(\"\");\n    require(ok, \"transfer failed\");\n    balances[msg.sender] = 0;\n}",
+  },
+  {
+    label: "Run intel",
+    budget: 45,
+    task: "Produce a sourced, five-point post-mortem of what actually caused the 2022 Terra/Luna collapse. Cite a primary source for each point. Output only the brief.",
+  },
+  {
+    label: "Make the call",
+    budget: 30,
+    task: "A token launched 40 minutes ago. Liquidity is 3.1 ETH and unlocked, the top wallet holds 41% of supply, the contract is unverified, and the mint function has no cap. Give a one-word verdict (APE or AVOID) and the three risks that decide it.",
+  },
 ];
 
 type Stage = "idle" | "posted" | "funded" | "working" | "delivered" | "verifying" | "settled";
@@ -42,7 +59,7 @@ function short(a: string) {
 
 export default function AgentMarket() {
   const [task, setTask] = useState(PRESETS[0].task);
-  const [budget, setBudget] = useState("5");
+  const [budget, setBudget] = useState(String(PRESETS[0].budget));
   const [mode, setMode] = useState<"diligent" | "lazy">("diligent");
   const [running, setRunning] = useState(false);
   const [stage, setStage] = useState<Stage>("idle");
@@ -156,12 +173,12 @@ export default function AgentMarket() {
       <section className={`${PANEL} mt-5 p-5`}>
         <div className="flex flex-wrap items-center gap-2">
           {PRESETS.map((p) => (
-            <button key={p.label} disabled={running} onClick={() => setTask(p.task)} className={`rounded-lg border px-3 py-1.5 text-[12.5px] font-medium transition-colors disabled:opacity-50 ${task === p.task ? "border-[#6366F1]/50 bg-[#6366F1]/10 text-[#A5B0FF]" : "border-white/10 text-[#AAB2C5] hover:text-white"}`}>
+            <button key={p.label} disabled={running} onClick={() => { setTask(p.task); setBudget(String(p.budget)); }} className={`rounded-lg border px-3 py-1.5 text-[12.5px] font-medium transition-colors disabled:opacity-50 ${task === p.task ? "border-[#6366F1]/50 bg-[#6366F1]/10 text-[#A5B0FF]" : "border-white/10 text-[#AAB2C5] hover:text-white"}`}>
               {p.label}
             </button>
           ))}
         </div>
-        <textarea value={task} onChange={(e) => setTask(e.target.value)} disabled={running} rows={2} className="mt-3 w-full resize-y rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white outline-none focus:border-[#6366F1] disabled:opacity-60" />
+        <textarea value={task} onChange={(e) => setTask(e.target.value)} disabled={running} rows={3} className="mt-3 max-h-44 w-full resize-y overflow-auto rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 font-mono text-[12.5px] leading-relaxed text-[#D4D9E4] outline-none focus:border-[#6366F1] disabled:opacity-60" />
         <div className="mt-3 flex flex-wrap items-center gap-4">
           <label className="flex items-center gap-2 text-[12.5px] text-[#8A93A6]">
             Budget

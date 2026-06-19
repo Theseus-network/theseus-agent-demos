@@ -17,7 +17,7 @@ export async function produceWork(brief: string, mode: ProviderMode): Promise<st
 
   const msg = await client.messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 1024,
+    max_tokens: 3000,
     system,
     messages: [{ role: "user", content: brief }],
   });
