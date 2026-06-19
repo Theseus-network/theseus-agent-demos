@@ -18,9 +18,6 @@ export default function EscrowNav() {
           <span className="text-[15px] font-semibold tracking-tight text-white">Agentic Escrow</span>
         </Link>
         <div className="flex items-center gap-5">
-          <a href="#how" className="hidden text-[13px] text-[#AAB2C5] transition-colors hover:text-white sm:block">
-            How it works
-          </a>
           <a
             href={basescanAddressUrl(ESCROW_ADDRESS)}
             target="_blank"

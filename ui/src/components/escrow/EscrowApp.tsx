@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import Link from "next/link";
 import {
   useAccount,
@@ -26,7 +26,6 @@ import {
   sameAddr,
   normalizeDeal,
   STATUS_LABEL,
-  TERMINAL,
   type Deal,
 } from "@/lib/escrow/client";
 
@@ -35,11 +34,80 @@ const INPUT =
   "mt-1.5 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-[13.5px] text-white outline-none transition-colors placeholder:text-[#6B7488] focus:border-[#6366F1]";
 
 function Icon({ name }: { name: string }) {
-  const common = { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-  if (name === "cheaper") return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M12 7v10M9.5 9.5a2.5 2 0 0 1 5 0c0 1.2-1 1.6-2.5 2s-2.5.8-2.5 2a2.5 2 0 0 0 5 0" /></svg>;
-  if (name === "faster") return <svg {...common}><path d="M13 2L4 14h7l-1 8 9-12h-7z" /></svg>;
-  if (name === "fairer") return <svg {...common}><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l3 6a3 3 0 0 1-6 0z" /></svg>;
-  return <svg {...common}><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></svg>;
+  const c = { width: 17, height: 17, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  if (name === "cheaper") return <svg {...c}><circle cx="12" cy="12" r="9" /><path d="M12 7v10M9.5 9.5a2.5 2 0 0 1 5 0c0 1.2-1 1.6-2.5 2s-2.5.8-2.5 2a2.5 2 0 0 0 5 0" /></svg>;
+  if (name === "faster") return <svg {...c}><path d="M13 2L4 14h7l-1 8 9-12h-7z" /></svg>;
+  if (name === "fairer") return <svg {...c}><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l3 6a3 3 0 0 1-6 0z" /></svg>;
+  return <svg {...c}><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></svg>;
+}
+
+function HeroBackdrop() {
+  return (
+    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_60%_at_40%_0%,black,transparent_75%)]" />
+      <div className="absolute -top-40 -left-28 h-[520px] w-[520px] rounded-full bg-[#6366F1]/25 blur-[130px]" />
+      <div className="absolute -top-28 right-0 h-[460px] w-[460px] rounded-full bg-[#8B5CF6]/20 blur-[130px]" />
+      <div className="absolute top-44 left-1/3 h-[380px] w-[380px] rounded-full bg-[#22D3EE]/10 blur-[140px]" />
+    </div>
+  );
+}
+
+function ConfidenceRing({ pct }: { pct: number }) {
+  const r = 24;
+  const circ = 2 * Math.PI * r;
+  const off = circ * (1 - Math.max(0, Math.min(100, pct)) / 100);
+  return (
+    <svg width="62" height="62" viewBox="0 0 62 62" className="shrink-0">
+      <circle cx="31" cy="31" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
+      <circle cx="31" cy="31" r={r} fill="none" stroke="url(#cring)" strokeWidth="5" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={off} transform="rotate(-90 31 31)" />
+      <defs>
+        <linearGradient id="cring" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#34D399" />
+          <stop offset="1" stopColor="#6EE7B7" />
+        </linearGradient>
+      </defs>
+      <text x="31" y="36" textAnchor="middle" fontSize="15" fontWeight="700" fill="#fff">{pct}</text>
+    </svg>
+  );
+}
+
+function FlowIcon({ name }: { name: string }) {
+  const c = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  if (name === "buyer") return <svg {...c}><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>;
+  if (name === "lock") return <svg {...c}><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>;
+  if (name === "agent") return <svg {...c}><rect x="5" y="7" width="14" height="12" rx="3" /><path d="M9 12h.01M15 12h.01M12 3v4M8.5 19l-1 2M15.5 19l1 2" /></svg>;
+  return <svg {...c}><circle cx="10" cy="8" r="4" /><path d="M3.5 21a7 7 0 0 1 12-4.9" /><path d="M16 18l2 2 4-4" /></svg>;
+}
+
+const FLOW = [
+  { n: "buyer", label: "Buyer", sub: "locks funds" },
+  { n: "lock", label: "Escrow", sub: "holds on chain" },
+  { n: "agent", label: "Agent", sub: "settles disputes", star: true },
+  { n: "seller", label: "Seller", sub: "gets paid" },
+];
+
+function FlowDiagram() {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] px-6 py-8 sm:px-12">
+      <div className="absolute left-1/2 top-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6366F1]/15 blur-3xl" />
+      <div className="relative flex items-start justify-between">
+        {FLOW.map((node, i) => (
+          <Fragment key={node.n}>
+            <div className="flex w-16 flex-col items-center gap-2.5 text-center sm:w-20">
+              <div className={`flex h-14 w-14 items-center justify-center rounded-2xl border ${node.star ? "border-[#6366F1]/50 bg-gradient-to-br from-[#6366F1]/30 to-[#8B5CF6]/20 text-white shadow-[0_0_34px_rgba(99,102,241,0.45)]" : "border-white/10 bg-white/[0.04] text-[#A5B0FF]"}`}>
+                <FlowIcon name={node.n} />
+              </div>
+              <div>
+                <div className="text-[12.5px] font-semibold text-white">{node.label}</div>
+                <div className="text-[10.5px] text-[#6B7488]">{node.sub}</div>
+              </div>
+            </div>
+            {i < FLOW.length - 1 && <div className="mt-7 h-[2px] flex-1 rounded-full bg-gradient-to-r from-white/10 via-[#6366F1]/50 to-white/10" />}
+          </Fragment>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function StatusPill({ status }: { status: number }) {
@@ -54,7 +122,7 @@ function StatusPill({ status }: { status: number }) {
 
 const EXAMPLE_FALLBACK = {
   id: 1,
-  spec: "Write a product description for a 24oz stainless steel water bottle: at least three sentences, mentioning vacuum insulation and the capacity in ounces.",
+  spec: "Write a product description for a 24oz stainless steel water bottle: three sentences, naming vacuum insulation and the capacity.",
   amount: 1_000_000_000n,
   confidencePct: 99,
 };
@@ -63,7 +131,7 @@ function HeroDealCard({ id, spec, amount, confidencePct }: { id: number; spec: s
   const steps = ["Funded", "Delivered", "Disputed", "Settled"];
   return (
     <Link href={`/escrow/${id}`} className="group relative block">
-      <div className="absolute -inset-3 rounded-[28px] bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.25),transparent_70%)] blur-xl" />
+      <div className="absolute -inset-3 rounded-[28px] bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.28),transparent_70%)] blur-xl" />
       <div className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-2xl transition-transform group-hover:-translate-y-0.5">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[12px] text-[#9AA3B2]">Deal #{id}</span>
@@ -85,16 +153,16 @@ function HeroDealCard({ id, spec, amount, confidencePct }: { id: number; spec: s
           {steps.map((s) => <span key={s}>{s}</span>)}
         </div>
 
-        <div className="mt-4 rounded-xl border border-[#6366F1]/20 bg-[#6366F1]/[0.07] p-3.5">
-          <div className="flex items-center justify-between">
+        <div className="mt-4 flex items-center gap-3 rounded-xl border border-[#6366F1]/20 bg-[#6366F1]/[0.07] p-3.5">
+          <div className="flex-1">
             <span className="font-mono text-[10.5px] uppercase tracking-wide text-[#A5B0FF]">Agent verdict</span>
-            <span className="text-[11px] text-[#9AA3B2]">{confidencePct}% confidence</span>
+            <div className="mt-1 text-[18px] font-bold leading-none text-[#34D399]">RELEASE</div>
+            <span className="mt-1 block text-[11.5px] text-[#AAB2C5]">{fmtUsdc(amount)} {USDC_SYMBOL} to the seller</span>
           </div>
-          <div className="mt-1.5 flex items-baseline gap-2">
-            <span className="text-[18px] font-bold text-[#34D399]">RELEASE</span>
-            <span className="text-[12.5px] text-[#AAB2C5]">{fmtUsdc(amount)} {USDC_SYMBOL} to the seller</span>
+          <div className="flex flex-col items-center">
+            <ConfidenceRing pct={confidencePct} />
+            <span className="mt-0.5 text-[9.5px] uppercase tracking-wide text-[#6B7488]">confidence</span>
           </div>
-          <p className="mt-1.5 text-[11.5px] leading-relaxed text-[#8A93A6]">Three sentences, names vacuum insulation, states the capacity in ounces. Every clause met.</p>
         </div>
       </div>
     </Link>
@@ -102,17 +170,10 @@ function HeroDealCard({ id, spec, amount, confidencePct }: { id: number; spec: s
 }
 
 const WHY = [
-  { icon: "cheaper", h: "Cheaper", p: "A few cents of gas to settle, with no percentage cut. Escrow services and arbiters take 1 to 5% of the deal, or bill by the hour." },
-  { icon: "faster", h: "Faster", p: "The agent reads the work and rules in seconds, at any hour. A human dispute desk runs days or weeks of back-and-forth." },
-  { icon: "fairer", h: "Fairer", p: "Judged against the brief by the same published rules every time, with the reasoning and confidence on chain. No human discretion." },
-  { icon: "transparent", h: "Transparent", p: "The funds, the brief, the delivery, and the verdict all live on chain, so anyone can audit how a deal settled. Ordinary escrow is a black box." },
-];
-
-const STEPS = [
-  { n: "01", h: "Lock the payment", p: "The buyer funds a deal against a written brief. The money sits in the contract, not with either side." },
-  { n: "02", h: "Deliver the work", p: "The seller submits the deliverable on chain, where both parties and the agent can read it." },
-  { n: "03", h: "Release in one click", p: "If the buyer is happy, the funds go to the seller. If the seller backs out, they return the money." },
-  { n: "04", h: "Or call the agent", p: "If they disagree, either side disputes. The agent reads the work and pays the side the record supports." },
+  { icon: "cheaper", h: "Cheaper", p: "Cents of gas, no cut" },
+  { icon: "faster", h: "Faster", p: "Settled in seconds" },
+  { icon: "fairer", h: "Fairer", p: "One rulebook, every deal" },
+  { icon: "transparent", h: "Transparent", p: "Every step on chain" },
 ];
 
 export default function EscrowApp() {
@@ -152,8 +213,6 @@ export default function EscrowApp() {
 
   const myDeals = allDeals.filter((x) => sameAddr(x.deal.buyer, address) || sameAddr(x.deal.seller, address)).reverse();
   const settledExample = [...allDeals].reverse().find((x) => x.deal.status === 4);
-  const totalLocked = allDeals.filter((x) => !TERMINAL.includes(x.deal.status)).reduce((s, x) => s + x.deal.amount, 0n);
-  const settledCount = allDeals.filter((x) => x.deal.status === 4 || x.deal.status === 5).length;
 
   const hero = settledExample
     ? { id: settledExample.id, spec: settledExample.deal.spec, amount: settledExample.deal.amount, confidencePct: settledExample.deal.confidencePct || 99 }
@@ -199,107 +258,79 @@ export default function EscrowApp() {
   return (
     <main className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
       {/* Hero */}
-      <section className="relative overflow-hidden pt-12 sm:pt-16">
-        <div className="pointer-events-none absolute -top-32 left-0 h-[520px] w-[760px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.16),transparent_65%)]" />
-        <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+      <section className="relative pt-14 sm:pt-20">
+        <HeroBackdrop />
+        <div className="relative grid items-center gap-12 lg:grid-cols-2">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-[#AAB2C5]">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#34D399]" /> Live on Base Sepolia
             </span>
-            <h1 className="mt-5 max-w-xl font-serif text-[40px] font-medium leading-[1.04] tracking-tight text-white sm:text-[54px]">
+            <h1 className="mt-5 font-serif text-[42px] font-medium leading-[1.03] tracking-tight text-white sm:text-[56px]">
               Escrow that settles its own disputes.
             </h1>
-            <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-[#AAB2C5]">
-              A buyer locks the payment against a brief and the seller delivers. When they disagree
-              about the work, a Theseus agent reads the deliverable against the brief and settles it
-              on chain in seconds. Cheaper, fairer, more transparent, and faster than any arbiter.
+            <p className="mt-5 max-w-md text-[16px] leading-relaxed text-[#AAB2C5]">
+              An agent reads the work against the brief and releases the funds. In seconds, on chain.
             </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <a href="#create" className="rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] px-5 py-2.5 text-[14px] font-semibold text-white shadow-[0_8px_30px_rgba(99,102,241,0.35)] transition-shadow hover:shadow-[0_8px_44px_rgba(99,102,241,0.6)]">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a href="#create" className="rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_8px_30px_rgba(99,102,241,0.35)] transition-shadow hover:shadow-[0_8px_44px_rgba(99,102,241,0.6)]">
                 Create a deal
               </a>
-              <Link href={`/escrow/${hero.id}`} className="rounded-xl border border-white/12 bg-white/[0.03] px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-white/[0.07]">
+              <Link href={`/escrow/${hero.id}`} className="text-[14px] font-medium text-[#AAB2C5] transition-colors hover:text-white">
                 See a live deal →
               </Link>
-            </div>
-            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
-              {[
-                { v: String(count), l: "deals created" },
-                { v: String(settledCount), l: "settled by the agent" },
-                { v: `${fmtUsdc(totalLocked)} ${USDC_SYMBOL}`, l: "currently in escrow" },
-              ].map((s) => (
-                <div key={s.l}>
-                  <div className="font-mono text-[20px] font-semibold text-white">{s.v}</div>
-                  <div className="text-[11.5px] text-[#6B7488]">{s.l}</div>
-                </div>
-              ))}
             </div>
           </div>
           <HeroDealCard id={hero.id} spec={hero.spec} amount={hero.amount} confidencePct={hero.confidencePct} />
         </div>
       </section>
 
-      {/* Why it's better */}
-      <section className="mt-16 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Why it's better — one compact bar */}
+      <section className="mt-14 grid grid-cols-2 divide-x divide-y divide-white/[0.07] overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] sm:grid-cols-4 sm:divide-y-0">
         {WHY.map((w) => (
-          <div key={w.h} className={`${PANEL} p-5`}>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#6366F1]/20 to-[#8B5CF6]/10 text-[#A5B0FF]">
+          <div key={w.h} className="flex items-center gap-3 p-4 sm:p-5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#6366F1]/20 to-[#8B5CF6]/10 text-[#A5B0FF]">
               <Icon name={w.icon} />
+            </span>
+            <div>
+              <div className="text-[13.5px] font-semibold text-white">{w.h}</div>
+              <div className="text-[11.5px] text-[#6B7488]">{w.p}</div>
             </div>
-            <h3 className="mt-3 text-[15px] font-semibold text-white">{w.h}</h3>
-            <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#8A93A6]">{w.p}</p>
           </div>
         ))}
       </section>
 
-      {/* How it works */}
-      <section id="how" className="mt-16 scroll-mt-20">
-        <h2 className="text-[13px] font-semibold uppercase tracking-[0.15em] text-[#6B7488]">How a deal works</h2>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((s) => (
-            <div key={s.n} className={`${PANEL} relative p-5`}>
-              <span className="font-mono text-[24px] font-bold text-white/10">{s.n}</span>
-              <h3 className="mt-1 text-[14.5px] font-semibold text-white">{s.h}</h3>
-              <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#8A93A6]">{s.p}</p>
-            </div>
-          ))}
-        </div>
+      {/* Flow */}
+      <section className="mt-6">
+        <FlowDiagram />
       </section>
 
       {/* App surface */}
-      <section id="create" className="mt-16 scroll-mt-20">
+      <section id="create" className="mt-14 scroll-mt-20">
         {!isConnected && (
           <div className={`${PANEL} flex flex-col items-center gap-4 px-6 py-12 text-center`}>
-            <h2 className="text-[20px] font-semibold text-white">Take a deal start to finish</h2>
-            <p className="max-w-md text-[13.5px] leading-relaxed text-[#AAB2C5]">
-              Connect a wallet on Base Sepolia to create a deal or act on one. You&rsquo;ll need a little
-              Base Sepolia ETH for gas from any public faucet, and you can mint {USDC_SYMBOL} once connected.
-            </p>
+            <h2 className="font-serif text-[24px] font-medium text-white">Run a real deal.</h2>
+            <p className="text-[13.5px] text-[#8A93A6]">Connect on Base Sepolia. Mint a test token here, ETH for gas from any faucet.</p>
             <ConnectControl size="lg" />
           </div>
         )}
 
         {isConnected && !onBase && (
           <div className={`${PANEL} flex items-center justify-between gap-3 px-5 py-4`}>
-            <span className="text-[13.5px] text-[#FBBF24]">This app runs on Base Sepolia. Switch your wallet&rsquo;s network to continue.</span>
+            <span className="text-[13.5px] text-[#FBBF24]">Switch your wallet to Base Sepolia to continue.</span>
             <button onClick={() => switchChain({ chainId: BASE_SEPOLIA_ID })} className="shrink-0 rounded-xl bg-[#FBBF24] px-4 py-2 text-[13px] font-semibold text-black">Switch network</button>
           </div>
         )}
 
         {isConnected && onBase && (
-          <div className="grid gap-5 lg:grid-cols-[1fr_0.85fr]">
-            {/* Create */}
+          <div className="grid gap-5 lg:grid-cols-[1fr_0.8fr]">
             <div className={`${PANEL} p-6`}>
               <div className="flex items-center justify-between">
-                <h2 className="text-[16px] font-semibold text-white">Create a deal</h2>
+                <h2 className="text-[16px] font-semibold text-white">New deal</h2>
                 <button onClick={faucet} disabled={busy !== null} className="rounded-lg border border-[#6366F1]/30 bg-[#6366F1]/10 px-3 py-1.5 text-[12px] font-semibold text-[#A5B0FF] disabled:opacity-50">
-                  {busy === "faucet" ? "Minting…" : `Faucet · +5,000 ${USDC_SYMBOL}`}
+                  {busy === "faucet" ? "Minting…" : `Faucet +5,000`}
                 </button>
               </div>
-              <p className="mt-1 text-[12.5px] text-[#8A93A6]">
-                You&rsquo;re the buyer · balance{" "}
-                <span className="font-mono text-white">{fmtUsdc(balData as bigint | undefined)} {USDC_SYMBOL}</span>
-              </p>
+              <p className="mt-1 text-[12px] text-[#6B7488]">Balance <span className="font-mono text-white">{fmtUsdc(balData as bigint | undefined)} {USDC_SYMBOL}</span></p>
               <div className="mt-4 space-y-3">
                 <label className="block">
                   <span className="text-[12px] text-[#8A93A6]">Seller address</span>
@@ -307,32 +338,29 @@ export default function EscrowApp() {
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <label className="block">
-                    <span className="text-[12px] text-[#8A93A6]">Amount ({USDC_SYMBOL})</span>
+                    <span className="text-[12px] text-[#8A93A6]">Amount</span>
                     <input value={amount} onChange={(e) => setAmount(e.target.value)} inputMode="decimal" placeholder="1000" className={`${INPUT} font-mono`} />
                   </label>
                   <label className="block">
-                    <span className="text-[12px] text-[#8A93A6]">Deadline (days)</span>
+                    <span className="text-[12px] text-[#8A93A6]">Days</span>
                     <input value={days} onChange={(e) => setDays(e.target.value)} inputMode="numeric" className={`${INPUT} font-mono`} />
                   </label>
                 </div>
                 <label className="block">
-                  <span className="text-[12px] text-[#8A93A6]">Brief / acceptance criteria</span>
-                  <textarea value={spec} onChange={(e) => setSpec(e.target.value)} rows={3} placeholder="What the seller must deliver for the funds to release. Be specific; this is exactly what the agent scores against." className={`${INPUT} resize-y leading-relaxed`} />
+                  <span className="text-[12px] text-[#8A93A6]">Brief</span>
+                  <textarea value={spec} onChange={(e) => setSpec(e.target.value)} rows={3} placeholder="What the seller must deliver. This is what the agent scores against." className={`${INPUT} resize-y leading-relaxed`} />
                 </label>
               </div>
               <button onClick={createDeal} disabled={!canCreate || busy !== null} className="mt-4 w-full rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_8px_30px_rgba(99,102,241,0.3)] transition-shadow hover:shadow-[0_8px_40px_rgba(99,102,241,0.5)] disabled:opacity-40 disabled:shadow-none">
-                {busy === "create" ? "Locking funds…" : "Lock funds & create deal"}
+                {busy === "create" ? "Locking funds…" : "Lock funds & create"}
               </button>
               {err && <p className="mt-3 rounded-xl border border-[#F87171]/30 bg-[#F87171]/10 px-3 py-2 text-[12.5px] text-[#F87171]">{err}</p>}
             </div>
 
-            {/* Your deals */}
             <div>
               <h2 className="mb-3 text-[14px] font-semibold text-white">Your deals</h2>
               {myDeals.length === 0 ? (
-                <div className={`${PANEL} px-4 py-10 text-center text-[13px] text-[#6B7488]`}>
-                  No deals yet. Create one, or have someone create one with your address as the seller.
-                </div>
+                <div className={`${PANEL} px-4 py-10 text-center text-[13px] text-[#6B7488]`}>None yet.</div>
               ) : (
                 <div className="space-y-2">
                   {myDeals.map(({ id, deal }) => (
