@@ -9,7 +9,7 @@ export default function PredictLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-bg text-fg">
+    <div className="dark min-h-screen bg-bg text-fg [color-scheme:dark]">
       <PredictNav />
       {children}
       <footer className="border-t border-border">

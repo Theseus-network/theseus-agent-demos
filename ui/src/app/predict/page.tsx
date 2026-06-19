@@ -66,39 +66,30 @@ export default function MarketsIndex() {
   return (
     <main className="mx-auto max-w-6xl px-3 pb-20 pt-8 sm:px-5">
       {/* Hero */}
-      <section className="rounded-2xl border border-border bg-surface/40 p-6 sm:p-8">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">
-          Theseus Predict
-        </p>
-        <h1 className="mt-2 max-w-2xl font-serif text-[28px] leading-[1.1] tracking-tight text-fg sm:text-[38px]">
+      <section className="relative overflow-hidden pt-10 sm:pt-14">
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_60%_at_30%_0%,black,transparent_75%)]" />
+          <div className="absolute -top-40 -left-28 h-[480px] w-[480px] rounded-full bg-[#6366F1]/25 blur-[130px]" />
+          <div className="absolute -top-28 right-10 h-[420px] w-[420px] rounded-full bg-[#8B5CF6]/18 blur-[130px]" />
+        </div>
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">Theseus Predict</p>
+        <h1 className="mt-3 max-w-3xl font-serif text-[34px] font-medium leading-[1.04] tracking-tight text-fg sm:text-[50px]">
           Prediction markets settled by an AI that reads the sources.
         </h1>
-        <p className="mt-3 max-w-2xl text-[14.5px] leading-relaxed text-fg-dim">
-          Most markets let a token vote decide the outcome, which a handful of
-          big holders can swing. Here, when a market closes, a Theseus agent reads
-          what actually happened and settles it. If the sources don&rsquo;t clearly
-          answer, it refuses to guess and refunds everyone. The questions and odds
-          are live from Polymarket; the money is play money. Try one.
+        <p className="mt-4 max-w-xl text-[15.5px] leading-relaxed text-fg-dim">
+          Most markets settle by a token vote big holders can swing. Here, an agent reads what
+          actually happened and settles it.
         </p>
-        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[12px] text-fg-mute">
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[12px] text-fg-mute">
           {state.hydrated && (
             <span className="inline-flex items-center gap-1.5">
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ background: state.live ? "var(--green)" : "var(--amber)" }}
-              />
-              {state.live ? "Live odds from Polymarket" : "Sample odds (Polymarket unavailable)"}
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: state.live ? "var(--green)" : "var(--amber)" }} />
+              {state.live ? "Live odds from Polymarket" : "Sample odds"}
             </span>
           )}
-          <span>
-            <span className="text-fg">{state.marketList.length}</span> markets
-          </span>
-          <span>
-            <span className="text-fg">{compactUsd(totalVol)}</span> volume
-          </span>
-          <Link href="/predict/how-it-works" className="text-coral hover:underline">
-            How resolution works →
-          </Link>
+          <span><span className="text-fg">{state.marketList.length}</span> markets</span>
+          <span><span className="text-fg">{compactUsd(totalVol)}</span> volume</span>
+          <Link href="/predict/how-it-works" className="text-coral hover:underline">How resolution works →</Link>
         </div>
       </section>
 
