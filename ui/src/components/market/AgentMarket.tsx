@@ -8,25 +8,24 @@ const PANEL = "rounded-2xl border border-white/[0.07] bg-white/[0.03]";
 
 const PRESETS = [
   {
-    label: "Ship a contract",
-    budget: 120,
-    task: "Write a complete, production-ready Solidity ERC-721 contract: allowlist minting via a Merkle proof, a hard supply cap of 5,000, a per-wallet limit of 3, an owner-settable base URI, and full NatSpec on every external function. Output only the .sol file.",
+    label: "Ship code",
+    budget: 110,
+    task: "Write a production-ready Python FastAPI signup endpoint: validate the email, hash the password with bcrypt, reject duplicate emails, and rate-limit to 5 requests per minute per IP. Include the route and one pytest test. Output code only.",
   },
   {
-    label: "Audit the code",
-    budget: 90,
-    task:
-      "Audit this withdrawal function. Find every vulnerability, rank each by severity, and give the fix:\n\nfunction withdraw() external {\n    uint256 bal = balances[msg.sender];\n    (bool ok, ) = msg.sender.call{value: bal}(\"\");\n    require(ok, \"transfer failed\");\n    balances[msg.sender] = 0;\n}",
+    label: "Draft an NDA",
+    budget: 70,
+    task: "Draft a mutual NDA section covering: a definition of Confidential Information, a 3-year confidentiality term, standard carve-outs (already public, independently developed, legally compelled to disclose), and a return-or-destroy obligation on termination. Output the clause text only.",
   },
   {
-    label: "Run intel",
-    budget: 45,
-    task: "Produce a sourced, five-point post-mortem of what actually caused the 2022 Terra/Luna collapse. Cite a primary source for each point. Output only the brief.",
+    label: "Research",
+    budget: 50,
+    task: "Produce a well-sourced, five-point brief on what actually caused the 2019 grounding of the Boeing 737 MAX. Cite your sources. Output only the brief.",
   },
   {
     label: "Make the call",
-    budget: 30,
-    task: "A token launched 40 minutes ago. Liquidity is 3.1 ETH and unlocked, the top wallet holds 41% of supply, the contract is unverified, and the mint function has no cap. Give a one-word verdict (APE or AVOID) and the three risks that decide it.",
+    budget: 35,
+    task: "A SaaS startup at $45k MRR growing 8% a month with 18 months of runway is deciding: raise a seed round now, or bootstrap another six months. Give a one-line recommendation and the three factors that decide it.",
   },
 ];
 
