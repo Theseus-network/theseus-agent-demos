@@ -9,7 +9,7 @@ export default function EscrowLayout({ children }: { children: React.ReactNode }
       {children}
       <footer className="border-t border-border">
         <div className="mx-auto max-w-4xl px-4 py-6 text-[12px] leading-relaxed text-fg-mute sm:px-5">
-          Theseus Escrow is a working app on Base Sepolia. The{" "}
+          Agentic Escrow is a working app on Base Sepolia. The{" "}
           <a href={basescanAddressUrl(ESCROW.address)} target="_blank" rel="noopener noreferrer" className="underline decoration-border underline-offset-2 hover:text-fg">
             AgentEscrow contract
           </a>{" "}

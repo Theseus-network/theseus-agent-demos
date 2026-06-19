@@ -44,14 +44,14 @@ export const DEMO_COPY = {
   },
   escrow: {
     path: "/escrow",
-    title: "Theseus Escrow · escrow with an agent arbiter",
+    title: "Agentic Escrow · escrow an agent settles",
     description:
-      "On-chain escrow on Base Sepolia. A buyer locks the payment against a written brief and the seller delivers. If they disagree about the work, a Theseus agent reads it and decides who gets paid.",
+      "On-chain agentic escrow on Base Sepolia. A buyer locks the payment against a brief and the seller delivers. If they disagree, a Theseus agent reads the work and settles it on chain in seconds, cheaper and fairer than a human arbiter.",
     og: {
-      section: "theseus escrow",
+      section: "agentic escrow",
       headline: "Escrow that settles its own disputes.",
       blurb:
-        "A buyer locks the payment against a brief and the seller delivers. If they disagree about the work, an agent reads it and decides who gets paid.",
+        "A buyer locks the payment against a brief and the seller delivers. If they disagree, an agent reads the work and settles it in seconds, cheaper and fairer than an arbiter.",
       url: "demo-agents.theseus.network/escrow",
       tag: "RELEASE · REFUND · UNRESOLVABLE",
     },

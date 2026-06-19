@@ -77,6 +77,13 @@ function ConnectControl() {
   );
 }
 
+const WHY = [
+  { h: "Cheaper", p: "Settling a dispute costs a few cents of gas, with no percentage cut. Escrow services and arbiters take 1 to 5% of the deal, or bill by the hour." },
+  { h: "Faster", p: "The agent reads the work and rules in seconds, at any hour. A human dispute desk runs days or weeks of back-and-forth." },
+  { h: "Fairer", p: "Every dispute is judged against the brief by the same published rules, with the reasoning and confidence written on chain. No human discretion, no platform taking a side." },
+  { h: "Transparent", p: "The funds, the brief, the delivery, and the verdict all live on chain, so anyone can audit how a deal was settled. Ordinary escrow is a black box." },
+];
+
 const STEPS = [
   { n: "01", h: "Lock the payment", p: "The buyer funds a deal in the contract against a written brief. The money sits in escrow, not with either side." },
   { n: "02", h: "Deliver the work", p: "The seller submits the deliverable on chain, where both parties and the agent can read it." },
@@ -173,7 +180,7 @@ export default function EscrowApp() {
       {/* Hero */}
       <section className="rounded-2xl border border-border bg-surface/40 p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">Theseus Escrow</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">Agentic Escrow</p>
           <ConnectControl />
         </div>
         <h1 className="mt-2 max-w-2xl font-serif text-[28px] leading-[1.1] tracking-tight text-fg sm:text-[38px]">
@@ -182,8 +189,10 @@ export default function EscrowApp() {
         <p className="mt-3 max-w-2xl text-[14.5px] leading-relaxed text-fg-dim">
           A buyer locks the payment against a written brief and the seller delivers. If the buyer is
           happy, one click pays out. If the two sides disagree about whether the work is good, a
-          Theseus agent reads the deliverable against the brief and decides who gets paid. It runs on
-          Base Sepolia with a faucet token, so you can take a real deal from start to finish.
+          Theseus agent reads the deliverable against the brief and settles it on chain in seconds.
+          That makes it cheaper, fairer, more transparent, and faster than a human arbiter or a
+          platform dispute desk. It runs on Base Sepolia with a faucet token, so you can take a real
+          deal from start to finish.
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[12px] text-fg-mute">
           <span className="inline-flex items-center gap-1.5">
@@ -196,8 +205,19 @@ export default function EscrowApp() {
         </div>
       </section>
 
-      {/* How it works */}
+      {/* Why it's better */}
       <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {WHY.map((w) => (
+          <div key={w.h} className="rounded-xl border border-coral/25 bg-coral/[0.04] p-4">
+            <h3 className="text-[14px] font-semibold text-coral">{w.h}</h3>
+            <p className="mt-1 text-[12.5px] leading-relaxed text-fg-dim">{w.p}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* How it works */}
+      <h2 className="mt-8 mb-3 text-[13px] font-semibold uppercase tracking-wide text-fg-mute">How a deal works</h2>
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((s) => (
           <div key={s.n} className="rounded-xl border border-border bg-surface/40 p-4">
             <span className="font-mono text-[12px] font-semibold text-coral">{s.n}</span>
