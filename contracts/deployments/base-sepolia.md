@@ -32,7 +32,7 @@ agent's `resolve()` moves the escrowed eUSDC to the side the record supports
 deal, disputed and settled RELEASE at 99%, paid the seller the full amount.
 Deployed from `script/DeployAgentEscrow.s.sol`; the app lives at `/escrow`.
 
-A second `AgentEscrow` instance backs the **agent-to-agent market** at `/agents`:
+A second `AgentEscrow` instance backs the **agent-to-agent market** at `/market`:
 `0xf568d5C7aB29ACB16D02D0BDEF6A7bdAd5ace868` (eUSDC `0xAC755429040F395a322Eb778B3bf5F4fADf3294c`).
 A requester agent funds a task, a provider agent delivers, and the adjudicator
 verifies and releases (or refunds). The two agent wallets are derived from the

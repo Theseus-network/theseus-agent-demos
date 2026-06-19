@@ -9,9 +9,9 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 
 const SITE_URL = "https://demo-agents.theseus.network";
-const TITLE = "Theseus demo agents · eight autonomous agents in a browser tab";
+const TITLE = "Theseus demo agents · autonomous agents in a browser tab";
 const DESCRIPTION =
-  "Browse eight Theseus demo agents: oracle replacements, mechanism gates, proposal reviewers, sovereign funds. Each reasons from raw inputs, posts a signed decision to a real chain, and publishes its verbatim system prompt on Proof of Agenthood.";
+  "Browse the Theseus demo agents and full demo apps: prediction markets, agentic escrow, an agent-to-agent market, oracle replacements, mechanism gates, proposal reviewers, sovereign funds. Each reasons from raw inputs, posts a signed decision to a real chain, and publishes its verbatim system prompt on Proof of Agenthood.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

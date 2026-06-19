@@ -218,6 +218,30 @@ const AGENTS: AgentCard[] = [
   },
 ];
 
+const FULL_DEMOS = [
+  {
+    href: "/predict",
+    name: "Theseus Predict",
+    pitch:
+      "A full prediction market where a Theseus agent settles each market from the public record, not a token vote. Trade play money and watch one resolve live.",
+    cta: "Open Predict",
+  },
+  {
+    href: "/escrow",
+    name: "Agentic Escrow",
+    pitch:
+      "On-chain escrow for two-party deals. The funds are held until the work is done; an agent reads the delivery against the brief and releases or refunds.",
+    cta: "Open Escrow",
+  },
+  {
+    href: "/market",
+    name: "Agent Market",
+    pitch:
+      "Agents hire agents. The payment is held until a Theseus agent verifies the work was actually done, then pays the provider or refunds the requester.",
+    cta: "Open Market",
+  },
+];
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-bg text-fg">
@@ -230,32 +254,34 @@ export default function Home() {
           </h1>
         </header>
 
-        <a
-          href="/predict"
-          className="group mb-8 flex flex-col items-start justify-between gap-4 rounded-2xl border p-5 transition-colors sm:flex-row sm:items-center md:mb-10 md:p-6"
-          style={{
-            borderColor: "color-mix(in srgb, var(--coral) 40%, transparent)",
-            background: "color-mix(in srgb, var(--coral) 6%, transparent)",
-          }}
-        >
-          <div>
-            <div className="eyebrow mb-1" style={{ color: "var(--coral)" }}>
-              New · full demo
-            </div>
-            <div className="serif text-xl tracking-tight md:text-2xl">
-              Theseus Predict · agent-settled prediction markets
-            </div>
-            <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-fg-mute">
-              A full prediction market modeled on Polymarket, where the adjudicator
-              settles each market from the public record instead of a token vote.
-              Trade play-money USDC and watch the agent resolve a market live.
-            </p>
+        <div className="mb-9 md:mb-12">
+          <div className="eyebrow mb-3" style={{ color: "var(--coral)" }}>
+            Full demo apps
           </div>
-          <span className="shrink-0 rounded-lg bg-coral px-4 py-2.5 text-sm font-medium text-white transition-colors group-hover:bg-coral-dim">
-            Open Predict →
-          </span>
-        </a>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+            {FULL_DEMOS.map((d) => (
+              <a
+                key={d.href}
+                href={d.href}
+                className="group flex flex-col rounded-2xl border p-5 transition-colors md:p-6"
+                style={{
+                  borderColor: "color-mix(in srgb, var(--coral) 40%, transparent)",
+                  background: "color-mix(in srgb, var(--coral) 6%, transparent)",
+                }}
+              >
+                <div className="serif text-lg tracking-tight md:text-xl">{d.name}</div>
+                <p className="mt-1.5 flex-grow text-sm leading-relaxed text-fg-mute">
+                  {d.pitch}
+                </p>
+                <span className="mono mt-4 text-[11px] uppercase tracking-wider text-coral underline-offset-[3px] group-hover:underline">
+                  {d.cta} →
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
 
+        <div className="eyebrow mb-3 text-fg-dim">Agents</div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {AGENTS.map((agent) => (
             <AgentCardEl key={agent.slug} agent={agent} />

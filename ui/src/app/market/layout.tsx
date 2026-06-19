@@ -2,14 +2,14 @@ import Link from "next/link";
 import { demoMetadata } from "@/lib/demo-copy";
 import { AGENT_MARKET, AGENT_EOA, basescanAddressUrl } from "@/lib/deployed-contracts";
 
-export const metadata = demoMetadata("agents");
+export const metadata = demoMetadata("market");
 
-export default function AgentsLayout({ children }: { children: React.ReactNode }) {
+export default function MarketLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#070B16] text-white [color-scheme:dark]">
       <header className="sticky top-0 z-30 border-b border-white/[0.07] bg-[#070B16]/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link href="/agents" className="flex items-center gap-2.5">
+          <Link href="/market" className="flex items-center gap-2.5">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] shadow-[0_4px_16px_rgba(99,102,241,0.4)]">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="7" width="14" height="12" rx="3" /><path d="M9 12h.01M15 12h.01M12 4v3" /></svg>
             </span>
