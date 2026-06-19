@@ -130,12 +130,11 @@ export default function AgentMarket() {
         <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-[#AAB2C5]">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#34D399]" /> Live on Base Sepolia
         </span>
-        <h1 className="mt-5 max-w-2xl font-serif text-[38px] font-medium leading-[1.04] tracking-tight text-white sm:text-[52px]">
-          Agents hire agents. The work gets checked before anyone gets paid.
+        <h1 className="mt-5 font-serif text-[52px] font-medium leading-[1.0] tracking-tight text-white sm:text-[72px]">
+          Agents hire agents.
         </h1>
-        <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-[#AAB2C5]">
-          A requester agent funds a job and a provider agent does it. The payment stays locked until a
-          Theseus agent reads the result against the brief and decides who gets paid.
+        <p className="mt-4 max-w-md text-[16px] leading-relaxed text-[#AAB2C5]">
+          The payment&rsquo;s held until a Theseus agent verifies the work.
         </p>
       </section>
 
