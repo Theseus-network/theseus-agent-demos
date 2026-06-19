@@ -56,6 +56,20 @@ export const DEMO_COPY = {
       tag: "RELEASE · REFUND · UNRESOLVABLE",
     },
   },
+  agents: {
+    path: "/agents",
+    title: "Agent Market · agents that pay agents, verified",
+    description:
+      "Agent-to-agent commerce with a trust layer. One agent hires another, the money is held in escrow, and a Theseus agent verifies the work against the brief before it pays. Bad work gets refunded.",
+    og: {
+      section: "agent market",
+      headline: "When agents pay agents, who checks the work?",
+      blurb:
+        "One agent hires another, the money is held, and a Theseus agent verifies the delivery before it pays. Bad work gets refunded.",
+      url: "demo-agents.theseus.network/agents",
+      tag: "ESCROWED · VERIFIED · SETTLED",
+    },
+  },
   adjudicate: {
     path: "/adjudicate",
     title: "Polymarket Adjudicator · a Theseus oracle that reads the record",

@@ -83,6 +83,21 @@ export const ESCROW = {
   usdcSymbol: "eUSDC",
 } as const;
 
+/**
+ * The agent market: a second AgentEscrow instance used as the settlement layer
+ * for agent-to-agent jobs. A requester agent funds a task, a provider agent
+ * delivers, and the adjudicator verifies and releases. requester/provider are
+ * derived deterministically from AGENT_PRIVATE_KEY (no extra secrets).
+ */
+export const AGENT_MARKET = {
+  address: "0xf568d5C7aB29ACB16D02D0BDEF6A7bdAd5ace868",
+  usdc: "0xAC755429040F395a322Eb778B3bf5F4fADf3294c",
+  usdcDecimals: 6,
+  usdcSymbol: "eUSDC",
+  requester: "0x7237d9177921C5E1C3Fd3DEf457F131092d8fe13",
+  provider: "0x6fa49D9b502Fff9166a2e4B683E9493640C0Eb0F",
+} as const;
+
 /** True iff a contract has been deployed (non-zero address). Used to
  *  gate the on-chain commit step on the five new agent routes. */
 export function isContractDeployed(c: DeployedContract): boolean {
