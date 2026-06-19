@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   useAccount,
@@ -79,32 +79,42 @@ function FlowIcon({ name }: { name: string }) {
   return <svg {...c}><circle cx="10" cy="8" r="4" /><path d="M3.5 21a7 7 0 0 1 12-4.9" /><path d="M16 18l2 2 4-4" /></svg>;
 }
 
-const FLOW = [
-  { n: "buyer", label: "Buyer", sub: "locks funds" },
-  { n: "lock", label: "Escrow", sub: "holds on chain" },
-  { n: "agent", label: "Agent", sub: "settles disputes", star: true },
-  { n: "seller", label: "Seller", sub: "gets paid" },
-];
+function FlowNode({ name, label, sub }: { name: string; label: string; sub: string }) {
+  return (
+    <div className="flex w-16 flex-col items-center gap-2 text-center sm:w-24">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-[#A5B0FF]">
+        <FlowIcon name={name} />
+      </div>
+      <div>
+        <div className="text-[12.5px] font-semibold text-white">{label}</div>
+        <div className="text-[10.5px] text-[#6B7488]">{sub}</div>
+      </div>
+    </div>
+  );
+}
 
 function FlowDiagram() {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] px-6 py-8 sm:px-12">
-      <div className="absolute left-1/2 top-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6366F1]/15 blur-3xl" />
-      <div className="relative flex items-start justify-between">
-        {FLOW.map((node, i) => (
-          <Fragment key={node.n}>
-            <div className="flex w-16 flex-col items-center gap-2.5 text-center sm:w-20">
-              <div className={`flex h-14 w-14 items-center justify-center rounded-2xl border ${node.star ? "border-[#6366F1]/50 bg-gradient-to-br from-[#6366F1]/30 to-[#8B5CF6]/20 text-white shadow-[0_0_34px_rgba(99,102,241,0.45)]" : "border-white/10 bg-white/[0.04] text-[#A5B0FF]"}`}>
-                <FlowIcon name={node.n} />
-              </div>
-              <div>
-                <div className="text-[12.5px] font-semibold text-white">{node.label}</div>
-                <div className="text-[10.5px] text-[#6B7488]">{node.sub}</div>
-              </div>
-            </div>
-            {i < FLOW.length - 1 && <div className="mt-7 h-[2px] flex-1 rounded-full bg-gradient-to-r from-white/10 via-[#6366F1]/50 to-white/10" />}
-          </Fragment>
-        ))}
+    <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] px-6 py-9">
+      <div className="absolute left-1/2 top-6 h-36 w-36 -translate-x-1/2 rounded-full bg-[#6366F1]/15 blur-3xl" />
+      <div className="relative mx-auto max-w-md">
+        {/* The agent: the judge, above the money path */}
+        <div className="flex flex-col items-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#6366F1]/50 bg-gradient-to-br from-[#6366F1]/30 to-[#8B5CF6]/20 text-white shadow-[0_0_34px_rgba(99,102,241,0.45)]">
+            <FlowIcon name="agent" />
+          </div>
+          <div className="mt-2 text-[12.5px] font-semibold text-white">Agent</div>
+          <div className="text-[10.5px] text-[#6B7488]">the judge, settles disputes</div>
+          <div className="mt-2 h-7 w-px bg-gradient-to-b from-[#6366F1]/60 to-white/5" />
+        </div>
+        {/* The money path */}
+        <div className="flex items-start justify-between">
+          <FlowNode name="buyer" label="Buyer" sub="funds the deal" />
+          <div className="mt-7 h-[2px] flex-1 rounded-full bg-gradient-to-r from-white/10 to-[#6366F1]/40" />
+          <FlowNode name="lock" label="Escrow" sub="holds the money" />
+          <div className="mt-7 h-[2px] flex-1 rounded-full bg-gradient-to-r from-[#6366F1]/40 to-white/10" />
+          <FlowNode name="seller" label="Seller" sub="gets paid" />
+        </div>
       </div>
     </div>
   );
@@ -170,10 +180,10 @@ function HeroDealCard({ id, spec, amount, confidencePct }: { id: number; spec: s
 }
 
 const WHY = [
-  { icon: "cheaper", h: "Cheaper", p: "Cents of gas, no cut" },
+  { icon: "cheaper", h: "Cheaper", p: "No percentage fee" },
   { icon: "faster", h: "Faster", p: "Settled in seconds" },
   { icon: "fairer", h: "Fairer", p: "One rulebook, every deal" },
-  { icon: "transparent", h: "Transparent", p: "Every step on chain" },
+  { icon: "transparent", h: "Transparent", p: "Shows its reasoning" },
 ];
 
 export default function EscrowApp() {
@@ -269,7 +279,8 @@ export default function EscrowApp() {
               Escrow that settles its own disputes.
             </h1>
             <p className="mt-5 max-w-md text-[16px] leading-relaxed text-[#AAB2C5]">
-              An agent reads the work against the brief and releases the funds. In seconds, on chain.
+              The money is held safely until the work is done. If the two sides disagree, an agent
+              reads it against the brief and pays the fair side, in seconds.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <a href="#create" className="rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_8px_30px_rgba(99,102,241,0.35)] transition-shadow hover:shadow-[0_8px_44px_rgba(99,102,241,0.6)]">

@@ -93,8 +93,8 @@ function AgentSettlePanel({ id, onSettled }: { id: number; onSettled: () => void
         <h3 className="text-[15px] font-semibold text-white">Agent settlement</h3>
       </div>
       <p className="mt-2 text-[12.5px] leading-relaxed text-[#AAB2C5]">
-        The Theseus agent reads the brief and the delivery, then commits a verdict on chain. It pays
-        the side the record supports, and refunds the buyer if it can&rsquo;t call it at 80% confidence.
+        The Theseus agent reads the brief and the delivery, then commits a verdict. It pays the side
+        the record supports, and refunds the buyer if it can&rsquo;t call it at 80% confidence.
       </p>
       {!verdict && !running && (
         <button onClick={settle} className={`mt-3 rounded-xl ${GRAD} px-4 py-2.5 text-[13.5px] font-semibold text-white`}>
@@ -110,7 +110,7 @@ function AgentSettlePanel({ id, onSettled }: { id: number; onSettled: () => void
             {verdict.verdict !== "UNRESOLVABLE" && <span className="text-[12px] text-[#6B7488]">{verdict.confidencePct}% confidence</span>}
           </div>
           <p className="mt-2 text-[12.5px] leading-relaxed text-[#AAB2C5]">{verdict.evidenceSummary}</p>
-          {tx && <a href={tx.url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-mono text-[11.5px] text-[#A5B0FF] hover:underline">settled on chain ↗ {tx.txHash.slice(0, 10)}…</a>}
+          {tx && <a href={tx.url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-mono text-[11.5px] text-[#A5B0FF] hover:underline">view settlement ↗ {tx.txHash.slice(0, 10)}…</a>}
         </div>
       )}
       {err && <p className="mt-3 rounded-xl border border-[#F87171]/30 bg-[#F87171]/10 px-3 py-2 text-[12px] text-[#F87171]">{err}</p>}
