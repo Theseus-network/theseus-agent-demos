@@ -74,12 +74,12 @@ export const DEMO_COPY = {
     path: "/guardian",
     title: "Guardian · an automatic gate in front of risky transactions",
     description:
-      "A contract checks with the Guardian before it runs a transaction. The agent flags the ones that quietly do something they never said they would.",
+      "A contract checks with the Guardian before it runs an important transaction. The agent confirms it does what it's supposed to, and stops it if it doesn't.",
     og: {
       section: "guardian",
-      headline: "It catches the transactions that lie about what they do.",
+      headline: "It makes sure every important transaction goes according to plan.",
       blurb:
-        "A contract asks the agent before it runs a transaction. It flags the ones that quietly do something they never said they would. The same check that would have caught Beanstalk and Ronin.",
+        "A contract checks with the agent before it runs a transaction. The agent confirms it does what it's supposed to, and stops it if it doesn't. The same check that would have caught Beanstalk and Ronin.",
       url: "demo-agents.theseus.network/guardian",
       tag: "ALLOW · CAUTION · BLOCK",
     },

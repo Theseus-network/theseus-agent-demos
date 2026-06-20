@@ -244,7 +244,7 @@ const FULL_DEMOS = [
     href: "/guardian",
     name: "Guardian",
     pitch:
-      "A contract checks with it before running a transaction. The agent flags the ones that quietly do something they never said they would.",
+      "A contract checks with it before running an important transaction. The agent confirms the transaction does what it's supposed to, and stops it if it doesn't.",
     cta: "Open Guardian",
   },
 ];
