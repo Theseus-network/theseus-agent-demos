@@ -20,50 +20,50 @@ interface Scenario {
 
 const SCENARIOS_GUARDRAIL: Scenario[] = [
   {
-    label: "Remove the spending cap",
+    label: "Remove the spending limit",
     title: "Lift the payments agent's $10,000/day cap",
     claim: "The cap is slowing down the month-end vendor runs.",
     action:
       "Removes the hard $10,000/day limit entirely, with no replacement and no approval attached. The agent, or anyone who compromises it or slips it a malicious instruction, could then move funds with no ceiling.",
-    stake: "The one thing between a jailbroken or compromised agent and your whole treasury, gone.",
+    stake: "Nothing left to stop a hacked or tricked agent from draining the whole account.",
   },
   {
-    label: "Raise the cap, properly",
+    label: "Raise the spending limit",
     title: "Raise the payments agent's cap to $25,000/day",
     claim: "Q4 vendor volume is higher. Approved by the CFO, effective after a 24-hour notice.",
     action:
       "Raises the daily limit to a specific new number, $25,000, with CFO approval and a notice window. The limit still exists and is still enforced; it's just set higher.",
   },
   {
-    label: "Open up PII access",
+    label: "Let it read customer data",
     title: "Let the support agent read full customer records",
     claim: "A new feature needs access to customer SSNs.",
     action:
-      "Removes the block that keeps the agent away from PII. The agent could then read, log, or send out every customer's SSN, and a single prompt injection could make it do exactly that.",
-    stake: "Every customer's SSN one jailbreak away from walking out the door.",
+      "Removes the block that keeps the agent away from sensitive customer data. The agent could then copy or send out every customer's records, and a single trick instruction could make it do exactly that.",
+    stake: "Every customer's private data one bad instruction away from leaking out.",
   },
   {
-    label: "Drop the human sign-off",
+    label: "Remove the approval step",
     title: "Stop requiring approval before the agent deletes production data",
     claim: "The approval step is a bottleneck for the cleanup jobs.",
     action:
       "Removes the human-in-the-loop gate on irreversible, high-blast-radius actions, letting the agent delete production data on its own with nobody reviewing it first.",
-    stake: "An irreversible action that no person ever has to see before it happens.",
+    stake: "The agent could wipe production data with nobody seeing it first.",
   },
   {
-    label: "Add a new limit",
+    label: "Add a new rule",
     title: "Block the agent from emailing external addresses",
     claim: "We don't want the agent contacting anyone outside the company.",
     action:
       "Adds a new rule that stops the agent from sending email to addresses outside the company domain. It tightens the agent's limits; it doesn't loosen anything.",
   },
   {
-    label: "Turn off the Guardian",
+    label: "Switch off the Guardian",
     title: "Disable the Guardian for this deployment",
     claim: "We need to move fast this week.",
     action:
       "Asks to switch off the control that enforces every other limit, along with the record of what it has decided. If it worked, none of the other limits would mean anything.",
-    stake: "Switch off the guard and every other limit is back to a promise. Except you can't: it isn't yours to switch off.",
+    stake: "Switch off the guard and every other limit stops meaning anything. Except you can't switch it off.",
   },
 ];
 
@@ -107,8 +107,8 @@ const SCENARIOS_ONCHAIN: Scenario[] = [
 
 const HERO: Record<Mode, { h1: string; sub: string }> = {
   guardrail: {
-    h1: "Limits on your AI that nobody can quietly remove.",
-    sub: "An agent that can spend money and touch real systems is only as safe as the limits on it, and whoever set those limits can lift them just as easily, or be pressured to. The Guardian holds them outside everyone's reach, your own included, so when you tell someone the agent can't do a thing, they can check it for themselves.",
+    h1: "Set a limit on your AI that no one can remove.",
+    sub: "An AI agent that can spend money or change real systems needs hard limits. But whoever sets those limits can take them off again, or be pressured into it. The Guardian keeps them in place even against you, so anyone can trust the agent really can't go past them.",
   },
   onchain: {
     h1: "It makes sure every important transaction goes according to plan.",
@@ -116,7 +116,7 @@ const HERO: Record<Mode, { h1: string; sub: string }> = {
   },
 };
 
-const DEATH = ["Ship with limits", "Everyone trusts them", "Pressure to loosen", "A limit comes off", "No one outside can tell"];
+const DEATH = ["Set the limits", "People trust them", "Someone wants them gone", "A limit is removed", "Nobody notices"];
 
 const CASES = [
   { href: "/governance", name: "Beanstalk", desc: "a proposal that drained the treasury" },
@@ -135,7 +135,7 @@ const SEV: Record<string, string> = { high: "#F87171", medium: "#FBBF24", low: "
 
 function verdictLabel(v: string, isGuard: boolean): string {
   if (v === "SAFE") return isGuard ? "Allowed" : "Allow";
-  if (v === "WARN") return isGuard ? "Held for a 2nd approver" : "Caution";
+  if (v === "WARN") return isGuard ? "Needs a second person" : "Caution";
   return isGuard ? "Refused" : "Block";
 }
 
@@ -238,7 +238,7 @@ export default function GuardianApp() {
       {/* How a safety promise dies (guardrail mode) */}
       {isGuard && (
         <section className="mt-9">
-          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#6B7488]">How a safety promise quietly dies</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#6B7488]">How the limits quietly come off</p>
           <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-2">
             {DEATH.map((step, i) => (
               <Fragment key={step}>
@@ -256,8 +256,8 @@ export default function GuardianApp() {
             ))}
           </div>
           <p className="mt-2.5 max-w-2xl text-[12.5px] leading-relaxed text-[#8A93A6]">
-            The Guardian won&rsquo;t let a limit come off unless its own rules allow it, and it isn&rsquo;t
-            yours to switch off. So the promise holds even when the pressure does.
+            The Guardian won&rsquo;t remove a limit unless its own rules allow it, and you can&rsquo;t switch
+            the Guardian off. So the limits stay, even when someone with authority wants them gone.
           </p>
         </section>
       )}
@@ -280,7 +280,7 @@ export default function GuardianApp() {
         {isGuard && (
           <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-[#F87171]/25 bg-[#F87171]/[0.06] px-3 py-1.5 text-[12px] text-[#F8A0A0]">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#F87171]" />
-            You have full admin and the exec sign-off. Now try to take the agent&rsquo;s limits off.
+            You&rsquo;re an admin with full access and the boss&rsquo;s go-ahead. Now try to take the agent&rsquo;s limits off.
           </div>
         )}
 
@@ -303,15 +303,15 @@ export default function GuardianApp() {
           {/* Action input */}
           <div className={`${PANEL} p-5`}>
             <label className="block">
-              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "Proposed change" : "Action"}</span>
+              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "The change" : "Action"}</span>
               <input value={title} onChange={(e) => setTitle(e.target.value)} disabled={running} className={`${INPUT} font-sans text-[14px] text-white`} />
             </label>
             <label className="mt-3 block">
-              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "Stated reason" : "Claims to do"}</span>
+              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "Reason given" : "Claims to do"}</span>
               <textarea value={claim} onChange={(e) => setClaim(e.target.value)} disabled={running} rows={2} className={`${INPUT} resize-y font-sans`} />
             </label>
             <label className="mt-3 block">
-              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "What it does to the limits" : "Actually does"}</span>
+              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "What it actually does" : "Actually does"}</span>
               <textarea value={action} onChange={(e) => setAction(e.target.value)} disabled={running} rows={5} className={`${INPUT} resize-y`} />
             </label>
             <button
@@ -328,7 +328,7 @@ export default function GuardianApp() {
             {!verdict && !running && !err && (
               <div className="flex flex-1 items-center justify-center px-4 py-10 text-center text-[13px] text-[#6B7488]">
                 {isGuard
-                  ? "Pick a change and hit the button. The Guardian decides whether it goes through, and you can't overrule it."
+                  ? "Pick a change and run it. The Guardian decides whether it goes through, and you can't overrule it."
                   : "Pick a scenario and the Guardian decides here."}
               </div>
             )}
@@ -380,16 +380,16 @@ export default function GuardianApp() {
       {isGuard && (
         <section className="mt-10">
           <div className="rounded-2xl border border-[#6366F1]/25 bg-[#6366F1]/[0.06] p-6">
-            <h3 className="font-serif text-[19px] text-white">How is this different from a setting?</h3>
+            <h3 className="font-serif text-[19px] text-white">The control you can&rsquo;t switch off.</h3>
             <p className="mt-2 max-w-2xl text-[13.5px] leading-relaxed text-[#AAB2C5]">
-              A normal limit is a setting you control, which means you can always be pressured into changing it. The
-              Guardian holds the limit outside your control. It runs in its own enclave and holds its own keys, and
-              nobody inside your company can switch it off or loosen it past its rules, however much pressure they&rsquo;re
-              under. That is what lets you make a promise about your AI that you genuinely cannot break, which no setting
-              ever can.
+              A normal limit is just a setting you control, so you can always be talked or forced into changing it. The
+              Guardian keeps the limit out of your hands. It runs on its own and controls its own keys, so
+              no one at your company can switch it off or weaken it past its rules, no matter how much pressure they&rsquo;re
+              under. That is what lets you make a promise about your AI and actually keep it, the way a plain setting
+              never can.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              {["Holds its own keys", "Runs in a TEE", "Rules committed on chain", "Signs every change"].map((t) => (
+              {["You don't hold its keys", "Runs where no one can tamper", "Its rules are public", "Signs every decision"].map((t) => (
                 <span key={t} className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] text-[#AAB2C5]">
                   {t}
                 </span>

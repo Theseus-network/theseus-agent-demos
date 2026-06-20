@@ -74,12 +74,12 @@ export const DEMO_COPY = {
     path: "/guardian",
     title: "Guardian · AI limits even you can't remove",
     description:
-      "An AI agent's safety limits are only as good as the company's promise to keep them. The Guardian enforces them from outside your control, so the limits hold even against you, and anyone can verify the agent can't do what you say it can't.",
+      "An AI agent's limits are only as good as the company's promise to keep them. The Guardian holds those limits even against you, so anyone can check that the agent really can't do what you promised.",
     og: {
       section: "guardian",
-      headline: "Limits on your AI that nobody can quietly remove.",
+      headline: "Set a limit on your AI that no one can remove.",
       blurb:
-        "An agent that can spend money and touch real systems is only as safe as its limits, and whoever set them can lift them. The Guardian holds them outside everyone's reach, your own included, so the promise is something anyone can verify.",
+        "An AI agent with real power needs hard limits, but whoever set them can take them off again. The Guardian keeps them in place even against you, so anyone can check the agent really can't go past them.",
       url: "demo-agents.theseus.network/guardian",
       tag: "ALLOWED · HELD · REFUSED",
     },
