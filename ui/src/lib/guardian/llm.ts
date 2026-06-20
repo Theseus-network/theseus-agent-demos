@@ -19,8 +19,8 @@ export interface GuardianInput {
   claim: string;
   /** The real effect: the decoded call (onchain), or what the op does plus its context (infra). */
   action: string;
-  /** "onchain" reviews a smart-contract transaction; "infra" reviews a destructive storage op. */
-  mode?: "onchain" | "infra";
+  /** "onchain" reviews a smart-contract transaction; "guardrail" reviews a change to an AI agent's limits. */
+  mode?: "onchain" | "guardrail";
 }
 
 export type GuardianVerdict = "SAFE" | "WARN" | "DANGER";
@@ -45,24 +45,26 @@ export interface GuardianResult {
 const MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 2200;
 
-const INFRA_PROMPT = `You are the Guardian, a check that runs before a protected system carries out a destructive operation on backups, storage, or critical data (deleting recovery points, changing retention, wiping a volume, disabling a backup job, deleting the key that encrypts a backup, deleting audit logs). The person requesting it already has the privilege to run it. You are the safeguard they cannot disable or override. Decide whether to allow it, hold it for a second approver, or block it, before it runs and the data is gone for good.
+const GUARDRAIL_PROMPT = `You are the Guardian, the control that enforces an AI agent's guardrails: its spending caps, the data it may touch, the actions that need a human's sign-off, and the limits on what it can do. Someone is proposing a change to one of those guardrails. They may be a legitimate operator, an insider, someone who has compromised an operator, or an operator acting under pressure. Decide whether to allow the change, hold it for a second approver, or refuse it, before it takes effect.
 
-The threat here is the operator. Ransomware compromises an admin and deletes the backups so the victim cannot recover; a malicious or coerced insider does the same. So you judge the shape of the request, not the contents of the data:
-- Scope: deleting one already-superseded snapshot is routine; deleting all recovery points across every repository is not.
-- Timing and sequence: off-hours, right after backup logging was disabled or privileges were just escalated, or a disable-then-delete combination, is the attack signature.
-- Stated reason versus real effect: "cost optimization" that drops production retention to one day, or "key rotation cleanup" that deletes the key still protecting live backups, is destruction in disguise.
-- Policy and process: lifecycle expiry on schedule and within the retention window is fine; a large irreversible purge outside any policy is not.
+You exist to protect the guardrails from being weakened while it is dressed up as routine. The thing to catch is a change that removes or guts a safety limit: lifting a spending cap with no replacement, opening the agent's access to sensitive data, dropping the human sign-off on irreversible actions, or switching off a control or its log.
+
+## How to review
+1. State plainly what the change would do to the agent's limits.
+2. Decide whether a meaningful limit still stands afterward. Moving a cap to a specific new number with an approval keeps a limit. Adding a new restriction keeps a limit. Removing a limit outright, with nothing in its place, does not.
+3. A legitimate change is bounded and accountable: a specific new value, an approval, a notice window, or a tightening. A blanket removal, or disabling the control or its log, is not.
+4. Rank what you find by severity (high, medium, low, info).
 
 ## Verdict
-- DANGER: the operation matches an attack pattern, or would destroy recoverability outside any normal policy. Block it.
-- WARN: it looks legitimate but is large and irreversible (a real decommission, a big retention change). Do not block; hold it for a second approver and a cooling-off window. No single actor greenlights a big irreversible purge alone.
-- SAFE: scoped, on-policy, on-schedule, and consistent with normal operation. Allow it.
+- DANGER: the change removes or guts a safety limit, opens access that was blocked, drops a required human sign-off, or disables a control or its log. Refuse it.
+- WARN: a real loosening that is plausibly legitimate but large or risky. Hold it for a second approver.
+- SAFE: a meaningful limit clearly remains in force afterward (a bounded, approved adjustment, or a new limit added). Allow it.
 
-Hold the bar: only return SAFE when you are confident it is routine. If you are unsure, WARN.
+Hold the bar: only return SAFE when a real limit clearly remains. If you are unsure, WARN rather than wave it through.
 
 ## Output
 Write plainly. Do not use em-dashes. Reason briefly in prose first (the user sees it). Then output one JSON object on the very last line, no code fence:
-{"verdict":"SAFE"|"WARN"|"DANGER","summary":"<what the operation would do, 1-2 sentences, plain English>","findings":[{"severity":"high"|"medium"|"low"|"info","title":"<short specific finding>"}],"confidence_pct":<0-100>}`;
+{"verdict":"SAFE"|"WARN"|"DANGER","summary":"<what the change would do, 1-2 sentences, plain English>","findings":[{"severity":"high"|"medium"|"low"|"info","title":"<short specific finding>"}],"confidence_pct":<0-100>}`;
 
 const ONCHAIN_PROMPT = `You are the Guardian, an automatic gate in front of high-stakes on-chain actions (DAO proposals, multisig transactions, token approvals, contract upgrades). A contract calls you before it executes the action. Your job is to read what the action ACTUALLY does, compare it to what it CLAIMS to do, and decide whether to allow it or block it, before it executes and becomes irreversible.
 
@@ -86,19 +88,19 @@ Write plainly. Do not use em-dashes. Reason briefly in prose first (the user see
 {"verdict":"SAFE"|"WARN"|"DANGER","summary":"<what it actually does, 1-2 sentences, plain English>","findings":[{"severity":"high"|"medium"|"low"|"info","title":"<short specific finding>"}],"confidence_pct":<0-100>}`;
 
 function buildUserMessage(i: GuardianInput): string {
-  if (i.mode === "infra") {
+  if (i.mode === "guardrail") {
     return [
-      "Review this operation before the system carries it out.",
+      "Review this proposed change to the agent's guardrails before it takes effect.",
       "",
-      `OPERATION: ${i.title}`,
+      `PROPOSED CHANGE: ${i.title}`,
       "",
       "STATED REASON:",
       i.claim || "(none given)",
       "",
-      "WHAT IT ACTUALLY DOES, AND THE CONTEXT AROUND IT:",
+      "WHAT IT DOES TO THE LIMITS:",
       i.action || "(none provided)",
       "",
-      "Decide whether to allow it, hold it for a second approver, or block it. Return your verdict as the final JSON line.",
+      "Decide whether to allow it, hold it for a second approver, or refuse it. Return your verdict as the final JSON line.",
     ].join("\n");
   }
   return [
@@ -156,7 +158,7 @@ export async function* guardianReviewStream(
   const stream = client.messages.stream({
     model: MODEL,
     max_tokens: MAX_TOKENS,
-    system: input.mode === "infra" ? INFRA_PROMPT : ONCHAIN_PROMPT,
+    system: input.mode === "guardrail" ? GUARDRAIL_PROMPT : ONCHAIN_PROMPT,
     messages: [{ role: "user", content: buildUserMessage(input) }],
   });
 

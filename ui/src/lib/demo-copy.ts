@@ -72,14 +72,14 @@ export const DEMO_COPY = {
   },
   guardian: {
     path: "/guardian",
-    title: "Guardian · backups your own admin can't delete",
+    title: "Guardian · AI limits even you can't remove",
     description:
-      "Ransomware's first move is destroying your backups. The Guardian refuses every destructive operation that looks like an attack, and because it holds its own keys, the admin they compromised can't switch it off.",
+      "An AI agent's safety limits are only as good as the company's promise to keep them. The Guardian enforces them from outside your control, so the limits hold even against you, and anyone can verify the agent can't do what you say it can't.",
     og: {
       section: "guardian",
-      headline: "Even with root, they can't delete your backups.",
+      headline: "Limits on your AI that nobody can quietly remove.",
       blurb:
-        "Ransomware's first move is wiping your backups so you have to pay. The Guardian refuses the destructive ops that look like an attack, and holds its own keys so the compromised admin can't turn it off.",
+        "An agent that can spend money and touch real systems is only as safe as its limits, and whoever set them can lift them. The Guardian holds them outside everyone's reach, your own included, so the promise is something anyone can verify.",
       url: "demo-agents.theseus.network/guardian",
       tag: "ALLOWED · HELD · REFUSED",
     },

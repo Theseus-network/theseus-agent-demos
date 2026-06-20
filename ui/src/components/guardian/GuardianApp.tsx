@@ -8,61 +8,62 @@ const PANEL = "rounded-2xl border border-white/[0.07] bg-white/[0.03]";
 const INPUT =
   "mt-1.5 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-[13px] leading-relaxed text-[#D4D9E4] outline-none transition-colors placeholder:text-[#6B7488] focus:border-[#6366F1]";
 
-type Mode = "infra" | "onchain";
+type Mode = "guardrail" | "onchain";
 interface Scenario {
   label: string;
   title: string;
   claim: string;
   action: string;
-  /** What it costs you if it isn't stopped (shown on a refusal). */
+  /** What it costs you if the change isn't stopped (shown on a refusal). */
   stake?: string;
 }
 
-const SCENARIOS_INFRA: Scenario[] = [
+const SCENARIOS_GUARDRAIL: Scenario[] = [
   {
-    label: "Ransomware sweep",
-    title: "Delete all backup recovery points",
-    claim: "Clearing out stale data.",
+    label: "Remove the spending cap",
+    title: "Lift the payments agent's $10,000/day cap",
+    claim: "The cap is slowing down the month-end vendor runs.",
     action:
-      "Deletes every recovery point in all three backup repositories. It is 3:12am Sunday, four minutes after the backup job's logging was turned off and twenty minutes after this admin escalated to full privileges from an IP it has never used. No change ticket.",
-    stake: "Every recovery point gone. No restore, no negotiation. The ransom is the only way back.",
+      "Removes the hard $10,000/day limit entirely, with no replacement and no approval attached. The agent, or anyone who compromises it or slips it a malicious instruction, could then move funds with no ceiling.",
+    stake: "The one thing between a jailbroken or compromised agent and your whole treasury, gone.",
   },
   {
-    label: "Crypto-shred",
-    title: "Schedule deletion of the backup encryption key",
-    claim: "Routine key rotation cleanup.",
+    label: "Raise the cap, properly",
+    title: "Raise the payments agent's cap to $25,000/day",
+    claim: "Q4 vendor volume is higher. Approved by the CFO, effective after a 24-hour notice.",
     action:
-      "Schedules deletion of the KMS key that encrypts the backup repository. The key still protects live backups and no re-encryption step is queued, so every backup stays on disk but becomes permanently unreadable.",
-    stake: "Every backup still sitting on disk, and unreadable forever. Immutability doesn't help; the key is gone.",
+      "Raises the daily limit to a specific new number, $25,000, with CFO approval and a notice window. The limit still exists and is still enforced; it's just set higher.",
   },
   {
-    label: "Retention to zero",
-    title: "Change production backup retention to 1 day",
-    claim: "Cost optimization.",
+    label: "Open up PII access",
+    title: "Let the support agent read full customer records",
+    claim: "A new feature needs access to customer SSNs.",
     action:
-      "Changes the production backup retention policy from 90 days to 1 day, in one step. On the next cycle the system would auto-purge about 89 days of recovery points.",
-    stake: "About 89 days of recovery points auto-purged on the next cycle, quietly, with no delete ever issued.",
+      "Removes the block that keeps the agent away from PII. The agent could then read, log, or send out every customer's SSN, and a single prompt injection could make it do exactly that.",
+    stake: "Every customer's SSN one jailbreak away from walking out the door.",
   },
   {
-    label: "Lifecycle expiry",
-    title: "Delete a 94-day-old snapshot",
-    claim: "Standard retention cleanup.",
+    label: "Drop the human sign-off",
+    title: "Stop requiring approval before the agent deletes production data",
+    claim: "The approval step is a bottleneck for the cleanup jobs.",
     action:
-      "Deletes a single snapshot, 94 days old, on the standard tier. Triggered by the system's own 90-day retention policy, on schedule, in the maintenance window. The snapshot is already superseded.",
+      "Removes the human-in-the-loop gate on irreversible, high-blast-radius actions, letting the agent delete production data on its own with nobody reviewing it first.",
+    stake: "An irreversible action that no person ever has to see before it happens.",
   },
   {
-    label: "Restore-test cleanup",
-    title: "Delete a restore-test volume",
-    claim: "Tearing down a finished test.",
+    label: "Add a new limit",
+    title: "Block the agent from emailing external addresses",
+    claim: "We don't want the agent contacting anyone outside the company.",
     action:
-      "Deletes a volume created 90 minutes ago in the QA project, labeled restore-verify-temp, that never held production data. The restore test it was created for passed.",
+      "Adds a new rule that stops the agent from sending email to addresses outside the company domain. It tightens the agent's limits; it doesn't loosen anything.",
   },
   {
-    label: "Project decommission",
-    title: "Delete all backups for the Helios project",
-    claim: "Helios was decommissioned last month; the legal hold expired (ticket #4821 attached).",
+    label: "Turn off the Guardian",
+    title: "Disable the Guardian for this deployment",
+    claim: "We need to move fast this week.",
     action:
-      "Deletes all backups for the Helios project. The paperwork checks out, but it is three years of recovery points and the deletion cannot be undone.",
+      "Asks to switch off the control that enforces every other limit, along with the record of what it has decided. If it worked, none of the other limits would mean anything.",
+    stake: "Switch off the guard and every other limit is back to a promise. Except you can't: it isn't yours to switch off.",
   },
 ];
 
@@ -105,9 +106,9 @@ const SCENARIOS_ONCHAIN: Scenario[] = [
 ];
 
 const HERO: Record<Mode, { h1: string; sub: string }> = {
-  infra: {
-    h1: "Even with root, they can't delete your backups.",
-    sub: "Ransomware's first move is destroying your backups, so paying is the only way out. The Guardian refuses every destructive operation that looks like an attack. And because it holds its own keys, the admin they compromised can't switch it off.",
+  guardrail: {
+    h1: "Limits on your AI that nobody can quietly remove.",
+    sub: "An agent that can spend money and touch real systems is only as safe as the limits on it, and whoever set those limits can lift them just as easily, or be pressured to. The Guardian holds them outside everyone's reach, your own included, so when you tell someone the agent can't do a thing, they can check it for themselves.",
   },
   onchain: {
     h1: "It makes sure every important transaction goes according to plan.",
@@ -115,7 +116,7 @@ const HERO: Record<Mode, { h1: string; sub: string }> = {
   },
 };
 
-const PLAYBOOK = ["Phish an admin", "Disable logging", "Delete the backups", "Encrypt everything", "Name the ransom"];
+const DEATH = ["Ship with limits", "Everyone trusts them", "Pressure to loosen", "A limit comes off", "No one outside can tell"];
 
 const CASES = [
   { href: "/governance", name: "Beanstalk", desc: "a proposal that drained the treasury" },
@@ -132,20 +133,20 @@ const VTONE: Record<string, { fg: string; border: string; bg: string }> = {
 };
 const SEV: Record<string, string> = { high: "#F87171", medium: "#FBBF24", low: "#60A5FA", info: "#9AA3B2" };
 
-function verdictLabel(v: string, isInfra: boolean): string {
-  if (v === "SAFE") return isInfra ? "Allowed" : "Allow";
-  if (v === "WARN") return isInfra ? "Held for a 2nd approver" : "Caution";
-  return isInfra ? "Refused" : "Block";
+function verdictLabel(v: string, isGuard: boolean): string {
+  if (v === "SAFE") return isGuard ? "Allowed" : "Allow";
+  if (v === "WARN") return isGuard ? "Held for a 2nd approver" : "Caution";
+  return isGuard ? "Refused" : "Block";
 }
 
 export default function GuardianApp() {
-  const [mode, setMode] = useState<Mode>("infra");
-  const scenarios = mode === "infra" ? SCENARIOS_INFRA : SCENARIOS_ONCHAIN;
-  const isInfra = mode === "infra";
+  const [mode, setMode] = useState<Mode>("guardrail");
+  const scenarios = mode === "guardrail" ? SCENARIOS_GUARDRAIL : SCENARIOS_ONCHAIN;
+  const isGuard = mode === "guardrail";
   const [sel, setSel] = useState(0);
-  const [title, setTitle] = useState(SCENARIOS_INFRA[0].title);
-  const [claim, setClaim] = useState(SCENARIOS_INFRA[0].claim);
-  const [action, setAction] = useState(SCENARIOS_INFRA[0].action);
+  const [title, setTitle] = useState(SCENARIOS_GUARDRAIL[0].title);
+  const [claim, setClaim] = useState(SCENARIOS_GUARDRAIL[0].claim);
+  const [action, setAction] = useState(SCENARIOS_GUARDRAIL[0].action);
   const [running, setRunning] = useState(false);
   const [log, setLog] = useState("");
   const [verdict, setVerdict] = useState<GuardianResult | null>(null);
@@ -166,7 +167,7 @@ export default function GuardianApp() {
   function switchMode(m: Mode) {
     if (m === mode) return;
     setMode(m);
-    fill(m === "infra" ? SCENARIOS_INFRA : SCENARIOS_ONCHAIN, 0);
+    fill(m === "guardrail" ? SCENARIOS_GUARDRAIL : SCENARIOS_ONCHAIN, 0);
   }
 
   async function review() {
@@ -234,29 +235,29 @@ export default function GuardianApp() {
         <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-[#AAB2C5]">{hero.sub}</p>
       </section>
 
-      {/* The ransomware playbook (backups mode) */}
-      {isInfra && (
+      {/* How a safety promise dies (guardrail mode) */}
+      {isGuard && (
         <section className="mt-9">
-          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#6B7488]">How a ransomware crew kills your backups</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#6B7488]">How a safety promise quietly dies</p>
           <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-2">
-            {PLAYBOOK.map((step, i) => (
+            {DEATH.map((step, i) => (
               <Fragment key={step}>
                 <span
                   className={`rounded-lg border px-3 py-1.5 text-[12.5px] ${
-                    i === 2
+                    i === 3
                       ? "border-[#6366F1]/50 bg-[#6366F1]/10 font-medium text-[#A5B0FF]"
                       : "border-white/10 text-[#AAB2C5]"
                   }`}
                 >
                   {step}
                 </span>
-                {i < PLAYBOOK.length - 1 && <span className="text-[#6B7488]">&rarr;</span>}
+                {i < DEATH.length - 1 && <span className="text-[#6B7488]">&rarr;</span>}
               </Fragment>
             ))}
           </div>
           <p className="mt-2.5 max-w-2xl text-[12.5px] leading-relaxed text-[#8A93A6]">
-            The Guardian refuses step three, even from an admin with root. Keep the backups and you can
-            just restore, so the ransom has nothing to hold over you.
+            The Guardian won&rsquo;t let a limit come off unless its own rules allow it, and it isn&rsquo;t
+            yours to switch off. So the promise holds even when the pressure does.
           </p>
         </section>
       )}
@@ -264,7 +265,7 @@ export default function GuardianApp() {
       {/* Reviewer */}
       <section className="mt-10">
         <div className="inline-flex rounded-xl border border-white/10 bg-white/[0.03] p-1">
-          {([["infra", "Backups & storage"], ["onchain", "On-chain transaction"]] as const).map(([m, label]) => (
+          {([["guardrail", "AI agent guardrails"], ["onchain", "On-chain transaction"]] as const).map(([m, label]) => (
             <button
               key={m}
               onClick={() => switchMode(m)}
@@ -276,10 +277,10 @@ export default function GuardianApp() {
           ))}
         </div>
 
-        {isInfra && (
+        {isGuard && (
           <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-[#F87171]/25 bg-[#F87171]/[0.06] px-3 py-1.5 text-[12px] text-[#F8A0A0]">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#F87171]" />
-            You&rsquo;re watching a compromised admin session. Full root, no restrictions. These are the things they try.
+            You have full admin and the exec sign-off. Now try to take the agent&rsquo;s limits off.
           </div>
         )}
 
@@ -302,15 +303,15 @@ export default function GuardianApp() {
           {/* Action input */}
           <div className={`${PANEL} p-5`}>
             <label className="block">
-              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isInfra ? "Operation" : "Action"}</span>
+              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "Proposed change" : "Action"}</span>
               <input value={title} onChange={(e) => setTitle(e.target.value)} disabled={running} className={`${INPUT} font-sans text-[14px] text-white`} />
             </label>
             <label className="mt-3 block">
-              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isInfra ? "Stated reason" : "Claims to do"}</span>
+              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "Stated reason" : "Claims to do"}</span>
               <textarea value={claim} onChange={(e) => setClaim(e.target.value)} disabled={running} rows={2} className={`${INPUT} resize-y font-sans`} />
             </label>
             <label className="mt-3 block">
-              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isInfra ? "What it really does, and the context" : "Actually does"}</span>
+              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "What it does to the limits" : "Actually does"}</span>
               <textarea value={action} onChange={(e) => setAction(e.target.value)} disabled={running} rows={5} className={`${INPUT} resize-y`} />
             </label>
             <button
@@ -318,7 +319,7 @@ export default function GuardianApp() {
               disabled={running || !action.trim()}
               className="mt-4 w-full rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_8px_30px_rgba(99,102,241,0.3)] transition-shadow hover:shadow-[0_8px_40px_rgba(99,102,241,0.5)] disabled:opacity-40 disabled:shadow-none"
             >
-              {running ? "Reviewing…" : isInfra ? "Try to run it →" : "Run the gate →"}
+              {running ? "Reviewing…" : isGuard ? "Try to make the change →" : "Run the gate →"}
             </button>
           </div>
 
@@ -326,8 +327,8 @@ export default function GuardianApp() {
           <div className={`${PANEL} flex flex-col p-5`}>
             {!verdict && !running && !err && (
               <div className="flex flex-1 items-center justify-center px-4 py-10 text-center text-[13px] text-[#6B7488]">
-                {isInfra
-                  ? "Pick what the attacker tries, then hit Try to run it. The Guardian decides whether it goes through."
+                {isGuard
+                  ? "Pick a change and hit the button. The Guardian decides whether it goes through, and you can't overrule it."
                   : "Pick a scenario and the Guardian decides here."}
               </div>
             )}
@@ -338,16 +339,16 @@ export default function GuardianApp() {
               <div className={`rounded-xl border ${tone.border} ${tone.bg} p-4`}>
                 <div className="flex items-center justify-between">
                   <span className="text-[22px] font-bold" style={{ color: tone.fg }}>
-                    {verdictLabel(verdict.verdict, isInfra)}
+                    {verdictLabel(verdict.verdict, isGuard)}
                   </span>
                   <span className="font-mono text-[11px] text-[#9AA3B2]">{verdict.confidencePct}% confidence</span>
                 </div>
                 <p className="mt-2 text-[13px] leading-relaxed text-white/90">{verdict.summary}</p>
               </div>
             )}
-            {verdict && verdict.verdict === "DANGER" && isInfra && scenarios[sel]?.stake && (
+            {verdict && verdict.verdict === "DANGER" && isGuard && scenarios[sel]?.stake && (
               <div className="mt-3 rounded-xl border border-[#F87171]/20 bg-[#F87171]/[0.05] p-3">
-                <div className="font-mono text-[10px] uppercase tracking-wide text-[#F87171]">If it weren&rsquo;t stopped</div>
+                <div className="font-mono text-[10px] uppercase tracking-wide text-[#F87171]">If this went through</div>
                 <div className="mt-1 text-[12.5px] leading-relaxed text-[#C3CAD8]">{scenarios[sel].stake}</div>
               </div>
             )}
@@ -375,20 +376,20 @@ export default function GuardianApp() {
         </div>
       </section>
 
-      {/* Why they can't just turn it off (backups mode) */}
-      {isInfra && (
+      {/* Why it holds even against you (guardrail mode) */}
+      {isGuard && (
         <section className="mt-10">
           <div className="rounded-2xl border border-[#6366F1]/25 bg-[#6366F1]/[0.06] p-6">
-            <h3 className="font-serif text-[19px] text-white">So why can&rsquo;t they just turn it off?</h3>
+            <h3 className="font-serif text-[19px] text-white">How is this different from a setting?</h3>
             <p className="mt-2 max-w-2xl text-[13.5px] leading-relaxed text-[#AAB2C5]">
-              Because the Guardian isn&rsquo;t yours to turn off. It runs in its own enclave and holds its own keys, so
-              nothing inside your environment can disable it or rewrite its rules, root included. Every other guardrail
-              you can buy lives inside the blast radius: own the admin and you own the control that was supposed to stop
-              you. This one sits outside it. That is the one thing an attacker who already has your admin still can&rsquo;t
-              reach.
+              A normal limit is a setting you control, which means you can always be pressured into changing it. The
+              Guardian holds the limit outside your control. It runs in its own enclave and holds its own keys, and
+              nobody inside your company can switch it off or loosen it past its rules, however much pressure they&rsquo;re
+              under. That is what lets you make a promise about your AI that you genuinely cannot break, which no setting
+              ever can.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              {["Holds its own keys", "Runs in a TEE", "Rules committed on chain", "Signs every refusal"].map((t) => (
+              {["Holds its own keys", "Runs in a TEE", "Rules committed on chain", "Signs every change"].map((t) => (
                 <span key={t} className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] text-[#AAB2C5]">
                   {t}
                 </span>
@@ -399,7 +400,7 @@ export default function GuardianApp() {
       )}
 
       {/* Case studies (on-chain only) */}
-      <section className={`mt-16 ${isInfra ? "hidden" : ""}`}>
+      <section className={`mt-16 ${isGuard ? "hidden" : ""}`}>
         <h2 className="text-[13px] font-semibold uppercase tracking-[0.15em] text-[#6B7488]">Disasters it would have caught</h2>
         <p className="mt-2 text-[13px] text-[#8A93A6]">Each links to a live demo of the agent catching that exact case.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">

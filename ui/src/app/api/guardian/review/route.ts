@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     title: String(body.title ?? "Untitled action").slice(0, 200),
     claim: String(body.claim ?? "").slice(0, 4000),
     action: String(body.action ?? "").slice(0, 6000),
-    mode: body.mode === "infra" ? "infra" : "onchain",
+    mode: body.mode === "guardrail" ? "guardrail" : "onchain",
   };
   if (!input.action.trim()) {
     return new Response("missing action", { status: 400 });
