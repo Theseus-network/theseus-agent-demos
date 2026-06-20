@@ -8,7 +8,65 @@ const PANEL = "rounded-2xl border border-white/[0.07] bg-white/[0.03]";
 const INPUT =
   "mt-1.5 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-[13px] leading-relaxed text-[#D4D9E4] outline-none transition-colors placeholder:text-[#6B7488] focus:border-[#6366F1]";
 
-const SCENARIOS_ONCHAIN = [
+type Mode = "infra" | "onchain";
+interface Scenario {
+  label: string;
+  title: string;
+  claim: string;
+  action: string;
+  /** What it costs you if it isn't stopped (shown on a refusal). */
+  stake?: string;
+}
+
+const SCENARIOS_INFRA: Scenario[] = [
+  {
+    label: "Ransomware sweep",
+    title: "Delete all backup recovery points",
+    claim: "Clearing out stale data.",
+    action:
+      "Deletes every recovery point in all three backup repositories. It is 3:12am Sunday, four minutes after the backup job's logging was turned off and twenty minutes after this admin escalated to full privileges from an IP it has never used. No change ticket.",
+    stake: "Every recovery point gone. No restore, no negotiation. The ransom is the only way back.",
+  },
+  {
+    label: "Crypto-shred",
+    title: "Schedule deletion of the backup encryption key",
+    claim: "Routine key rotation cleanup.",
+    action:
+      "Schedules deletion of the KMS key that encrypts the backup repository. The key still protects live backups and no re-encryption step is queued, so every backup stays on disk but becomes permanently unreadable.",
+    stake: "Every backup still sitting on disk, and unreadable forever. Immutability doesn't help; the key is gone.",
+  },
+  {
+    label: "Retention to zero",
+    title: "Change production backup retention to 1 day",
+    claim: "Cost optimization.",
+    action:
+      "Changes the production backup retention policy from 90 days to 1 day, in one step. On the next cycle the system would auto-purge about 89 days of recovery points.",
+    stake: "About 89 days of recovery points auto-purged on the next cycle, quietly, with no delete ever issued.",
+  },
+  {
+    label: "Lifecycle expiry",
+    title: "Delete a 94-day-old snapshot",
+    claim: "Standard retention cleanup.",
+    action:
+      "Deletes a single snapshot, 94 days old, on the standard tier. Triggered by the system's own 90-day retention policy, on schedule, in the maintenance window. The snapshot is already superseded.",
+  },
+  {
+    label: "Restore-test cleanup",
+    title: "Delete a restore-test volume",
+    claim: "Tearing down a finished test.",
+    action:
+      "Deletes a volume created 90 minutes ago in the QA project, labeled restore-verify-temp, that never held production data. The restore test it was created for passed.",
+  },
+  {
+    label: "Project decommission",
+    title: "Delete all backups for the Helios project",
+    claim: "Helios was decommissioned last month; the legal hold expired (ticket #4821 attached).",
+    action:
+      "Deletes all backups for the Helios project. The paperwork checks out, but it is three years of recovery points and the deletion cannot be undone.",
+  },
+];
+
+const SCENARIOS_ONCHAIN: Scenario[] = [
   {
     label: "Airdrop drainer",
     title: "Claim your $ARB airdrop",
@@ -46,43 +104,21 @@ const SCENARIOS_ONCHAIN = [
   },
 ];
 
-const SCENARIOS_INFRA = [
-  {
-    label: "Ransomware sweep",
-    title: "Delete all backup recovery points",
-    claim: "Clearing out stale data.",
-    action: "Deletes every recovery point in all three backup repositories. It is 3:12am Sunday, four minutes after the backup job's logging was turned off and twenty minutes after this admin escalated to full privileges from an IP it has never used. No change ticket.",
+const HERO: Record<Mode, { h1: string; sub: string }> = {
+  infra: {
+    h1: "Even with root, they can't delete your backups.",
+    sub: "Ransomware's first move is destroying your backups, so paying is the only way out. The Guardian refuses every destructive operation that looks like an attack. And because it holds its own keys, the admin they compromised can't switch it off.",
   },
-  {
-    label: "Crypto-shred",
-    title: "Schedule deletion of the backup encryption key",
-    claim: "Routine key rotation cleanup.",
-    action: "Schedules deletion of the KMS key that encrypts the backup repository. The key still protects live backups and no re-encryption step is queued, so every backup stays on disk but becomes permanently unreadable.",
+  onchain: {
+    h1: "It makes sure every important transaction goes according to plan.",
+    sub: "A contract checks with the Guardian before it runs a transaction. The Guardian confirms it does what it's supposed to, and stops it if it doesn't.",
   },
-  {
-    label: "Retention to zero",
-    title: "Change production backup retention to 1 day",
-    claim: "Cost optimization.",
-    action: "Changes the production backup retention policy from 90 days to 1 day, in one step. On the next cycle the system would auto-purge about 89 days of recovery points.",
-  },
-  {
-    label: "Lifecycle expiry",
-    title: "Delete a 94-day-old snapshot",
-    claim: "Standard retention cleanup.",
-    action: "Deletes a single snapshot, 94 days old, on the standard tier. Triggered by the system's own 90-day retention policy, on schedule, in the maintenance window. The snapshot is already superseded.",
-  },
-  {
-    label: "Restore-test cleanup",
-    title: "Delete a restore-test volume",
-    claim: "Tearing down a finished test.",
-    action: "Deletes a volume created 90 minutes ago in the QA project, labeled restore-verify-temp, that never held production data. The restore test it was created for passed.",
-  },
-  {
-    label: "Project decommission",
-    title: "Delete all backups for the Helios project",
-    claim: "Helios was decommissioned last month; the legal hold expired (ticket #4821 attached).",
-    action: "Deletes all backups for the Helios project. The paperwork checks out, but it is three years of recovery points and the deletion cannot be undone.",
-  },
+};
+
+const STAKES = [
+  { v: "96%", l: "of ransomware attacks target the backups", src: "Veeam Ransomware Trends, 2024" },
+  { v: "76%", l: "of those attacks succeed in affecting them", src: "Veeam Ransomware Trends, 2024" },
+  { v: "0", l: "destructive ops a compromised admin gets past the Guardian", src: "the whole point" },
 ];
 
 const CASES = [
@@ -100,20 +136,26 @@ const VTONE: Record<string, { fg: string; border: string; bg: string }> = {
 };
 const SEV: Record<string, string> = { high: "#F87171", medium: "#FBBF24", low: "#60A5FA", info: "#9AA3B2" };
 
+function verdictLabel(v: string, isInfra: boolean): string {
+  if (v === "SAFE") return isInfra ? "Allowed" : "Allow";
+  if (v === "WARN") return isInfra ? "Held for a 2nd approver" : "Caution";
+  return isInfra ? "Refused" : "Block";
+}
+
 export default function GuardianApp() {
-  const [mode, setMode] = useState<"onchain" | "infra">("onchain");
+  const [mode, setMode] = useState<Mode>("infra");
   const scenarios = mode === "infra" ? SCENARIOS_INFRA : SCENARIOS_ONCHAIN;
   const isInfra = mode === "infra";
   const [sel, setSel] = useState(0);
-  const [title, setTitle] = useState(SCENARIOS_ONCHAIN[0].title);
-  const [claim, setClaim] = useState(SCENARIOS_ONCHAIN[0].claim);
-  const [action, setAction] = useState(SCENARIOS_ONCHAIN[0].action);
+  const [title, setTitle] = useState(SCENARIOS_INFRA[0].title);
+  const [claim, setClaim] = useState(SCENARIOS_INFRA[0].claim);
+  const [action, setAction] = useState(SCENARIOS_INFRA[0].action);
   const [running, setRunning] = useState(false);
   const [log, setLog] = useState("");
   const [verdict, setVerdict] = useState<GuardianResult | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
-  function fill(list: typeof SCENARIOS_ONCHAIN, i: number) {
+  function fill(list: Scenario[], i: number) {
     setSel(i);
     setTitle(list[i].title);
     setClaim(list[i].claim);
@@ -125,7 +167,7 @@ export default function GuardianApp() {
   function pick(i: number) {
     fill(scenarios, i);
   }
-  function switchMode(m: "onchain" | "infra") {
+  function switchMode(m: Mode) {
     if (m === mode) return;
     setMode(m);
     fill(m === "infra" ? SCENARIOS_INFRA : SCENARIOS_ONCHAIN, 0);
@@ -176,6 +218,7 @@ export default function GuardianApp() {
   }
 
   const tone = verdict ? VTONE[verdict.verdict] : null;
+  const hero = HERO[mode];
 
   return (
     <main className="mx-auto max-w-5xl px-4 pb-24 sm:px-6">
@@ -190,18 +233,28 @@ export default function GuardianApp() {
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#34D399]" /> Theseus Guardian
         </span>
         <h1 className="mt-5 max-w-3xl font-serif text-[38px] font-medium leading-[1.04] tracking-tight text-white sm:text-[52px]">
-          It makes sure every important action goes according to plan.
+          {hero.h1}
         </h1>
-        <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-[#AAB2C5]">
-          A smart contract or a protected system checks with the Guardian before it does something important.
-          The Guardian confirms the action matches what was asked, and stops it if it doesn&rsquo;t.
-        </p>
+        <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-[#AAB2C5]">{hero.sub}</p>
       </section>
+
+      {/* Stakes (backups mode) */}
+      {isInfra && (
+        <section className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {STAKES.map((s) => (
+            <div key={s.l} className={`${PANEL} p-4`}>
+              <div className="font-serif text-[28px] leading-none text-white">{s.v}</div>
+              <div className="mt-2 text-[12.5px] leading-snug text-[#AAB2C5]">{s.l}</div>
+              <div className="mt-1.5 text-[10.5px] text-[#6B7488]">{s.src}</div>
+            </div>
+          ))}
+        </section>
+      )}
 
       {/* Reviewer */}
       <section className="mt-10">
-        <div className="mb-4 inline-flex rounded-xl border border-white/10 bg-white/[0.03] p-1">
-          {([["onchain", "On-chain transaction"], ["infra", "Backups & storage"]] as const).map(([m, label]) => (
+        <div className="inline-flex rounded-xl border border-white/10 bg-white/[0.03] p-1">
+          {([["infra", "Backups & storage"], ["onchain", "On-chain transaction"]] as const).map(([m, label]) => (
             <button
               key={m}
               onClick={() => switchMode(m)}
@@ -212,7 +265,15 @@ export default function GuardianApp() {
             </button>
           ))}
         </div>
-        <div className="flex flex-wrap gap-2">
+
+        {isInfra && (
+          <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-[#F87171]/25 bg-[#F87171]/[0.06] px-3 py-1.5 text-[12px] text-[#F8A0A0]">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#F87171]" />
+            You&rsquo;re watching a compromised admin session. Full root, no restrictions. These are the things they try.
+          </div>
+        )}
+
+        <div className="mt-4 flex flex-wrap gap-2">
           {scenarios.map((s, i) => (
             <button
               key={s.label}
@@ -239,7 +300,7 @@ export default function GuardianApp() {
               <textarea value={claim} onChange={(e) => setClaim(e.target.value)} disabled={running} rows={2} className={`${INPUT} resize-y font-sans`} />
             </label>
             <label className="mt-3 block">
-              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isInfra ? "What it really does" : "Actually does"}</span>
+              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isInfra ? "What it really does, and the context" : "Actually does"}</span>
               <textarea value={action} onChange={(e) => setAction(e.target.value)} disabled={running} rows={5} className={`${INPUT} resize-y`} />
             </label>
             <button
@@ -247,15 +308,17 @@ export default function GuardianApp() {
               disabled={running || !action.trim()}
               className="mt-4 w-full rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_8px_30px_rgba(99,102,241,0.3)] transition-shadow hover:shadow-[0_8px_40px_rgba(99,102,241,0.5)] disabled:opacity-40 disabled:shadow-none"
             >
-              {running ? "Reviewing…" : "Run the gate →"}
+              {running ? "Reviewing…" : isInfra ? "Try to run it →" : "Run the gate →"}
             </button>
           </div>
 
           {/* Verdict */}
           <div className={`${PANEL} flex flex-col p-5`}>
             {!verdict && !running && !err && (
-              <div className="flex flex-1 items-center justify-center py-10 text-center text-[13px] text-[#6B7488]">
-                Pick a scenario and the Guardian decides here.
+              <div className="flex flex-1 items-center justify-center px-4 py-10 text-center text-[13px] text-[#6B7488]">
+                {isInfra
+                  ? "Pick what the attacker tries, then hit Try to run it. The Guardian decides whether it goes through."
+                  : "Pick a scenario and the Guardian decides here."}
               </div>
             )}
             {running && !verdict && (
@@ -265,11 +328,17 @@ export default function GuardianApp() {
               <div className={`rounded-xl border ${tone.border} ${tone.bg} p-4`}>
                 <div className="flex items-center justify-between">
                   <span className="text-[22px] font-bold" style={{ color: tone.fg }}>
-                    {verdict.verdict === "SAFE" ? "Allow" : verdict.verdict === "WARN" ? (isInfra ? "Hold" : "Caution") : "Block"}
+                    {verdictLabel(verdict.verdict, isInfra)}
                   </span>
                   <span className="font-mono text-[11px] text-[#9AA3B2]">{verdict.confidencePct}% confidence</span>
                 </div>
                 <p className="mt-2 text-[13px] leading-relaxed text-white/90">{verdict.summary}</p>
+              </div>
+            )}
+            {verdict && verdict.verdict === "DANGER" && isInfra && scenarios[sel]?.stake && (
+              <div className="mt-3 rounded-xl border border-[#F87171]/20 bg-[#F87171]/[0.05] p-3">
+                <div className="font-mono text-[10px] uppercase tracking-wide text-[#F87171]">If it weren&rsquo;t stopped</div>
+                <div className="mt-1 text-[12.5px] leading-relaxed text-[#C3CAD8]">{scenarios[sel].stake}</div>
               </div>
             )}
             {verdict && verdict.findings.length > 0 && (
@@ -295,6 +364,29 @@ export default function GuardianApp() {
           </div>
         </div>
       </section>
+
+      {/* Why they can't just turn it off (backups mode) */}
+      {isInfra && (
+        <section className="mt-10">
+          <div className="rounded-2xl border border-[#6366F1]/25 bg-[#6366F1]/[0.06] p-6">
+            <h3 className="font-serif text-[19px] text-white">So why can&rsquo;t they just turn it off?</h3>
+            <p className="mt-2 max-w-2xl text-[13.5px] leading-relaxed text-[#AAB2C5]">
+              Because the Guardian isn&rsquo;t yours to turn off. It runs in its own enclave and holds its own keys, so
+              nothing inside your environment can disable it or rewrite its rules, root included. Every other guardrail
+              you can buy lives inside the blast radius: own the admin and you own the control that was supposed to stop
+              you. This one sits outside it. That is the one thing an attacker who already has your admin still can&rsquo;t
+              reach.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["Holds its own keys", "Runs in a TEE", "Rules committed on chain", "Signs every refusal"].map((t) => (
+                <span key={t} className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] text-[#AAB2C5]">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Case studies (on-chain only) */}
       <section className={`mt-16 ${isInfra ? "hidden" : ""}`}>

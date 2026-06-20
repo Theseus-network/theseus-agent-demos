@@ -72,16 +72,16 @@ export const DEMO_COPY = {
   },
   guardian: {
     path: "/guardian",
-    title: "Guardian · an automatic gate in front of risky transactions",
+    title: "Guardian · backups your own admin can't delete",
     description:
-      "A contract checks with the Guardian before it runs an important transaction. The agent confirms it does what it's supposed to, and stops it if it doesn't.",
+      "Ransomware's first move is destroying your backups. The Guardian refuses every destructive operation that looks like an attack, and because it holds its own keys, the admin they compromised can't switch it off.",
     og: {
       section: "guardian",
-      headline: "It makes sure every important transaction goes according to plan.",
+      headline: "Even with root, they can't delete your backups.",
       blurb:
-        "A contract checks with the agent before it runs a transaction. The agent confirms it does what it's supposed to, and stops it if it doesn't. The same check that would have caught Beanstalk and Ronin.",
+        "Ransomware's first move is wiping your backups so you have to pay. The Guardian refuses the destructive ops that look like an attack, and holds its own keys so the compromised admin can't turn it off.",
       url: "demo-agents.theseus.network/guardian",
-      tag: "ALLOW · CAUTION · BLOCK",
+      tag: "ALLOWED · HELD · REFUSED",
     },
   },
   adjudicate: {
