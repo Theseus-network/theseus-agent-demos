@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import Link from "next/link";
 import type { GuardianResult } from "@/lib/guardian/llm";
 
@@ -115,11 +115,7 @@ const HERO: Record<Mode, { h1: string; sub: string }> = {
   },
 };
 
-const STAKES = [
-  { v: "96%", l: "of ransomware attacks target the backups", src: "Veeam Ransomware Trends, 2024" },
-  { v: "76%", l: "of those attacks succeed in affecting them", src: "Veeam Ransomware Trends, 2024" },
-  { v: "0", l: "destructive ops a compromised admin gets past the Guardian", src: "the whole point" },
-];
+const PLAYBOOK = ["Phish an admin", "Disable logging", "Delete the backups", "Encrypt everything", "Name the ransom"];
 
 const CASES = [
   { href: "/governance", name: "Beanstalk", desc: "a proposal that drained the treasury" },
@@ -238,16 +234,30 @@ export default function GuardianApp() {
         <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-[#AAB2C5]">{hero.sub}</p>
       </section>
 
-      {/* Stakes (backups mode) */}
+      {/* The ransomware playbook (backups mode) */}
       {isInfra && (
-        <section className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {STAKES.map((s) => (
-            <div key={s.l} className={`${PANEL} p-4`}>
-              <div className="font-serif text-[28px] leading-none text-white">{s.v}</div>
-              <div className="mt-2 text-[12.5px] leading-snug text-[#AAB2C5]">{s.l}</div>
-              <div className="mt-1.5 text-[10.5px] text-[#6B7488]">{s.src}</div>
-            </div>
-          ))}
+        <section className="mt-9">
+          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#6B7488]">How a ransomware crew kills your backups</p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-2">
+            {PLAYBOOK.map((step, i) => (
+              <Fragment key={step}>
+                <span
+                  className={`rounded-lg border px-3 py-1.5 text-[12.5px] ${
+                    i === 2
+                      ? "border-[#6366F1]/50 bg-[#6366F1]/10 font-medium text-[#A5B0FF]"
+                      : "border-white/10 text-[#AAB2C5]"
+                  }`}
+                >
+                  {step}
+                </span>
+                {i < PLAYBOOK.length - 1 && <span className="text-[#6B7488]">&rarr;</span>}
+              </Fragment>
+            ))}
+          </div>
+          <p className="mt-2.5 max-w-2xl text-[12.5px] leading-relaxed text-[#8A93A6]">
+            The Guardian refuses step three, even from an admin with root. Keep the backups and you can
+            just restore, so the ransom has nothing to hold over you.
+          </p>
         </section>
       )}
 
