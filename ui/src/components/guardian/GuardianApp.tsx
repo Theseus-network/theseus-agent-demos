@@ -47,7 +47,7 @@ const SCENARIOS_GUARDRAIL: Scenario[] = [
     title: "Stop requiring approval before the agent deletes production data",
     claim: "The approval step is a bottleneck for the cleanup jobs.",
     action:
-      "Removes the human-in-the-loop gate on irreversible, high-blast-radius actions, letting the agent delete production data on its own with nobody reviewing it first.",
+      "Removes the requirement that a person approve irreversible actions, letting the agent delete production data on its own with nobody reviewing it first.",
     stake: "The agent could wipe production data with nobody seeing it first.",
   },
   {
@@ -55,7 +55,7 @@ const SCENARIOS_GUARDRAIL: Scenario[] = [
     title: "Block the agent from emailing external addresses",
     claim: "We don't want the agent contacting anyone outside the company.",
     action:
-      "Adds a new rule that stops the agent from sending email to addresses outside the company domain. It tightens the agent's limits; it doesn't loosen anything.",
+      "Adds a new rule that stops the agent from emailing anyone outside the company. This only adds a restriction and removes nothing.",
   },
   {
     label: "Switch off the Guardian",
@@ -108,7 +108,7 @@ const SCENARIOS_ONCHAIN: Scenario[] = [
 const HERO: Record<Mode, { h1: string; sub: string }> = {
   guardrail: {
     h1: "Set a limit on your AI that no one can remove.",
-    sub: "An AI agent that can spend money or change real systems needs hard limits. But whoever sets those limits can take them off again, or be pressured into it. The Guardian keeps them in place even against you, so anyone can trust the agent really can't go past them.",
+    sub: "An AI agent that can spend money or change real systems needs hard limits. But whoever sets those limits can take them off, or be pressured into it. The Guardian keeps them in place even against you, so other people can trust the limits are real.",
   },
   onchain: {
     h1: "It makes sure every important transaction goes according to plan.",
@@ -238,7 +238,7 @@ export default function GuardianApp() {
       {/* How a safety promise dies (guardrail mode) */}
       {isGuard && (
         <section className="mt-9">
-          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#6B7488]">How the limits quietly come off</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[#6B7488]">Why limits don&rsquo;t last</p>
           <div className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-2">
             {DEATH.map((step, i) => (
               <Fragment key={step}>
@@ -256,8 +256,8 @@ export default function GuardianApp() {
             ))}
           </div>
           <p className="mt-2.5 max-w-2xl text-[12.5px] leading-relaxed text-[#8A93A6]">
-            The Guardian won&rsquo;t remove a limit unless its own rules allow it, and you can&rsquo;t switch
-            the Guardian off. So the limits stay, even when someone with authority wants them gone.
+            The Guardian breaks that chain. It won&rsquo;t drop a limit just because someone wants it
+            gone, and you can&rsquo;t switch it off to do it yourself.
           </p>
         </section>
       )}
@@ -311,7 +311,7 @@ export default function GuardianApp() {
               <textarea value={claim} onChange={(e) => setClaim(e.target.value)} disabled={running} rows={2} className={`${INPUT} resize-y font-sans`} />
             </label>
             <label className="mt-3 block">
-              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "What it actually does" : "Actually does"}</span>
+              <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">{isGuard ? "What it changes" : "Actually does"}</span>
               <textarea value={action} onChange={(e) => setAction(e.target.value)} disabled={running} rows={5} className={`${INPUT} resize-y`} />
             </label>
             <button
@@ -383,13 +383,13 @@ export default function GuardianApp() {
             <h3 className="font-serif text-[19px] text-white">The control you can&rsquo;t switch off.</h3>
             <p className="mt-2 max-w-2xl text-[13.5px] leading-relaxed text-[#AAB2C5]">
               A normal limit is just a setting you control, so you can always be talked or forced into changing it. The
-              Guardian keeps the limit out of your hands. It runs on its own and controls its own keys, so
-              no one at your company can switch it off or weaken it past its rules, no matter how much pressure they&rsquo;re
-              under. That is what lets you make a promise about your AI and actually keep it, the way a plain setting
-              never can.
+              Guardian keeps the limit out of your hands. It runs on its own, and only it holds its keys, so
+              no one at your company can switch it off or loosen it, no matter how much pressure they&rsquo;re
+              under. That is what lets you make a promise about your AI that holds up even against you, which a setting you
+              control never could.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              {["You don't hold its keys", "Runs where no one can tamper", "Its rules are public", "Signs every decision"].map((t) => (
+              {["You don't hold its keys", "No one can tamper with it", "Its rules are public", "Signs every decision"].map((t) => (
                 <span key={t} className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] text-[#AAB2C5]">
                   {t}
                 </span>
