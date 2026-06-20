@@ -46,8 +46,7 @@ export function GovernanceScenarioControls({
           Try it
         </span>
         <span className="text-[13.5px] text-fg-dim">
-          Load a proposal and watch the reviewer read the calldata, not the
-          title.
+          Load a proposal, then submit it for review.
         </span>
         <span className="ml-auto flex items-center gap-4">
           {agentPending && (

@@ -301,7 +301,7 @@ function CommissionForm({
 }) {
   return (
     <TryItForm
-      prompt="Commission Aperture — one inside its fingerprint, one that breaks it."
+      prompt="Commission a piece. Aperture only makes ones that match its style."
       presets={PRESET_COMMISSIONS.map((p) => ({
         label: p.label,
         onClick: () => onPreset(p.text),

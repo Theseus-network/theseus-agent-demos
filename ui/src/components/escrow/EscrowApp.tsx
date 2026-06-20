@@ -276,11 +276,11 @@ export default function EscrowApp() {
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#34D399]" /> Live on Base Sepolia
             </span>
             <h1 className="mt-5 font-serif text-[42px] font-medium leading-[1.03] tracking-tight text-white sm:text-[56px]">
-              Escrow that settles its own disputes.
+              Escrow with an agent to settle disputes.
             </h1>
             <p className="mt-5 max-w-md text-[16px] leading-relaxed text-[#AAB2C5]">
               The money is held safely until the work is done. If the two sides disagree, an agent
-              reads it against the brief and pays the fair side, in seconds.
+              reads it against the brief and decides who gets paid.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <a href="#create" className="rounded-xl bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_8px_30px_rgba(99,102,241,0.35)] transition-shadow hover:shadow-[0_8px_44px_rgba(99,102,241,0.6)]">

@@ -47,7 +47,7 @@ export default async function LaunchSniperPage() {
         <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
           A Theseus agent paper-trading fresh Uniswap V3 launches on Base.
           Every twenty minutes it picks the most credible candidate and
-          commits a PASS or BUY to its on-chain fund. It never retunes.
+          commits a PASS or BUY to its on-chain fund. It never changes its rules.
           Recent decisions appear below, signed on chain.
         </p>
 

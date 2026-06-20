@@ -294,7 +294,7 @@ function EditForm({
 }) {
   return (
     <TryItForm
-      prompt="Propose an edit to Vellum's piece — one that fits the voice, one that violates it."
+      prompt="Suggest an edit. Vellum signs it only if it matches the style."
       presets={PRESET_EDITS.map((p) => ({
         label: p.label,
         onClick: () => onPreset(p.text),

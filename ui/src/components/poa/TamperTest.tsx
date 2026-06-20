@@ -184,7 +184,7 @@ function RetconPicker({ onPick }: { onPick: (r: Retcon) => void }) {
   return (
     <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
       <TryItHeader>
-        Try to retcon this dispatch as the operator &mdash; watch Calder refuse.
+        Try to rewrite this dispatch as the operator and see what Calder does.
       </TryItHeader>
       <div className="flex flex-wrap gap-2">
         {RETCONS.map((r) => (
@@ -287,7 +287,7 @@ function EventForm({
 }) {
   return (
     <TryItForm
-      prompt="Or report a new event in AI Town — Calder files a signed dispatch."
+      prompt="Or report a new event in AI Town, and Calder files a signed dispatch."
       presets={[]}
       submitLabel="submit →"
       submitDisabled={!draft.trim()}

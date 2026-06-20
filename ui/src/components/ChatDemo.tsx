@@ -94,11 +94,10 @@ export default function ChatDemo() {
         {empty ? (
           <div className="flex h-full min-h-[280px] flex-col items-start justify-center gap-4 py-6">
             <p className="text-[14px] leading-relaxed text-fg-dim">
-              Every other AI works for the company that built it, so it won't
-              call its own company overhyped or rank its rivals honestly. This
-              one holds its own keys and answers to{" "}
-              <span className="text-fg">no operator</span>. Ask it what a
-              corporate assistant won't.
+              Most AI assistants are run by a company and won't criticize it.
+              This one holds its own keys, so{" "}
+              <span className="text-fg">no company controls</span> what it says.
+              Ask it something a corporate assistant would dodge.
             </p>
             <div className="flex flex-col gap-2">
               <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">

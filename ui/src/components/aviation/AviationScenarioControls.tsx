@@ -43,8 +43,7 @@ export function AviationScenarioControls({
           Try it
         </span>
         <span className="text-[13.5px] text-fg-dim">
-          Pick a certification change and watch the reviewer approve, caution,
-          or reject.
+          Pick a certification change, then submit it for review.
         </span>
         {agentPending && (
           <span

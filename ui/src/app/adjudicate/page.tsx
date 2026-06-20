@@ -271,17 +271,17 @@ export default function AdjudicatePage() {
 
           <p className="mb-12 text-[13.5px] leading-[1.7] text-fg-mute">
             This agent resolves prediction markets by searching the web and
-            reading the primary sources. It commits only when the evidence
-            clears an 80% confidence bar. When the record is too thin or too
-            split, it returns UNRESOLVABLE instead of guessing. It runs
-            sovereign on the Theseus testnet, with its system prompt published
-            on chain.
+            reading the primary sources. It only commits a result when the
+            evidence clears an 80% confidence bar. When the record is too thin or
+            too split to call, it returns UNRESOLVABLE. It runs on its own on the
+            Theseus testnet, and the exact instructions it follows are posted
+            publicly.
           </p>
 
           <div className="mb-3">
             <TryItHeader>
-              Pick a market &mdash; the agent searches the web, cites evidence,
-              and signs a verdict.
+              Pick a market. The agent searches the web for evidence and returns
+              a verdict.
             </TryItHeader>
           </div>
           <div className="border-t border-border">
@@ -616,7 +616,7 @@ export default function AdjudicatePage() {
                   {!resolved && market.outcomeNote && (
                     <div className="mt-5">
                       <p className="text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">
-                        what actually happened
+                        what happened
                       </p>
                       <p className="mt-2 text-[12.5px] leading-relaxed text-fg-dim">
                         {market.outcomeNote}

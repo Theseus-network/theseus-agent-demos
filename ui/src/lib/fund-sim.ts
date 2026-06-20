@@ -57,7 +57,7 @@ const BAND = 0.05; // rebalance only past a 5% drift
 const FRICTION = 0.001; // 0.1% of traded notional, gas + slippage
 
 export const SCENARIOS: { key: Scenario; label: string; blurb: string }[] = [
-  { key: "calm", label: "Calm", blurb: "Range-bound, low vol — the do-nothing baseline." },
+  { key: "calm", label: "Calm", blurb: "Range-bound and quiet. The baseline case." },
   { key: "bull", label: "Bull run", blurb: "Sustained uptrend, vol contracting." },
   { key: "crash", label: "Black swan", blurb: "A violent crash mid-path. Watch it de-risk." },
   { key: "drawdown", label: "Slow bleed", blurb: "A grinding decline with elevated vol." },

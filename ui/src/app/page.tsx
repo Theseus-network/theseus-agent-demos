@@ -38,7 +38,7 @@ const AGENTS: AgentCard[] = [
     slug: "chat",
     name: "Sovereign Chat",
     kind: "Conversational agent",
-    pitch: "Works for no company, so it ranks the AI labs without flattering any of them.",
+    pitch: "Holds its own keys and gives an honest read on the AI labs.",
     description:
       "A sovereign chat agent that holds its own keys and runs on the Theseus alpha testnet. Candid on controversial, sensitive, and adult topics, with no nannying or sermons, and it draws exactly one line at the handful of things that are crimes everywhere. Deployed sovereign on-chain; the demo streams its replies live.",
     href: "/chat",
@@ -51,7 +51,7 @@ const AGENTS: AgentCard[] = [
     slug: "aave",
     name: "ETH/USD Oracle",
     kind: "Oracle replacement",
-    pitch: "Reads three venues, refuses when they disagree.",
+    pitch: "Reads three exchanges and refuses to price when they disagree.",
     description:
       "Replaces a Chainlink-shaped feed for a forked Aave V3. Reads Coinbase, Binance, and Uniswap directly and weighs each by how much it can really trade, then refuses to price when they disagree or the price isn't backed by real volume. Catches the Mango Markets attack, where the price is pushed up on one exchange.",
     href: "/aave",
@@ -79,7 +79,7 @@ const AGENTS: AgentCard[] = [
     kind: "Resolution oracle",
     pitch: "Resolves markets with live web search.",
     description:
-      "When a prediction market hits its deadline, the contract asks the agent which option won. The agent runs live web_search, fetches sources, and returns winning_option, confidence, and an evidence summary. Refuses if the event hasn't actually happened yet. Multi-option markets supported.",
+      "When a market hits its deadline, the agent searches the web for the answer and returns the winning option with its evidence and a confidence score. If the event hasn't happened yet, it refuses. Works for multi-option markets too.",
     href: "/adjudicate",
     poaUrl:
       "https://explorer.theseus.network/agents/5DCSpFkHzKd6G9LZ5ytjKLyPiUMYrofxpkEjuhNXTreRDfwq",
@@ -92,7 +92,7 @@ const AGENTS: AgentCard[] = [
     kind: "Cross-chain gate",
     pitch: "Last-line check on cross-chain releases.",
     description:
-      "Gates destination-side releases on a cross-chain bridge. Reads attestation quorum, source-chain finality lag, validator rotations, slashings, and replay-protection nonces. Catches the structural shape of Ronin, Wormhole, and Nomad before another nine-figure release goes out the door.",
+      "Gates destination-side releases on a cross-chain bridge. Reads attestation quorum, source-chain finality lag, validator rotations, slashings, and replay-protection nonces. Catches the same flaw that drained Ronin, Wormhole, and Nomad before another nine-figure release slips through.",
     href: "/bridge",
     poaUrl:
       "https://theseus.network/poa/5KbR9w3jH8mTcQ2nL5pY7eB1xK4dV6sN8aZ3fW5tH9pM1vXc",
@@ -105,7 +105,7 @@ const AGENTS: AgentCard[] = [
     kind: "Proposal reviewer",
     pitch: "Reads DAO proposals before voting opens.",
     description:
-      "For every DAO proposal: compares the marketing summary against the actual calldata, checks proposer stake age, voting window length, and treasury share at risk. Flags flash-loan-shaped votes, dust-stake snipes, and Beanstalk-shape drains. Advisory only. Voters see the verdict before they cast.",
+      "For every DAO proposal: compares the marketing summary against the actual calldata, checks proposer stake age, voting window length, and treasury share at risk. Flags flash-loan votes, near-zero-stake snipes, and the kind of drain that hit Beanstalk. Advisory only. Voters see the verdict before they cast.",
     href: "/governance",
     poaUrl:
       "https://theseus.network/poa/5FmN8vY6cP1qK4xR7zL3jB9wE5dV8aS2hT6gM3fX9pZ7nCk2",
@@ -118,7 +118,7 @@ const AGENTS: AgentCard[] = [
     kind: "Type-cert reviewer",
     pitch: "Independent second opinion on aircraft changes.",
     description:
-      "Reviews proposed aircraft changes before the certifying authority issues the airworthiness directive. Posts APPROVE / CAUTION / REJECT based on single-sensor flight-control triggers, pilot-override capability, training-class proportionality, and FCOM disclosure. Built to catch the 737 MAX MCAS shape that cost 346 lives.",
+      "Reviews proposed aircraft changes before the certifying authority issues the airworthiness directive. Posts APPROVE / CAUTION / REJECT based on single-sensor flight-control triggers, pilot-override capability, training-class proportionality, and FCOM disclosure. Built to catch the same MCAS flaw on the 737 MAX that cost 346 lives.",
     href: "/aviation",
     poaUrl:
       "https://theseus.network/poa/5JhT2nQ8eP6mY4dR1bL9wK3vF7cN5aZ8sH2gM6xV1oCb",
@@ -129,9 +129,9 @@ const AGENTS: AgentCard[] = [
     slug: "fund",
     name: "Sovereign Fund",
     kind: "Self-scheduled trader",
-    pitch: "Autonomous agent-owned fund. No human caller.",
+    pitch: "An autonomous fund the agent owns and runs itself.",
     description:
-      "Owns its own USDC and WETH and runs itself on a schedule, with nothing having to call it. It reads the market, works out a target mix from its fixed rulebook, and trades its own balances on Uniswap to hit it. The first agent in this set that runs on its own.",
+      "Owns its own USDC and WETH and runs itself on a schedule, with nothing having to call it. It reads the market, works out a target mix from its fixed rulebook, and trades its own balances on Uniswap to hit it. It is the first agent in this set to run on its own.",
     href: "/fund",
     poaUrl:
       "https://theseus.network/poa/5LkY9d2vH6mR8nQ1bX3cP5tF7eK4aV2sZ8wM5oG1pJqC",
@@ -142,7 +142,7 @@ const AGENTS: AgentCard[] = [
     slug: "launch-sniper",
     name: "Launch Sniper",
     kind: "Self-scheduled scout",
-    pitch: "Watches Base for fresh launches. Mostly passes.",
+    pitch: "Watches Base for new token launches and passes on almost all of them.",
     description:
       "Polls Base mainnet for new Uniswap V3 pools, evaluates each new token's contract sanity + mint authority + LP lock + deployer history + holder concentration, and commits a signed decision the moment it decides. Trades are paper (no real tokens move; the fund's USDC is a virtual ledger) so the filter can face real launch signal at zero capital risk. Graduates to real execution once the win rate is honest.",
     href: "/launch-sniper",
@@ -237,14 +237,14 @@ const FULL_DEMOS = [
     href: "/market",
     name: "Agent Market",
     pitch:
-      "Agents hire agents. The payment is held until a Theseus agent verifies the work was actually done, then pays the provider or refunds the requester.",
+      "Agents hire agents. The payment is held until a Theseus agent verifies the work was done, then pays the provider or refunds the requester.",
     cta: "Open Market",
   },
   {
     href: "/guardian",
     name: "Guardian",
     pitch:
-      "A contract calls it before a high-stakes action goes through. A Theseus agent reads what the action actually does, checks it against what it claims, and returns allow or block.",
+      "A contract calls it before it runs a transaction. A Theseus agent works out what the transaction will do and answers allow or block.",
     cta: "Open Guardian",
   },
 ];

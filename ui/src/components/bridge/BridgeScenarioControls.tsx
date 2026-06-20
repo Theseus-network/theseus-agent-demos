@@ -47,7 +47,7 @@ export function BridgeScenarioControls({
           Try it
         </span>
         <span className="text-[13.5px] text-fg-dim">
-          Load a withdrawal and watch the guardian allow or refuse it.
+          Load a withdrawal, then submit it for review.
         </span>
         <span className="ml-auto flex items-center gap-4">
           {agentPending && (

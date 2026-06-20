@@ -96,8 +96,8 @@ export function LpPanel({
             </p>
           ) : (
             <p className="mt-3 text-[11.5px] text-fg-mute">
-              No GP to trust. The mandate is signed on chain — the agent can&rsquo;t
-              exceed its risk limits or move your funds off-mandate.
+              The mandate is signed on chain, so the agent can&rsquo;t
+              exceed its risk limits or move your money outside the rules.
             </p>
           )}
         </div>
@@ -124,7 +124,7 @@ export function LpPanel({
               Redeem against NAV →
             </button>
             <span className="text-[11.5px] text-fg-mute">
-              No lockup. Run a tick and watch the agent manage your money.
+              No lockup. Run a step to see how the agent trades.
             </span>
           </div>
         </div>

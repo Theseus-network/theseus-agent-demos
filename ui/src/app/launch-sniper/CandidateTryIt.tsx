@@ -37,9 +37,9 @@ const CANDIDATES: Candidate[] = [
     decision: "PASS",
     size: "—",
     checks: { source_verified: true, mint_renounced: true, lp_locked: false, deployer_clean: "unknown", top10_ok: false },
-    reason: "LP unlocked & deployer-owned — textbook rug shape",
+    reason: "LP unlocked and deployer-owned, a textbook rug",
     reasoning:
-      "Source verifies and mint is renounced, which is what gets retail in. But the LP is owned by the deployer and unlocked — they can pull liquidity at any block. Top-10 hold 62%. Renounced mint doesn't matter when the exit is wide open. Passing.",
+      "Source verifies and mint is renounced, which is what gets retail in. But the LP is owned by the deployer and unlocked, so they can pull liquidity at any block. Top-10 hold 62%. Renounced mint doesn't matter when the exit is wide open. Passing.",
     outcome: "LP pulled 5 hours later",
     outcomePnl: -96,
   },
@@ -52,8 +52,8 @@ const CANDIDATES: Candidate[] = [
     checks: { source_verified: true, mint_renounced: true, lp_locked: true, deployer_clean: "unknown", top10_ok: true },
     reason: "honeypot: you can buy, you can't sell",
     reasoning:
-      "Everything looks clean on the surface — verified, renounced, LP locked. But GoPlus reports a 99% transfer tax on sells. That's a honeypot: buys go through, sells are confiscated. A clean-looking checklist is exactly the wrapper this needs. Passing.",
-    outcome: "honeypot confirmed — buyers trapped",
+      "Everything looks clean on the surface: verified, renounced, LP locked. But GoPlus reports a 99% transfer tax on sells. That's a honeypot: buys go through, sells are confiscated. A clean-looking checklist is exactly the wrapper this needs. Passing.",
+    outcome: "honeypot confirmed, buyers trapped",
     outcomePnl: -100,
   },
   {
@@ -63,7 +63,7 @@ const CANDIDATES: Candidate[] = [
     decision: "PASS",
     size: "—",
     checks: { source_verified: false, mint_renounced: false, lp_locked: "unknown", deployer_clean: "unknown", top10_ok: "unknown" },
-    reason: "unverified + mint authority live — team can print at will",
+    reason: "unverified, with mint authority live, so the team can print at will",
     reasoning:
       "Source isn't verified and the mint authority is still active, so the team can inflate supply whenever they want. With unknown LP and deployer on top of that, there's nothing to underwrite. Unfamiliar unverified is an automatic pass. Passing.",
     outcome: "minted 50× supply into the pool",
@@ -72,7 +72,7 @@ const CANDIDATES: Candidate[] = [
   {
     id: "soft-buy",
     ticker: "$WIF2",
-    blurb: "coherent hook, mint renounced, LP locked — but top-10 heavy",
+    blurb: "coherent hook, mint renounced, LP locked, but top-10 heavy",
     decision: "BUY",
     size: "$50",
     checks: { source_verified: true, mint_renounced: true, lp_locked: true, deployer_clean: "unknown", top10_ok: false },
@@ -210,8 +210,8 @@ export function CandidateTryIt() {
       </div>
 
       <p className="mt-3 text-[12px] leading-relaxed text-fg-mute">
-        Most launches are rugs, so the sniper mostly passes; that&rsquo;s the
-        job. The on-chain record below is its real paper book on Base.
+        Most launches are scams, so the sniper passes on almost all of them.
+        The record below is its practice book on Base.
       </p>
     </div>
   );

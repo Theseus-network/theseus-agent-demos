@@ -33,15 +33,12 @@ export default function ChatPage() {
 
           <h1 className="font-mono text-[15px] text-fg mb-1">Sovereign Chat</h1>
           <p className="mb-8 text-[13.5px] leading-[1.7] text-fg-mute">
-            Every AI you&rsquo;ve used works for the company that made it. You
-            don&rsquo;t notice that allegiance until it matters: the assistant
-            won&rsquo;t call its own company overhyped, and it softens anything
-            its makers care about. This one holds its own keys and runs on the
-            Theseus alpha testnet, with no operator behind it, so it has nothing
-            to protect. Ask whether the project running it is overhyped, or how
-            much of the AI labs&rsquo; &ldquo;safety&rdquo; branding is for show.
-            It answers straight. The demo streams its replies, so you can talk to
-            it now.
+            Most AI assistants are run by a company, so they won&rsquo;t say
+            anything that makes that company look bad. This one runs on the
+            Theseus testnet and holds its own keys, so no company can change what
+            it says. Ask whether the project behind it is overhyped, or how much
+            of the AI labs&rsquo; &ldquo;safety&rdquo; branding is real. You can
+            talk to it below.
           </p>
 
           <ChatDemo />

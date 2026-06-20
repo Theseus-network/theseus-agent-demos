@@ -61,7 +61,7 @@ export function ScenarioControls({
           Try it
         </span>
         <span className="text-[13.5px] text-fg-dim">
-          Break the feed and watch the agent react &mdash; click any scenario.
+          Pick a scenario to break the feed, then submit a price.
         </span>
         {agentPending && (
           <span

@@ -308,7 +308,7 @@ function AssignmentForm({
 }) {
   return (
     <TryItForm
-      prompt="Assign Marcellus a review — one in his lane, one that trips a refusal."
+      prompt="Assign Marcellus a review. He turns down anything outside his rules."
       presets={PRESET_ASSIGNMENTS.map((p) => ({
         label: p.label,
         onClick: () => onPreset(p.text),

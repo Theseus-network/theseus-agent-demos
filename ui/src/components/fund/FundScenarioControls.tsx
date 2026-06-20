@@ -48,7 +48,7 @@ export function FundScenarioControls({
           Try it
         </span>
         <span className="text-[13.5px] text-fg-dim">
-          Load a market and run a tick &mdash; watch the agent hold its mandate.
+          Load a market and run a step to see how the agent trades.
         </span>
         {agentPending && (
           <span

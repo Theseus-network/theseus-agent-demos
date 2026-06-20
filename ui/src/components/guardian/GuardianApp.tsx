@@ -140,11 +140,11 @@ export default function GuardianApp() {
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#34D399]" /> Theseus Guardian
         </span>
         <h1 className="mt-5 max-w-3xl font-serif text-[38px] font-medium leading-[1.04] tracking-tight text-white sm:text-[52px]">
-          A gate that blocks the bad transaction before it goes through.
+          It checks a transaction before a contract runs it.
         </h1>
         <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-[#AAB2C5]">
-          A contract calls the agent before it makes a high-stakes move. The agent reads the real
-          state and returns allow or block. No human in the loop.
+          Before a contract runs a transaction, it asks the agent. The agent works out what the
+          transaction will do and answers allow or block, catching the ones that do something other than what they claim.
         </p>
       </section>
 
@@ -236,7 +236,7 @@ export default function GuardianApp() {
 
       {/* Case studies */}
       <section className="mt-16">
-        <h2 className="text-[13px] font-semibold uppercase tracking-[0.15em] text-[#6B7488]">Real disasters it would have caught</h2>
+        <h2 className="text-[13px] font-semibold uppercase tracking-[0.15em] text-[#6B7488]">Disasters it would have caught</h2>
         <p className="mt-2 text-[13px] text-[#8A93A6]">Each links to a live demo of the agent catching that exact case.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {CASES.map((c) => (

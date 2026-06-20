@@ -95,7 +95,7 @@ export function VerdictHero({
       ) : (
         <p className="text-[14px] leading-relaxed text-fg-mute">
           {idleHint ??
-            "Pick a scenario and submit — the agent's verdict and reasoning appear here."}
+            "Pick a scenario and submit it. The verdict and reasoning appear here."}
         </p>
       )}
     </div>

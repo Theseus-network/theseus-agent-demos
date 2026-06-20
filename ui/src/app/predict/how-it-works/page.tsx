@@ -29,7 +29,7 @@ const STEPS = [
   {
     n: "04",
     h: "Settlement pays the record",
-    p: "Each share of the winning outcome pays $1; the other side pays $0. If the record is too thin or too split to clear the bar, the agent returns UNRESOLVABLE and every position is refunded its cost. No forced payout on a coin flip.",
+    p: "Each share of the winning outcome pays $1; the other side pays $0. If the record is too thin or too split to clear the bar, the agent returns UNRESOLVABLE and every position is refunded its cost.",
   },
 ];
 
@@ -48,7 +48,7 @@ const FAQ = [
   },
   {
     q: "What happens if the question can't be settled?",
-    a: "The agent returns UNRESOLVABLE rather than guessing, and every position is refunded its cost. A wrong resolution pays a market out on the wrong truth and can't be undone; an honest UNRESOLVABLE just sends it to human dispute. The verdict and evidence are public, so a bad call is reviewable.",
+    a: "The agent returns UNRESOLVABLE rather than guessing, and every position is refunded its cost. A wrong resolution pays a market out on the wrong truth and can't be undone; an honest UNRESOLVABLE sends it to human dispute. The verdict and evidence are public, so a bad call is reviewable.",
   },
   {
     q: "What is a share worth?",
@@ -77,7 +77,7 @@ export default function HowItWorks() {
 
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">How it works</p>
       <h1 className="mt-2 font-serif text-[30px] leading-[1.1] tracking-tight text-fg sm:text-[40px]">
-        What actually settles these markets.
+        How these markets get settled.
       </h1>
       <p className="mt-4 text-[15px] leading-relaxed text-fg-dim">
         A prediction market is only as good as the thing that settles it. Most
@@ -103,7 +103,7 @@ export default function HowItWorks() {
           The agent only calls a market when it is at least 80% sure the sources
           settle it. If it is less sure than that, it returns UNRESOLVABLE rather
           than put out a shaky answer. So when something here says &ldquo;resolved,&rdquo;
-          the sources actually settled it. You can read the live verdicts on the{" "}
+          the sources settled it. You can read the live verdicts on the{" "}
           <a href={AGENT} target="_blank" rel="noopener noreferrer" className="text-coral hover:underline">
             agent&rsquo;s on-chain profile
           </a>

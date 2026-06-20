@@ -44,7 +44,7 @@ export function TerraScenarioControls({
           Try it
         </span>
         <span className="text-[13.5px] text-fg-dim">
-          Load a vault state and watch the failsafe decide.
+          Load a vault state, then submit a mint or redeem.
         </span>
         {agentPending && (
           <span

@@ -5,7 +5,7 @@
 const CAN = [
   "Hold 30–60% WETH, rebalanced to a vol/momentum target",
   "Trade only past a 5% drift band (no churn)",
-  "Run on its own schedule — no one pokes it",
+  "Runs on its own schedule",
   "Skip a tick whose price feed can't be trusted",
 ];
 

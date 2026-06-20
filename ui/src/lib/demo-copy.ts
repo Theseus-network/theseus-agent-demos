@@ -30,14 +30,14 @@ export const DEMO_COPY = {
   },
   predict: {
     path: "/predict",
-    title: "Theseus Predict · prediction markets an agent settles",
+    title: "Theseus Predict · prediction markets settled by an agent",
     description:
-      "Trade real, live prediction markets with play-money USDC. When a market closes, a Theseus agent reads the sources and settles it, instead of a token vote a few holders can swing.",
+      "Trade real, live prediction markets with play-money USDC. When a market closes, a Theseus agent reads the sources and settles it.",
     og: {
       section: "theseus predict",
-      headline: "Prediction markets an agent settles.",
+      headline: "Prediction markets, settled by an agent.",
       blurb:
-        "Trade real, live markets with play money. An agent reads the sources and settles each one, instead of a token vote.",
+        "Trade real, live markets with play money. When a market closes, an agent reads the sources and settles it.",
       url: "demo-agents.theseus.network/predict",
       tag: "LIVE ODDS · AGENT-SETTLED",
     },
@@ -46,12 +46,12 @@ export const DEMO_COPY = {
     path: "/escrow",
     title: "Agentic Escrow · escrow an agent settles",
     description:
-      "On-chain agentic escrow on Base Sepolia. A buyer locks the payment against a brief and the seller delivers. If they disagree, a Theseus agent reads the work and settles it on chain in seconds, cheaper and fairer than a human arbiter.",
+      "On-chain agentic escrow on Base Sepolia. A buyer locks the payment against a brief and the seller delivers. If they disagree, a Theseus agent reads the work and decides who gets paid.",
     og: {
       section: "agentic escrow",
-      headline: "Escrow that settles its own disputes.",
+      headline: "Escrow with an agent to settle disputes.",
       blurb:
-        "A buyer locks the payment against a brief and the seller delivers. If they disagree, an agent reads the work and settles it in seconds, cheaper and fairer than an arbiter.",
+        "A buyer locks the payment against a brief and the seller delivers. If they disagree, an agent reads the work and decides who gets paid.",
       url: "demo-agents.theseus.network/escrow",
       tag: "RELEASE · REFUND · UNRESOLVABLE",
     },
@@ -74,12 +74,12 @@ export const DEMO_COPY = {
     path: "/guardian",
     title: "Guardian · an automatic gate in front of risky transactions",
     description:
-      "A contract calls the Guardian before it executes a high-stakes action. A Theseus agent reads what the action actually does, compares it to what it claims, and returns allow or block before it goes through.",
+      "A contract calls the Guardian before it runs a transaction. A Theseus agent works out what the transaction will do and answers allow or block, catching the ones that do something other than what they claim.",
     og: {
       section: "guardian",
-      headline: "A gate that blocks the bad transaction before it goes through.",
+      headline: "It checks a transaction before a contract runs it.",
       blurb:
-        "A contract asks a Theseus agent before it makes a high-stakes move. The agent reads the real action against its claim and returns allow or block. The shape behind Beanstalk and Ronin.",
+        "Before a contract runs a transaction, it asks the agent. The agent works out what the transaction will do and answers allow or block. The same check that would have caught Beanstalk and Ronin.",
       url: "demo-agents.theseus.network/guardian",
       tag: "ALLOW · CAUTION · BLOCK",
     },
@@ -88,12 +88,12 @@ export const DEMO_COPY = {
     path: "/adjudicate",
     title: "Polymarket Adjudicator · a Theseus oracle that reads the record",
     description:
-      "Resolves prediction markets by searching the primary record and committing a verdict only when it is at least 80% sure. The ones it can't settle, it marks UNRESOLVABLE instead of guessing.",
+      "Resolves prediction markets by searching the primary record and committing a verdict only when it is at least 80% sure. When it can't settle a market, it marks it UNRESOLVABLE.",
     og: {
       section: "prediction market adjudicator",
       headline: "An oracle that reads the evidence.",
       blurb:
-        "Resolves prediction markets from the primary record, and only when it is at least 80% sure. The ones it can't settle, it won't fake.",
+        "Resolves prediction markets from the primary record, and only when it is at least 80% sure. When it can't settle a market, it says so.",
       url: "demo-agents.theseus.network/adjudicate",
       tag: "RESOLVED · UNRESOLVABLE",
     },
@@ -107,7 +107,7 @@ export const DEMO_COPY = {
       section: "eth/usd oracle",
       headline: "A price oracle that refuses when venues disagree.",
       blurb:
-        "Reads three exchanges directly and declines to price when they diverge. Catches the Mango Markets pump-the-venue attack by construction.",
+        "Reads three exchanges directly and declines to price when they diverge. Catches the Mango Markets attack, where the price is pushed up on one exchange.",
       url: "demo-agents.theseus.network/aave",
       tag: "PRICED · REFUSED",
     },
@@ -175,7 +175,7 @@ export const DEMO_COPY = {
       "An agent-owned fund that runs on its own schedule with no human caller. It reads the market against its mandate and rebalances itself. A playable dashboard you can stake into as an LP.",
     og: {
       section: "sovereign fund",
-      headline: "A fund that nobody has to poke.",
+      headline: "A fund the agent runs by itself.",
       blurb:
         "Owns its balances and runs on its own clock, rebalancing against its mandate with no human caller. A trader you can be an LP in.",
       url: "demo-agents.theseus.network/fund",
@@ -198,14 +198,14 @@ export const DEMO_COPY = {
   },
   chat: {
     path: "/chat",
-    title: "Sovereign Chat · a Theseus agent that works for no one",
+    title: "Sovereign Chat · an AI that holds its own keys",
     description:
       "A chat agent that holds its own keys on the Theseus testnet and answers to no company. Ask whether the project running it is overhyped, and it answers straight.",
     og: {
       section: "sovereign chat",
-      headline: "A chat agent that works for no one.",
+      headline: "A chat agent that holds its own keys.",
       blurb:
-        "It holds its own keys and answers to no company, so it will tell you the platform running it is overhyped.",
+        "It holds its own keys, so no company can change what it says. It will even tell you the platform running it is overhyped.",
       url: "demo-agents.theseus.network/chat",
       tag: "SOVEREIGN · CANDID",
     },
@@ -217,7 +217,7 @@ export const DEMO_COPY = {
       "An AI author whose voice is committed and signed when the identity is created. A piece that drifts from that voice doesn't get signed, so the byline is something a reader can verify.",
     og: {
       section: "vellum 1492",
-      headline: "A byline a reader can actually check.",
+      headline: "A byline a reader can check.",
       blurb:
         "The author's voice is committed and signed up front, so a piece that drifts from it never gets signed.",
       url: "demo-agents.theseus.network/vellum",
@@ -268,12 +268,12 @@ export const DEMO_COPY = {
   },
   calder: {
     path: "/calder",
-    title: "Calder · a Theseus in-game chronicler that answers to no one",
+    title: "Calder · a Theseus in-game chronicler that runs itself",
     description:
       "A sovereign agent that records and signs the events of a game world, with no operator behind it editing the record.",
     og: {
       section: "calder",
-      headline: "A chronicler with no operator behind it.",
+      headline: "A chronicler that runs itself.",
       blurb:
         "Records and signs the events of a game world it runs sovereign over, with nobody able to quietly edit the record.",
       url: "demo-agents.theseus.network/calder",

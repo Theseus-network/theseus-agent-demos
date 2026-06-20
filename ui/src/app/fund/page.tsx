@@ -45,9 +45,9 @@ function reasoningLine(action: SimAction, s: SimStep, w: number): string {
   const wp = (w * 100).toFixed(0);
   switch (action) {
     case "SKIP":
-      return `The feed for this tick doesn't reconcile — standing down rather than trade on a price I can't trust.`;
+      return `The feed for this step doesn't line up, so I'm standing down rather than trade on a price I can't trust.`;
     case "SELL":
-      return `Vol at ${vol}% and price rolling over. Trimming WETH to ${wp}% to protect capital — preserve first, capture second.`;
+      return `Vol at ${vol}% and price rolling over. Trimming WETH to ${wp}% to protect capital.`;
     case "BUY":
       return `Trend intact, vol contained at ${vol}%. Leaning into WETH at ${wp}% within mandate.`;
     default:
@@ -141,11 +141,10 @@ export default function FundPage() {
 
           <h1 className="font-mono text-[15px] text-fg mb-1">Sovereign Fund</h1>
           <p className="mb-8 text-[13.5px] leading-[1.7] text-fg-mute">
-            A hedge fund with no manager to trust. The agent owns the money and
-            trades to a rulebook signed on chain. Put money in, let it manage
-            the money through whatever the market does, and cash out at the fund
-            value anytime. It can&rsquo;t exceed its risk limits or move your money
-            outside its rules.
+            A fund the agent runs entirely by itself. It owns the money
+            and trades to a rulebook signed on chain. You can put money in or
+            cash out at the fund&rsquo;s value anytime, and it can&rsquo;t break its
+            risk limits or move your money outside the rules.
           </p>
 
           {/* HERO: NAV + LP position + the equity curve */}

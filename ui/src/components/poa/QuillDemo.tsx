@@ -282,7 +282,7 @@ function CitationForm({
 }) {
   return (
     <TryItForm
-      prompt="Throw a citation at Quill — a real one, an abrogated one, or a fabrication."
+      prompt="Give Quill a citation. It checks whether the case exists and is still good law."
       presets={PRESET_CITATIONS.map((p) => ({
         label: p.label,
         onClick: () => onPreset(p.citation, p.proposition),

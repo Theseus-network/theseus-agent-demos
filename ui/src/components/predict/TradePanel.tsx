@@ -128,7 +128,7 @@ export default function TradePanel({
 
       {resolving && (
         <p className="mt-3 rounded-lg border border-border bg-bg px-3 py-2 text-center text-[11.5px] font-medium text-amber">
-          Resolving — trade until the agent settles it below.
+          Resolving. You can keep trading until the agent settles it below.
         </p>
       )}
       {/* Amount */}

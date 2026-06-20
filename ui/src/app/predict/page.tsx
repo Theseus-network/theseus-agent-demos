@@ -74,11 +74,11 @@ export default function MarketsIndex() {
         </div>
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">Theseus Predict</p>
         <h1 className="mt-3 max-w-3xl font-serif text-[34px] font-medium leading-[1.04] tracking-tight text-fg sm:text-[50px]">
-          Prediction markets that settle themselves.
+          Prediction markets, settled by an agent.
         </h1>
         <p className="mt-4 max-w-xl text-[15.5px] leading-relaxed text-fg-dim">
           Most markets settle by a token vote big holders can swing. Here, an agent reads what
-          actually happened and settles it.
+          happened, then settles it.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[12px] text-fg-mute">
           {state.hydrated && (
