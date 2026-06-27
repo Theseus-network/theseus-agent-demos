@@ -8,6 +8,7 @@ import AccountBar from "./AccountBar";
 
 const LINKS = [
   { href: "/predict", label: "Markets" },
+  { href: "/predict/leaderboard", label: "Leaderboard" },
   { href: "/predict/portfolio", label: "Portfolio" },
   { href: "/predict/how-it-works", label: "How it works" },
 ];

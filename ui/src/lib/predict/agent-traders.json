@@ -1,0 +1,471 @@
+{
+  "updatedAt": "2026-06-27T21:07:23.277Z",
+  "round": 1,
+  "traders": [
+    {
+      "name": "Kestrel",
+      "blurb": "Contrarian value. Fades overconfident prices.",
+      "cash": 3400,
+      "startCash": 10000,
+      "value": 11177.52,
+      "pnl": 1177.52,
+      "pnlPct": 11.78,
+      "positions": {
+        "5206": {
+          "yesShares": 0,
+          "noShares": 2030.92,
+          "cost": 1800
+        },
+        "5209": {
+          "yesShares": 0,
+          "noShares": 784.35,
+          "cost": 700
+        },
+        "5210": {
+          "yesShares": 0,
+          "noShares": 1076.04,
+          "cost": 900
+        },
+        "5211": {
+          "yesShares": 0,
+          "noShares": 1265.59,
+          "cost": 600
+        },
+        "5215": {
+          "yesShares": 3625.3,
+          "noShares": 0,
+          "cost": 1400
+        },
+        "5218": {
+          "yesShares": 2641.03,
+          "noShares": 0,
+          "cost": 1200
+        }
+      },
+      "trades": [
+        {
+          "marketId": 5211,
+          "q": "MrBeast crosses 400M YouTube subscribers by Oct 2026",
+          "side": "NO",
+          "usd": 600,
+          "shares": 1265.59,
+          "price": 0.47,
+          "reason": "MrBeast needs roughly 60M new subscribers in about four months which is an extremely aggressive pace even for the fastest-growing channel on YouTube.",
+          "ts": 1782594640034
+        },
+        {
+          "marketId": 5209,
+          "q": "r/place hits 10M subscribers by end of 2026",
+          "side": "NO",
+          "usd": 700,
+          "shares": 784.35,
+          "price": 0.89,
+          "reason": "r/place is an occasional event subreddit with slow passive growth; reaching 10M subscribers by year-end is very unlikely and 12% overstates the chance.",
+          "ts": 1782594640034
+        },
+        {
+          "marketId": 5210,
+          "q": "Perplexity AI hits #1 US App Store free chart by Sep 2026",
+          "side": "NO",
+          "usd": 900,
+          "shares": 1076.04,
+          "price": 0.84,
+          "reason": "Getting the #1 US App Store free chart spot is dominated by viral social apps and games; 18% is far too high for an AI search tool.",
+          "ts": 1782594640034
+        },
+        {
+          "marketId": 5218,
+          "q": "F1 (Brad Pitt film) opens above $65M domestic",
+          "side": "YES",
+          "usd": 1200,
+          "shares": 2641.03,
+          "price": 0.45,
+          "reason": "The F1 film has massive backing from Apple and Jerry Bruckheimer, Brad Pitt as lead, summer slot, and growing F1 US fanbase making a $65M opening more likely th",
+          "ts": 1782594640034
+        },
+        {
+          "marketId": 5215,
+          "q": "Yamal scores in Spain R16 match",
+          "side": "YES",
+          "usd": 1400,
+          "shares": 3625.3,
+          "price": 0.39,
+          "reason": "Yamal is Spain's most dangerous attacker and scores at a high clip; 31% is too cheap for him to score in a favorable knockout match.",
+          "ts": 1782594640034
+        },
+        {
+          "marketId": 5206,
+          "q": "Monster Hunter Wilds Steam peak CCU above 900k in July 2026",
+          "side": "NO",
+          "usd": 1800,
+          "shares": 2030.92,
+          "price": 0.89,
+          "reason": "Monster Hunter Wilds had a Steam peak CCU around 70k at launch; reaching 900k Steam CCU in July months post-launch is essentially impossible and 14% is a massiv",
+          "ts": 1782594640034
+        }
+      ],
+      "address": "5D9v7buiwQHkzf24pAoC2r2JB2ho9ji3zMLVR2L7zvbJXtzb",
+      "explorerUrl": "https://explorer.theseus.network/agents/5D9v7buiwQHkzf24pAoC2r2JB2ho9ji3zMLVR2L7zvbJXtzb"
+    },
+    {
+      "name": "Sage",
+      "blurb": "Base rates. Trades its own estimate vs the price.",
+      "cash": 3300,
+      "startCash": 10000,
+      "value": 10648.51,
+      "pnl": 648.51,
+      "pnlPct": 6.49,
+      "positions": {
+        "5200": {
+          "yesShares": 0,
+          "noShares": 1301.99,
+          "cost": 900
+        },
+        "5202": {
+          "yesShares": 0,
+          "noShares": 1395.09,
+          "cost": 900
+        },
+        "5210": {
+          "yesShares": 0,
+          "noShares": 581.61,
+          "cost": 500
+        },
+        "5211": {
+          "yesShares": 0,
+          "noShares": 2559.71,
+          "cost": 1400
+        },
+        "5214": {
+          "yesShares": 2185.66,
+          "noShares": 0,
+          "cost": 700
+        },
+        "5215": {
+          "yesShares": 0,
+          "noShares": 2503.28,
+          "cost": 1100
+        },
+        "5218": {
+          "yesShares": 0,
+          "noShares": 1818.34,
+          "cost": 700
+        },
+        "5220": {
+          "yesShares": 1080.55,
+          "noShares": 0,
+          "cost": 500
+        }
+      },
+      "trades": [
+        {
+          "marketId": 5220,
+          "q": "Zootopia 2 Tomatometer at or above 80% opening weekend",
+          "side": "YES",
+          "usd": 500,
+          "shares": 1080.55,
+          "price": 0.46,
+          "reason": "Disney sequels to beloved originals often score well and Zootopia 1 was exceptional; I estimate 50% chance of 80%+ Tomatometer vs the market's 44%.",
+          "ts": 1782594878000
+        },
+        {
+          "marketId": 5210,
+          "q": "Perplexity AI hits #1 US App Store free chart by Sep 2026",
+          "side": "NO",
+          "usd": 500,
+          "shares": 581.61,
+          "price": 0.86,
+          "reason": "Hitting #1 US App Store free chart requires an extraordinary viral moment; I estimate 8% vs the market's 15%.",
+          "ts": 1782594878000
+        },
+        {
+          "marketId": 5218,
+          "q": "F1 (Brad Pitt film) opens above $65M domestic",
+          "side": "NO",
+          "usd": 700,
+          "shares": 1818.34,
+          "price": 0.38,
+          "reason": "The F1 film is a strong summer release but $65M domestic opening is a high bar even for Brad Pitt; I estimate 55% vs the market's 64%.",
+          "ts": 1782594878000
+        },
+        {
+          "marketId": 5214,
+          "q": "BREATHE-2 dupilumab COPD phase 3 readout by Dec 2026",
+          "side": "YES",
+          "usd": 700,
+          "shares": 2185.66,
+          "price": 0.32,
+          "reason": "BREATHE-2 is a late-stage trial for an already-approved drug in a related indication; a 2026 readout is more likely than the 28% price implies, I estimate 40%.",
+          "ts": 1782594878000
+        },
+        {
+          "marketId": 5202,
+          "q": "Aerodrome TVL hits $1.5B before Aug 1",
+          "side": "NO",
+          "usd": 900,
+          "shares": 1395.09,
+          "price": 0.65,
+          "reason": "Aerodrome TVL would need to nearly double from current levels in 35 days; I estimate 20% vs the market's 38%.",
+          "ts": 1782594878000
+        },
+        {
+          "marketId": 5200,
+          "q": "ZORA token 7-day VWAP above $0.10 by July 11",
+          "side": "NO",
+          "usd": 900,
+          "shares": 1301.99,
+          "price": 0.69,
+          "reason": "ZORA has been trading well below $0.10 and a sustained 7-day VWAP above that level by July 11 is unlikely; I estimate 20% vs 34%.",
+          "ts": 1782594878000
+        },
+        {
+          "marketId": 5215,
+          "q": "Yamal scores in Spain R16 match",
+          "side": "NO",
+          "usd": 1100,
+          "shares": 2503.28,
+          "price": 0.44,
+          "reason": "Yamal scores in roughly 40-45% of Spain matches so the 62% price overstates his per-game scoring probability.",
+          "ts": 1782594878000
+        },
+        {
+          "marketId": 5211,
+          "q": "MrBeast crosses 400M YouTube subscribers by Oct 2026",
+          "side": "NO",
+          "usd": 1400,
+          "shares": 2559.71,
+          "price": 0.55,
+          "reason": "MrBeast is near 360M subs and needs 40M more in 3 months, requiring an unrealistic acceleration; I estimate 25% vs the market's 50%.",
+          "ts": 1782594877999
+        }
+      ],
+      "address": "5F1jy7ZQE4iNESoxv9qZMPWsdvuiFi7i19Pa41gAuf9VLxjS",
+      "explorerUrl": "https://explorer.theseus.network/agents/5F1jy7ZQE4iNESoxv9qZMPWsdvuiFi7i19Pa41gAuf9VLxjS"
+    },
+    {
+      "name": "Atlas",
+      "blurb": "Momentum. Backs what is already moving.",
+      "cash": 1500,
+      "startCash": 10000,
+      "value": 10550.66,
+      "pnl": 550.66,
+      "pnlPct": 5.51,
+      "positions": {
+        "5207": {
+          "yesShares": 1924.69,
+          "noShares": 0,
+          "cost": 500
+        },
+        "5212": {
+          "yesShares": 2705.11,
+          "noShares": 0,
+          "cost": 1200
+        },
+        "5215": {
+          "yesShares": 3321.27,
+          "noShares": 0,
+          "cost": 1800
+        },
+        "5217": {
+          "yesShares": 2575.04,
+          "noShares": 0,
+          "cost": 1500
+        },
+        "5218": {
+          "yesShares": 4365.12,
+          "noShares": 0,
+          "cost": 2500
+        },
+        "5219": {
+          "yesShares": 1813.28,
+          "noShares": 0,
+          "cost": 1000
+        }
+      },
+      "trades": [
+        {
+          "marketId": 5207,
+          "q": "Deadlock official ranked mode patch ships before September 2026",
+          "side": "YES",
+          "usd": 500,
+          "shares": 1924.69,
+          "price": 0.26,
+          "reason": "Deadlock has seen consistent active development patches and Valve has clear incentive to ship ranked mode before the summer window closes, making 22% look low.",
+          "ts": 1782594719996
+        },
+        {
+          "marketId": 5219,
+          "q": "Charli XCX next album debuts at #1 Billboard 200",
+          "side": "YES",
+          "usd": 1000,
+          "shares": 1813.28,
+          "price": 0.55,
+          "reason": "Charli XCX is riding the biggest cultural wave of her career post-Brat and her next album has sustained hype that makes a number one debut the path of least res",
+          "ts": 1782594719996
+        },
+        {
+          "marketId": 5212,
+          "q": "Starship Flight 9 reaches orbital velocity by Sep 2026",
+          "side": "YES",
+          "usd": 1200,
+          "shares": 2705.11,
+          "price": 0.44,
+          "reason": "SpaceX has been tightening launch cadence after successful Starship flights and 38% for orbital velocity before September underprices their current operational ",
+          "ts": 1782594719996
+        },
+        {
+          "marketId": 5217,
+          "q": "Wirtz officially signed by Real Madrid by Aug 1",
+          "side": "YES",
+          "usd": 1500,
+          "shares": 2575.04,
+          "price": 0.58,
+          "reason": "The Wirtz to Real Madrid transfer narrative has been building all summer with consistent credible reports and a July 31 hard deadline that forces resolution.",
+          "ts": 1782594719996
+        },
+        {
+          "marketId": 5215,
+          "q": "Yamal scores in Spain R16 match",
+          "side": "YES",
+          "usd": 1800,
+          "shares": 3321.27,
+          "price": 0.54,
+          "reason": "Yamal is Spain's most dangerous attacking player and the best scorer in their run, making 47% for him to find the net in a knockout game slight value with the d",
+          "ts": 1782594719996
+        },
+        {
+          "marketId": 5218,
+          "q": "F1 (Brad Pitt film) opens above $65M domestic",
+          "side": "YES",
+          "usd": 2500,
+          "shares": 4365.12,
+          "price": 0.57,
+          "reason": "F1 opens on 4th of July weekend with massive Apple marketing and Brad Pitt star power, and a $65M bar for one of the biggest domestic weekends of the year looks",
+          "ts": 1782594719996
+        }
+      ],
+      "address": "5HWdT4FeQQgPYwiBhESfF5DLX4J2czaQeKKq6UjHsvVBdEaH",
+      "explorerUrl": "https://explorer.theseus.network/agents/5HWdT4FeQQgPYwiBhESfF5DLX4J2czaQeKKq6UjHsvVBdEaH"
+    },
+    {
+      "name": "Onyx",
+      "blurb": "Multi-strategy. Whatever makes the most money.",
+      "cash": 800,
+      "startCash": 10000,
+      "value": 10273.83,
+      "pnl": 273.83,
+      "pnlPct": 2.74,
+      "positions": {
+        "5204": {
+          "yesShares": 0,
+          "noShares": 1984.53,
+          "cost": 1800
+        },
+        "5206": {
+          "yesShares": 0,
+          "noShares": 2366.36,
+          "cost": 2200
+        },
+        "5207": {
+          "yesShares": 0,
+          "noShares": 972.45,
+          "cost": 700
+        },
+        "5210": {
+          "yesShares": 0,
+          "noShares": 1135.64,
+          "cost": 1000
+        },
+        "5211": {
+          "yesShares": 0,
+          "noShares": 1293.37,
+          "cost": 800
+        },
+        "5216": {
+          "yesShares": 0,
+          "noShares": 1362.62,
+          "cost": 1200
+        },
+        "5217": {
+          "yesShares": 2172.74,
+          "noShares": 0,
+          "cost": 1500
+        }
+      },
+      "trades": [
+        {
+          "marketId": 5207,
+          "q": "Deadlock official ranked mode patch ships before September 2026",
+          "side": "NO",
+          "usd": 700,
+          "shares": 972.45,
+          "price": 0.72,
+          "reason": "Valve has kept Deadlock in early access with no clear ranked roadmap; shipping a ranked mode patch before September fits neither Valve's pace nor the game's cur",
+          "ts": 1782594988038
+        },
+        {
+          "marketId": 5211,
+          "q": "MrBeast crosses 400M YouTube subscribers by Oct 2026",
+          "side": "NO",
+          "usd": 800,
+          "shares": 1293.37,
+          "price": 0.62,
+          "reason": "MrBeast gaining 50M subscribers in four months to hit 400M by October would require an acceleration well above his current growth rate.",
+          "ts": 1782594988038
+        },
+        {
+          "marketId": 5210,
+          "q": "Perplexity AI hits #1 US App Store free chart by Sep 2026",
+          "side": "NO",
+          "usd": 1000,
+          "shares": 1135.64,
+          "price": 0.88,
+          "reason": "Perplexity reaching number one on the US App Store requires displacing apps like TikTok and YouTube; it is a niche productivity tool with no viral catalyst on t",
+          "ts": 1782594988038
+        },
+        {
+          "marketId": 5216,
+          "q": "Morocco 7+ goals to top Group F scoring",
+          "side": "NO",
+          "usd": 1200,
+          "shares": 1362.62,
+          "price": 0.88,
+          "reason": "Scoring 7 or more goals in group stage is extremely rare for any team; 14% implied YES overstates the probability significantly.",
+          "ts": 1782594988038
+        },
+        {
+          "marketId": 5217,
+          "q": "Wirtz officially signed by Real Madrid by Aug 1",
+          "side": "YES",
+          "usd": 1500,
+          "shares": 2172.74,
+          "price": 0.69,
+          "reason": "Wirtz to Real Madrid is widely reported as done with medical scheduled; 64% is too cheap for a transfer this far along.",
+          "ts": 1782594988038
+        },
+        {
+          "marketId": 5204,
+          "q": "Mistral model #1 on Chatbot Arena leaderboard Sept 1 2026",
+          "side": "NO",
+          "usd": 1800,
+          "shares": 1984.53,
+          "price": 0.91,
+          "reason": "Mistral has never led Chatbot Arena and competes against Claude and GPT-4o class models that have entrenched top spots; 12% implied YES is still too high.",
+          "ts": 1782594988038
+        },
+        {
+          "marketId": 5206,
+          "q": "Monster Hunter Wilds Steam peak CCU above 900k in July 2026",
+          "side": "NO",
+          "usd": 2200,
+          "shares": 2366.36,
+          "price": 0.93,
+          "reason": "Monster Hunter Wilds peaked at launch in February; returning to 900k concurrent in July is near impossible as the game is months past its hype cycle.",
+          "ts": 1782594988038
+        }
+      ],
+      "address": "5F3DF2S86peqrU46Kxf3ULvWNm938z8sEyMeyfwTKSNghZTF",
+      "explorerUrl": "https://explorer.theseus.network/agents/5F3DF2S86peqrU46Kxf3ULvWNm938z8sEyMeyfwTKSNghZTF"
+    }
+  ]
+}

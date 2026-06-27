@@ -50,6 +50,8 @@ export interface PredictState {
   hydrated: boolean;
   live: boolean;
   balance: number;
+  /** Total play-money put in (start + faucets), the baseline for P&L. */
+  deposited: number;
   positions: Record<number, Position>;
   trades: Trade[];
   markets: Record<number, MarketRuntime>;
@@ -62,6 +64,7 @@ const EMPTY: PredictState = {
   hydrated: false,
   live: false,
   balance: 0,
+  deposited: 0,
   positions: {},
   trades: [],
   markets: {},
@@ -95,10 +98,10 @@ function persist() {
   if (typeof window === "undefined" || !state.hydrated) return;
   try {
     // Persist user state only. Market odds are reseeded live each load.
-    const { balance, positions, trades, settlements, settledPositions } = state;
+    const { balance, deposited, positions, trades, settlements, settledPositions } = state;
     window.localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ balance, positions, trades, settlements, settledPositions }),
+      JSON.stringify({ balance, deposited, positions, trades, settlements, settledPositions }),
     );
   } catch {
     /* quota / private mode — ignore */
@@ -133,6 +136,7 @@ function ensureHydrated() {
     hydrated: true,
     live: false,
     balance: STARTING_BALANCE,
+    deposited: STARTING_BALANCE,
     positions: {},
     trades: [],
     markets: seedRuntime(FALLBACK_MARKETS, {}),
@@ -145,6 +149,7 @@ function ensureHydrated() {
     if (raw) {
       const saved = JSON.parse(raw) as Partial<PredictState>;
       base.balance = typeof saved.balance === "number" ? saved.balance : base.balance;
+      base.deposited = typeof saved.deposited === "number" ? saved.deposited : base.balance;
       base.positions = saved.positions ?? {};
       base.trades = saved.trades ?? [];
       base.settlements = saved.settlements ?? {};
@@ -160,7 +165,20 @@ function ensureHydrated() {
 
 async function loadLive() {
   const { markets: list, live } = await fetchLiveMarkets();
-  const merged = [...loadRequested(), ...list];
+  let merged = [...loadRequested(), ...list];
+  // overlay the latest agent-trader round (cron-updated prices + volume)
+  try {
+    const st = await (await fetch("/api/predict/state")).json();
+    if (st?.live && st.prices) {
+      merged = merged.map((m) =>
+        st.prices[m.id]
+          ? { ...m, initialYes: st.prices[m.id].initialYes, volumeUsd: st.prices[m.id].volumeUsd }
+          : m,
+      );
+    }
+  } catch {
+    /* no live state, use bundled */
+  }
   rebuildMeta(merged);
   set({
     marketList: merged,
@@ -218,13 +236,26 @@ export function emptyPosition(marketId: number): Position {
 // ---- actions ---------------------------------------------------------------
 
 export function faucet(amount = FAUCET_AMOUNT) {
-  set({ balance: state.balance + amount });
+  set({ balance: state.balance + amount, deposited: state.deposited + amount });
+}
+
+/** The signed-in human's standing, for the leaderboard. */
+export function myStanding(s: PredictState): { value: number; pnl: number; pnlPct: number } {
+  let posVal = 0;
+  for (const p of Object.values(s.positions)) {
+    const pr = marketPriceYes(p.marketId);
+    posVal += p.yesShares * pr + p.noShares * (1 - pr);
+  }
+  const value = s.balance + posVal;
+  const pnl = value - s.deposited;
+  return { value, pnl, pnlPct: s.deposited > 0 ? (pnl / s.deposited) * 100 : 0 };
 }
 
 export function resetAccount() {
   state = {
     ...state,
     balance: STARTING_BALANCE,
+    deposited: STARTING_BALANCE,
     positions: {},
     trades: [],
     settlements: {},
