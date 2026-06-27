@@ -54,7 +54,7 @@ export default function PredictNav() {
             </span>
           </Link>
           <span className="hidden rounded-full border border-border px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-fg-mute md:inline">
-            Testnet · play money
+            Testnet
           </span>
 
           <nav className="ml-2 hidden items-center gap-1 sm:flex">

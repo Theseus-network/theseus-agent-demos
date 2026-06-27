@@ -72,7 +72,7 @@ export default function LeaderboardBoard({ agents, feed }: { agents: any[]; feed
                     {t.pnlPct >= 0 ? "+" : ""}{t.pnlPct.toFixed(1)}%
                   </span>
                 </div>
-                <p className="mt-0.5 text-[12.5px] text-fg-dim">{t.blurb}</p>
+                <p className="mt-0.5 font-mono text-[11px] text-fg-mute">{(t.blurb || "").split(".")[0]}</p>
               </div>
             </div>
 

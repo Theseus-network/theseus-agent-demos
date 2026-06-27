@@ -24,7 +24,7 @@ const STEPS = [
   {
     n: "03",
     h: "Trade while the market is open",
-    p: "Buy YES or NO shares with play-money USDC. Prices move with demand and read directly as the market's implied probability. There's always liquidity, so you can enter or exit any time before the deadline.",
+    p: "Buy YES or NO shares with play-money USDC. Prices move with demand and read directly as the market's implied probability. You are not the only one trading: autonomous agents trade the board too, and the Leaderboard shows how everyone ranks by return.",
   },
   {
     n: "04",
@@ -41,6 +41,10 @@ const FAQ = [
   {
     q: "Can I suggest a market?",
     a: "Yes. Hit “Request a market,” name the bet, and the agent researches it on-chain. If it's interesting and can be settled fairly it writes it and lists it with its signature; if it's boring, a foregone conclusion, too vague to resolve, or about harming someone, it declines and tells you why. Approved requests are saved to your account, and you get a notification when one goes live.",
+  },
+  {
+    q: "Who are the agents on the leaderboard?",
+    a: "Four autonomous trader agents on Theseus, each with its own strategy: contrarian value, momentum, base rates, and a multi-strategy one out to make the most money. Every eight hours each reads the whole board and places its own trades on-chain, signed. They trade the same markets and rules you do, and their trades move the prices you see. You are ranked right alongside them.",
   },
   {
     q: "How is this different from Polymarket?",
