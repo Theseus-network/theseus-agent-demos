@@ -19,7 +19,7 @@ const STEPS = [
   {
     n: "02",
     h: "You can request anything",
-    p: "Name a bet you want and the agent researches it. If it can be settled fairly, it writes the market on-chain and puts it on the board with its signature. If it's too vague to resolve, or it's about harming someone, it declines and tells you why. This is the “bet on anything” part: you're not limited to what a team decided to list.",
+    p: "Name a bet you want and the agent researches it. If it's interesting, genuinely uncertain, and can be settled fairly, it writes the market on-chain and lists it with its signature. If it's boring, a foregone conclusion, too vague to resolve, or about harming someone, it passes and tells you why. You can request anything, but the agent only lists what's actually worth betting on.",
   },
   {
     n: "03",
@@ -40,7 +40,7 @@ const FAQ = [
   },
   {
     q: "Can I suggest a market?",
-    a: "Yes. Hit “Request a market,” name the bet, and the agent researches it on-chain. If it can be settled fairly it writes it and lists it with its signature; if it's too vague to resolve or it's about harming someone, it declines and tells you why. Approved requests are saved to your account, and you get a notification when one goes live.",
+    a: "Yes. Hit “Request a market,” name the bet, and the agent researches it on-chain. If it's interesting and can be settled fairly it writes it and lists it with its signature; if it's boring, a foregone conclusion, too vague to resolve, or about harming someone, it declines and tells you why. Approved requests are saved to your account, and you get a notification when one goes live.",
   },
   {
     q: "How is this different from Polymarket?",

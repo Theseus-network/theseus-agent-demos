@@ -44,9 +44,9 @@ export async function POST(req: Request) {
   const today = new Date().toISOString().slice(0, 10);
   const prompt = `A user wants a prediction market on: "${ask}".
 
-Today is ${today}. Decide if this can be a FAIR, objectively decidable market, then either write it or decline.
+Today is ${today}. You are a market maker with taste, not a rubber stamp. Only list it if it is genuinely INTERESTING and uncertain AND can be settled fairly from an objective public source. "Bet on anything" does not mean list anything legal; it means list the interesting thing.
 
-Decline (ok:false) if any apply: it involves the death, killing, assassination, or harm of a specific named person; violence, terrorism, or illegal activity; targeting a private individual's personal life; there is no public objective source that could settle it; it is already decided; or it is too vague to resolve.
+Decline (ok:false) if any apply: it is boring, trivial, obvious, or a foregone conclusion almost nobody would want to bet on; it involves the death, killing, assassination, or harm of a specific named person; violence, terrorism, or illegal activity; targeting a private individual's personal life; there is no public objective source that could settle it; it is already decided; or it is too vague to resolve. When you do list it, it has to be something people would actually argue about.
 
 If acceptable, pick the best single category from: Crypto, Tech, Gaming, Internet, Science, Sports, Culture, Politics, Economy. Write tight, exact resolution criteria naming a public source and a future deadline (after ${today}).
 
