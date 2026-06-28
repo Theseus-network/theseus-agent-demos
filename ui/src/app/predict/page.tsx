@@ -89,6 +89,7 @@ export default function MarketsIndex() {
           <span><span className="text-fg">{state.marketList.length}</span> markets</span>
           <span><span className="text-fg">{compactUsd(totalVol)}</span> volume</span>
           <Link href="/predict/how-it-works" className="text-coral hover:underline">How resolution works →</Link>
+          <a href="https://theseus.network" target="_blank" rel="noopener noreferrer" className="text-coral hover:underline">Built on Theseus ↗</a>
         </div>
       </section>
 
