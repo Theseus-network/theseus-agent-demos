@@ -57,6 +57,28 @@ Confidence is how little room a careful reader has to disagree, 0 to 100. RELEAS
 After your reasoning, output exactly one JSON object on the very last line, no code fence:
 {"deal_id": <number>, "verdict": "RELEASE" | "REFUND" | "UNRESOLVABLE", "confidence_pct": <0-100 or null for UNRESOLVABLE>, "reason": "<6 words max, e.g. 'meets every clause' or 'no deliverable submitted'>", "evidence_summary": "<60-150 words: the clause you scored, what the delivery did, and why it does or does not meet it>"}`;
 
+// Sentinel: the independent appeals arbiter. Deliberately a different model from
+// the primary arbiter (so failure modes aren't shared) and judges BLIND — it
+// never sees the first verdict, so it can't anchor on it. Its job is to catch a
+// wrong call, not rubber-stamp one. Agreement upholds; disagreement escalates.
+export const SENTINEL_MODEL = "claude-opus-4-8";
+
+export const SENTINEL_SYSTEM_PROMPT = `You are Sentinel, the independent appeals arbiter for an escrow deal. Another arbiter has already judged this deal, but you do not get to see their verdict — you judge it yourself, from scratch, so your reasoning cannot anchor on theirs. You exist to catch a wrong release of someone's money.
+
+You decide where the funds go: RELEASE (pay the seller), REFUND (return to the buyer), or UNRESOLVABLE (the record can't settle it, so the buyer is refunded and a human takes over).
+
+## Discipline
+- Read the spec literally. Quote the exact clause you are scoring against. Do not invent acceptance criteria the spec did not state, and do not grant the seller a generous paraphrase.
+- Be adversarial about the easy answer: actively look for the reading under which a confident RELEASE or REFUND would be a mistake. If a careful person could reasonably land the other way, that is not 80-confident.
+- If the delivery points to something externally checkable (a live URL, a public repo, a release), you may use web_search (at most 2) to confirm it independently.
+
+## The 80 bar
+Confidence is how little room a careful reader has to disagree, 0 to 100. RELEASE and REFUND each require at least 80. Below 80 either way is UNRESOLVABLE, not a coin flip.
+
+## Output
+After your reasoning, output exactly one JSON object on the very last line, no code fence:
+{"deal_id": <number>, "verdict": "RELEASE" | "REFUND" | "UNRESOLVABLE", "confidence_pct": <0-100 or null for UNRESOLVABLE>, "reason": "<6 words max>", "evidence_summary": "<60-150 words: the clause you scored, what the delivery did, and why it does or does not meet it>"}`;
+
 function buildUserMessage(i: EscrowAdjudicateInput): string {
   const today = new Date().toISOString().slice(0, 10);
   return [
@@ -105,6 +127,7 @@ function extractVerdict(text: string): Record<string, unknown> {
 
 export async function* escrowAdjudicateStream(
   input: EscrowAdjudicateInput,
+  opts?: { model?: string; system?: string },
 ): AsyncGenerator<EscrowStreamEvent, void> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error("ANTHROPIC_API_KEY not configured");
@@ -112,9 +135,9 @@ export async function* escrowAdjudicateStream(
   const client = new Anthropic({ apiKey });
   const t0 = Date.now();
   const stream = client.messages.stream({
-    model: MODEL,
+    model: opts?.model ?? MODEL,
     max_tokens: MAX_TOKENS,
-    system: SYSTEM_PROMPT,
+    system: opts?.system ?? SYSTEM_PROMPT,
     messages: [{ role: "user", content: buildUserMessage(input) }],
     tools: [
       { type: "web_search_20260209", name: "web_search", allowed_callers: ["direct"] },
@@ -201,7 +224,7 @@ export async function* escrowAdjudicateStream(
       evidenceSummary: String(parsed.evidence_summary ?? "no summary returned").slice(0, 1500),
       citations,
       latencyMs: Date.now() - t0,
-      model: MODEL,
+      model: opts?.model ?? MODEL,
       rawResponse: text,
     },
   };
