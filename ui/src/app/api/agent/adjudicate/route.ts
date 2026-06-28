@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adjudicateStream } from "@/lib/adjudicator-llm";
 import { findMarket, type PredictionMarket } from "@/lib/adjudicator-markets";
 import { sse } from "@/lib/llm-stream";
+import { resolveOnChain } from "@/lib/predict/resolve-onchain";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -72,6 +73,13 @@ export async function POST(req: NextRequest) {
       try {
         for await (const event of agentStream) {
           controller.enqueue(encoder.encode(sse(event as object)));
+          // When the agent commits a verdict, write it on-chain (no-op unless
+          // the contract + settler key are configured).
+          const ev = event as { type?: string; output?: { verdict?: string; winningOption?: number } };
+          if (ev?.type === "final" && ev.output?.verdict === "RESOLVED" && (ev.output.winningOption === 0 || ev.output.winningOption === 1)) {
+            const tx = await resolveOnChain(market.marketId, ev.output.winningOption === 0 ? "YES" : "NO");
+            if (tx) controller.enqueue(encoder.encode(sse({ type: "settled_onchain", tx, chain: "base-sepolia" })));
+          }
         }
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);

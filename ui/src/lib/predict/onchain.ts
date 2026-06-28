@@ -20,6 +20,7 @@ export const OUTCOME = { YES: 0, NO: 1 } as const;
 export const PREDICT_MARKET_ABI = [
   { type: "function", name: "buy", stateMutability: "nonpayable", inputs: [{ name: "id", type: "uint256" }, { name: "outcome", type: "uint8" }, { name: "amountIn", type: "uint256" }, { name: "minSharesOut", type: "uint256" }], outputs: [{ name: "sharesOut", type: "uint256" }] },
   { type: "function", name: "redeem", stateMutability: "nonpayable", inputs: [{ name: "id", type: "uint256" }], outputs: [{ name: "payout", type: "uint256" }] },
+  { type: "function", name: "resolve", stateMutability: "nonpayable", inputs: [{ name: "id", type: "uint256" }, { name: "winner", type: "uint8" }], outputs: [] },
   { type: "function", name: "priceYes", stateMutability: "view", inputs: [{ name: "id", type: "uint256" }], outputs: [{ type: "uint256" }] },
   { type: "function", name: "sharesOf", stateMutability: "view", inputs: [{ name: "id", type: "uint256" }, { name: "trader", type: "address" }], outputs: [{ name: "yes", type: "uint256" }, { name: "no", type: "uint256" }] },
   { type: "function", name: "markets", stateMutability: "view", inputs: [{ name: "", type: "uint256" }], outputs: [{ name: "reserveYes", type: "uint256" }, { name: "reserveNo", type: "uint256" }, { name: "collateral", type: "uint256" }, { name: "open", type: "bool" }, { name: "resolved", type: "bool" }, { name: "winner", type: "uint8" }] },
