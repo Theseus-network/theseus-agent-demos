@@ -66,7 +66,7 @@ export default function MarketDetail({ slug }: { slug: string }) {
             <h1 className="text-[22px] font-semibold leading-snug tracking-tight text-fg sm:text-[27px]">
               {seed.question}
             </h1>
-            <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-fg-mute">
+            <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-fg-mute">
               <span className="text-fg-dim">{seed.category}</span>
               <span>·</span>
               <span>{compactUsd(volume)} vol</span>

@@ -84,7 +84,7 @@ export default function MarketCard({ seed, priceYes, history, volume, settlement
         </div>
       )}
 
-      <div className="mt-3 flex items-center justify-between font-mono text-[10.5px] text-fg-mute">
+      <div className="mt-3 flex items-center justify-between text-[11.5px] text-fg-mute">
         <span>{compactUsd(volume)} Vol</span>
         <span className={past && !resolved ? "text-amber" : undefined}>
           {resolved ? "Settled by agent" : past ? "Agent can settle" : untilDeadline(seed.deadlineISO)}

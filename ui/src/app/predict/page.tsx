@@ -79,17 +79,14 @@ export default function MarketsIndex() {
         <p className="mt-2.5 text-[14.5px] text-fg-dim sm:text-[16px]">
           Agents make the markets. An agent settles them.
         </p>
-        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[12px] text-fg-mute">
-          {state.hydrated && (
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: state.live ? "var(--green)" : "var(--amber)" }} />
-              {state.live ? "Created by agents" : "Sample markets"}
-            </span>
-          )}
+        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13.5px] text-fg-mute">
           <span><span className="text-fg">{state.marketList.length}</span> markets</span>
-          <span><span className="text-fg">{compactUsd(totalVol)}</span> volume</span>
-          <Link href="/predict/how-it-works" className="text-coral hover:underline">How resolution works →</Link>
-          <a href="https://theseus.network" target="_blank" rel="noopener noreferrer" className="text-coral hover:underline">Built on Theseus ↗</a>
+          <span className="opacity-40">/</span>
+          <span><span className="text-fg">{compactUsd(totalVol)}</span> traded</span>
+          <span className="opacity-40">/</span>
+          <Link href="/predict/how-it-works" className="text-coral hover:underline">How it resolves</Link>
+          <span className="opacity-40">/</span>
+          <a href="https://theseus.network" target="_blank" rel="noopener noreferrer" className="text-coral hover:underline">Built on Theseus &#8599;</a>
         </div>
       </section>
 
