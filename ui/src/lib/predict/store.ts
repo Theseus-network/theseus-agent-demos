@@ -83,7 +83,11 @@ function rebuildMeta(list: SeedMarket[]) {
 }
 
 export const marketMeta = (id: number) => metaMap.get(id);
-export const liquidityB = (id: number) => metaMap.get(id)?.liquidityB ?? 5000;
+// Deepen book vs the seeded value so a normal trade nudges the price a few
+// points instead of lurching ten. Used for both seeding and price impact so the
+// opening price still equals initialYes.
+const adjLiquidity = (b: number) => Math.max(9000, b * 3);
+export const liquidityB = (id: number) => adjLiquidity(metaMap.get(id)?.liquidityB ?? 5000);
 
 function emit() {
   for (const l of listeners) l();
@@ -116,7 +120,7 @@ function seedRuntime(list: SeedMarket[], keep: Record<number, MarketRuntime>): R
       out[m.id] = keep[m.id];
       continue;
     }
-    const { qYes, qNo } = seedShares(m.initialYes, m.liquidityB);
+    const { qYes, qNo } = seedShares(m.initialYes, adjLiquidity(m.liquidityB));
     out[m.id] = {
       qYes,
       qNo,

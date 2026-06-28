@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { myStanding, usePredict } from "@/lib/predict/store";
 import { usd, cents } from "@/lib/predict/format";
 
@@ -26,6 +28,14 @@ interface Row {
 
 export default function LeaderboardBoard({ agents, feed }: { agents: any[]; feed: any[] }) {
   const state = usePredict();
+  const router = useRouter();
+
+  // Pick up the latest cron round without a manual reload. This only re-reads
+  // stored state (no agent runs), so it costs nothing in agent credits.
+  useEffect(() => {
+    const t = setInterval(() => router.refresh(), 60_000);
+    return () => clearInterval(t);
+  }, [router]);
 
   const rows: Row[] = agents
     .map((a) => ({

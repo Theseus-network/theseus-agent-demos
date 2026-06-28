@@ -148,6 +148,38 @@ export default function MarketDetail({ slug }: { slug: string }) {
             </h2>
             <p className="mt-2.5 text-[13.5px] leading-relaxed text-fg-dim">{seed.description}</p>
           </section>
+
+          {/* Related markets */}
+          {(() => {
+            const related = state.marketList
+              .filter((m) => m.category === seed.category && m.id !== seed.id)
+              .slice(0, 4);
+            if (related.length === 0) return null;
+            return (
+              <section className="mt-6">
+                <h2 className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">
+                  More in {seed.category}
+                </h2>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {related.map((m) => {
+                    const r = state.markets[m.id];
+                    const p = r ? priceYesFn(r.qYes, r.qNo, liquidityB(m.id)) : m.initialYes;
+                    return (
+                      <Link
+                        key={m.id}
+                        href={`/predict/${m.slug}`}
+                        className="flex items-center gap-3 rounded-lg border border-border bg-surface/40 p-3 transition-colors hover:border-fg/20"
+                      >
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-border bg-bg text-[15px]">{m.icon}</span>
+                        <span className="min-w-0 flex-1 truncate text-[13px] text-fg">{m.shortTitle}</span>
+                        <span className="shrink-0 font-mono text-[13px] font-semibold text-fg">{pct(p)}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })()}
         </div>
 
         {/* Right: trade */}
