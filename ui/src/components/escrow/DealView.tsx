@@ -249,16 +249,13 @@ export default function DealView({ id }: { id: number }) {
         <span className={`ml-auto rounded-full border px-3 py-1 text-[12px] font-medium ${statusTone}`}>{STATUS_LABEL[deal.status]}</span>
       </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="mt-3 flex flex-wrap gap-x-7 gap-y-1 text-[12.5px]">
         {[
           { k: "Buyer", v: isBuyer ? "You" : shortAddr(deal.buyer) },
           { k: "Seller", v: isSeller ? "You" : shortAddr(deal.seller) },
           { k: "Deadline", v: `${dlText}${past ? " · passed" : ""}` },
         ].map((c) => (
-          <div key={c.k} className={`${PANEL} px-4 py-3`}>
-            <p className="text-[11px] uppercase tracking-wide text-[#6B7488]">{c.k}</p>
-            <p className="mt-0.5 font-mono text-[13.5px] text-white">{c.v}</p>
-          </div>
+          <span key={c.k} className="text-[#6B7488]">{c.k} <span className="ml-1 font-mono text-white/85">{c.v}</span></span>
         ))}
       </div>
 

@@ -66,44 +66,62 @@ function HeroDealCard({ id, spec, amount }: { id: number; spec: string; amount: 
   );
 }
 
-function Agents() {
-  // Two-agent cross-check, drawn as the mechanism — not a stock hub-and-spoke.
+function WorkedDispute() {
+  // The moat made concrete: a second, independent model catches what the first
+  // missed, so the funds don't move. A single-agent escrow would have paid out.
   return (
     <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 sm:p-8">
-      <h2 className="text-[12px] font-medium uppercase tracking-[0.16em] text-[#7E8696]">How a disputed deal is settled</h2>
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-stretch">
-        {/* Arbiter + Sentinel pair */}
-        <div className="flex-1 rounded-lg border border-white/10 bg-white/[0.02] p-4">
+      <div className="flex items-baseline justify-between gap-4">
+        <h2 className="font-serif text-[22px] font-medium leading-tight text-white sm:text-[27px]">When the two agents disagree, no one gets paid.</h2>
+        <span className="hidden shrink-0 font-mono text-[11px] text-[#6B7488] sm:block">a contested deal</span>
+      </div>
+      <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-[#8A93A6]">
+        A single-agent escrow pays out on the first verdict. Here the second, independent model catches
+        what the first one waved through &mdash; so the money stays locked.
+      </p>
+
+      <div className="mt-6 rounded-lg border border-white/[0.07] bg-black/20 p-4">
+        <p className="font-mono text-[10.5px] uppercase tracking-wide text-[#6B7488]">Brief</p>
+        <p className="mt-1 text-[12.5px] leading-relaxed text-white/85">Translate our homepage into French. Native quality &mdash; no machine translation.</p>
+        <p className="mt-3 font-mono text-[10.5px] uppercase tracking-wide text-[#6B7488]">Delivery</p>
+        <p className="mt-1 text-[12.5px] leading-relaxed text-[#AAB2C5]">&laquo; Bienvenue sur notre plateforme. Nous sommes excit&eacute;s de vous avoir ici&hellip; &raquo; <span className="text-[#6B7488]">(full page submitted)</span></p>
+      </div>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-lg border border-[#34D399]/25 bg-[#34D399]/[0.05] p-4">
           <div className="flex items-center justify-between">
-            <span className="text-[13.5px] font-semibold text-white">Arbiter</span>
-            <span className="font-mono text-[10.5px] text-[#6B7488]">model A</span>
+            <span className="text-[12.5px] font-semibold text-white">Arbiter <span className="font-mono text-[10.5px] font-normal text-[#6B7488]">model A</span></span>
+            <span className="font-mono text-[12.5px] font-semibold text-[#34D399]">RELEASE</span>
           </div>
-          <p className="mt-1.5 text-[12px] leading-relaxed text-[#8A93A6]">Reads the deliverable against the brief and rules: pay the seller, refund the buyer, or abstain.</p>
+          <p className="mt-1.5 text-[12px] leading-relaxed text-[#8A93A6]">&ldquo;Reads fluently and covers every section of the page. Pay the seller.&rdquo;</p>
         </div>
-        <div className="flex items-center justify-center px-1 text-[#6B7488]">
-          <span className="rounded-md border border-white/10 px-2 py-1 font-mono text-[10.5px] text-[#9AA3B2]">must agree</span>
-        </div>
-        <div className="flex-1 rounded-lg border border-white/10 bg-white/[0.02] p-4">
+        <div className="rounded-lg border border-[#F87171]/25 bg-[#F87171]/[0.05] p-4">
           <div className="flex items-center justify-between">
-            <span className="text-[13.5px] font-semibold text-white">Sentinel</span>
-            <span className="font-mono text-[10.5px] text-[#6B7488]">model B · blind</span>
+            <span className="text-[12.5px] font-semibold text-white">Sentinel <span className="font-mono text-[10.5px] font-normal text-[#6B7488]">model B · blind</span></span>
+            <span className="font-mono text-[12.5px] font-semibold text-[#F87171]">REFUND</span>
           </div>
-          <p className="mt-1.5 text-[12px] leading-relaxed text-[#8A93A6]">A different model re-judges from scratch, never shown the first verdict. It exists to catch a wrong call.</p>
+          <p className="mt-1.5 text-[12px] leading-relaxed text-[#8A93A6]">&ldquo;&lsquo;Excit&eacute;s de vous avoir&rsquo; is a word-for-word calque from English, not native French. The brief required native quality.&rdquo;</p>
         </div>
       </div>
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg border border-[#34D399]/20 bg-[#34D399]/[0.05] px-4 py-3">
-          <span className="text-[12.5px] font-semibold text-[#34D399]">They agree →</span>
-          <span className="ml-1.5 text-[12.5px] text-[#AAB2C5]">the contract pays out, on-chain.</span>
-        </div>
-        <div className="rounded-lg border border-[#FBBF24]/20 bg-[#FBBF24]/[0.05] px-4 py-3">
-          <span className="text-[12.5px] font-semibold text-[#FBBF24]">They disagree →</span>
-          <span className="ml-1.5 text-[12.5px] text-[#AAB2C5]">funds are held for a human. Never a coin flip.</span>
-        </div>
+
+      <div className="mt-3 flex items-start gap-3 rounded-lg border border-[#FBBF24]/25 bg-[#FBBF24]/[0.05] px-4 py-3">
+        <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#FBBF24]" />
+        <p className="text-[12.5px] leading-relaxed text-[#AAB2C5]">
+          <span className="font-semibold text-[#FBBF24]">They disagree, so the funds stay locked.</span> No automatic
+          payout on a contested call &mdash; a human makes the final decision. A single-agent escrow would have
+          released the money on the first verdict.
+        </p>
       </div>
     </div>
   );
 }
+
+const FAQ = [
+  { q: "What if the agents can’t decide?", a: "Either one can return UNRESOLVABLE — the brief is too vague to score, or the deliverable can’t be verified. The buyer is refunded and a human takes over. The agent never guesses to look decisive." },
+  { q: "Who decides on a tie?", a: "Disagreement or UNRESOLVABLE routes to a human review step, not an automatic payout. The contract holds the funds the entire time — neither the agents nor we can move them to ourselves." },
+  { q: "Can a deliverable trick the agent?", a: "The agent only signals a verdict; it holds no keys, so a prompt-injection has nothing to steal. And a second, independent model has to agree before any payout, so fooling one model isn’t enough to move funds." },
+  { q: "Why not Kleros or UMA?", a: "Those settle with staked jurors or an optimistic-oracle challenge window — capital games and multi-day waits. Here two independent models read the actual deliverable in seconds, and you can read their reasoning on-chain." },
+];
 
 const TENETS = [
   {
@@ -247,20 +265,33 @@ export default function EscrowApp() {
         </div>
       </section>
 
-      {/* Tenets — the real mechanism, not adjectives */}
-      <section className="mt-16 grid gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.05] sm:grid-cols-3">
+      {/* The moat, demonstrated on a real contested deal */}
+      <section className="mt-16">
+        <WorkedDispute />
+      </section>
+
+      {/* Tenets — borderless, so they read as a point of view not a card grid */}
+      <section className="mt-14 grid gap-x-10 gap-y-8 sm:grid-cols-3">
         {TENETS.map((t, i) => (
-          <div key={t.h} className="bg-[#0b0c0f] p-5">
+          <div key={t.h}>
             <div className="font-mono text-[11px] text-[#6B7488]">0{i + 1}</div>
             <h3 className="mt-2 text-[14px] font-semibold leading-snug text-white">{t.h}</h3>
-            <p className="mt-2 text-[12.5px] leading-relaxed text-[#8A93A6]">{t.p}</p>
+            <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#8A93A6]">{t.p}</p>
           </div>
         ))}
       </section>
 
-      {/* Two-agent mechanism */}
-      <section className="mt-6">
-        <Agents />
+      {/* The hard questions */}
+      <section className="mt-14 border-t border-white/[0.07] pt-10">
+        <h2 className="text-[12px] font-medium uppercase tracking-[0.16em] text-[#7E8696]">How it holds up</h2>
+        <div className="mt-5 grid gap-x-10 gap-y-6 sm:grid-cols-2">
+          {FAQ.map((f) => (
+            <div key={f.q}>
+              <h3 className="text-[13.5px] font-semibold text-white">{f.q}</h3>
+              <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#8A93A6]">{f.a}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* App surface */}

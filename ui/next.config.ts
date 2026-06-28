@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Hide the dev-mode overlay indicator (the floating logo button).
+  devIndicators: false,
   // The chain RPC endpoints are read at request time inside API routes,
   // so we keep them in the runtime env, not bundled.
   experimental: {
