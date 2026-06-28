@@ -41,12 +41,47 @@ interface Verdict {
   citations: { url: string; title: string }[];
 }
 
-function AgentSettlePanel({ id, onSettled }: { id: number; onSettled: () => void }) {
+function AgentSettlePanel({ id, spec, delivery, amountLabel, onSettled }: { id: number; spec: string; delivery: string; amountLabel: string; onSettled: () => void }) {
   const [running, setRunning] = useState(false);
   const [log, setLog] = useState("");
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [tx, setTx] = useState<{ txHash: string; url: string } | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  // Sentinel: an independent appeals agent (different model, blind to the first
+  // verdict). Agreement upholds; disagreement means a human takes over.
+  const [sentinel, setSentinel] = useState<Verdict | null>(null);
+  const [sLog, setSLog] = useState("");
+  const [sRunning, setSRunning] = useState(false);
+
+  async function appealSentinel() {
+    setSRunning(true); setSentinel(null); setSLog("");
+    try {
+      const res = await fetch("/api/escrow/adjudicate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ dealId: id, spec, delivery, amountLabel, role: "sentinel" }) });
+      if (!res.body) throw new Error("no stream");
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "";
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const parts = buf.split("\n\n");
+        buf = parts.pop() ?? "";
+        for (const p of parts) {
+          const dl = p.match(/^data: (.*)$/m)?.[1];
+          if (!dl) continue;
+          let d: Record<string, unknown>;
+          try { d = JSON.parse(dl); } catch { continue; }
+          if (d.type === "text_delta") setSLog((l) => l + String(d.text ?? ""));
+          else if (d.type === "final") setSentinel(d.output as unknown as Verdict);
+        }
+      }
+    } catch {
+      /* leave sentinel null; the appeal can be retried */
+    } finally {
+      setSRunning(false);
+    }
+  }
 
   async function settle() {
     setRunning(true); setLog(""); setVerdict(null); setTx(null); setErr(null);
@@ -111,6 +146,39 @@ function AgentSettlePanel({ id, onSettled }: { id: number; onSettled: () => void
           </div>
           <p className="mt-2 text-[12.5px] leading-relaxed text-[#AAB2C5]">{verdict.evidenceSummary}</p>
           {tx && <a href={tx.url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-mono text-[11.5px] text-[#A5B0FF] hover:underline">view settlement ↗ {tx.txHash.slice(0, 10)}…</a>}
+
+          {/* Sentinel: independent appeals agent */}
+          <div className="mt-3 border-t border-white/10 pt-3">
+            {!sentinel && !sRunning && (
+              <>
+                <p className="text-[12px] leading-relaxed text-[#8A93A6]">Don&rsquo;t want to take one agent&rsquo;s word for it? A second agent &mdash; a different model, blind to this verdict &mdash; can re-judge the deal from scratch.</p>
+                <button onClick={appealSentinel} className="mt-2 rounded-lg border border-white/15 px-3 py-1.5 text-[12.5px] font-medium text-white/85 transition-colors hover:border-white/35">
+                  Request independent appeal (Sentinel)
+                </button>
+              </>
+            )}
+            {sRunning && !sentinel && <p className="animate-pulse text-[12px] text-[#A5B0FF]">Sentinel is re-judging independently…</p>}
+            {sLog && !sentinel && <pre className="mt-2 max-h-44 overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-black/30 p-3 font-mono text-[11px] leading-relaxed text-[#AAB2C5]">{sLog}</pre>}
+            {sentinel && (() => {
+              const agree = sentinel.verdict === verdict.verdict;
+              const sTone = sentinel.verdict === "RELEASE" ? "text-[#34D399]" : sentinel.verdict === "REFUND" ? "text-[#FBBF24]" : "text-[#9AA3B2]";
+              return (
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] uppercase tracking-wide text-[#6B7488]">Sentinel</span>
+                    <span className={`text-[14px] font-bold ${sTone}`}>{sentinel.verdict}</span>
+                    {sentinel.verdict !== "UNRESOLVABLE" && <span className="text-[11px] text-[#6B7488]">{sentinel.confidencePct}%</span>}
+                  </div>
+                  <p className="mt-1.5 text-[12px] leading-relaxed text-[#AAB2C5]">{sentinel.evidenceSummary}</p>
+                  <div className={`mt-2 rounded-lg border px-3 py-2 text-[12px] ${agree ? "border-[#34D399]/30 bg-[#34D399]/10 text-[#34D399]" : "border-[#FBBF24]/30 bg-[#FBBF24]/10 text-[#FBBF24]"}`}>
+                    {agree
+                      ? "Upheld — two independent agents, different models, reached the same verdict."
+                      : "Split — the appeal disagrees with the arbiter. A contested call like this is held and escalated to a human instead of paying out."}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
         </div>
       )}
       {err && <p className="mt-3 rounded-xl border border-[#F87171]/30 bg-[#F87171]/10 px-3 py-2 text-[12px] text-[#F87171]">{err}</p>}
@@ -262,7 +330,7 @@ export default function DealView({ id }: { id: number }) {
             </div>
           )}
 
-          {deal.status === STATUS.DISPUTED && <AgentSettlePanel id={id} onSettled={() => refetch()} />}
+          {deal.status === STATUS.DISPUTED && <AgentSettlePanel id={id} spec={deal.spec} delivery={deal.delivery} amountLabel={`${fmtUsdc(deal.amount)} ${USDC_SYMBOL}`} onSettled={() => refetch()} />}
 
           {err && <p className="rounded-xl border border-[#F87171]/30 bg-[#F87171]/10 px-3 py-2 text-[12.5px] text-[#F87171]">{err}</p>}
         </div>
