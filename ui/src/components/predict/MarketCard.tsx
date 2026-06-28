@@ -97,20 +97,6 @@ export default function MarketCard({ seed, priceYes, history, volume, settlement
           {resolved ? "Settled by agent" : past ? "Agent can settle" : untilDeadline(seed.deadlineISO)}
         </span>
       </div>
-
-      {seed.createdBy && (
-        <a
-          href={seed.createdBy.explorerUrl}
-          target="_blank"
-          rel="noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          title="This market was written on-chain by a Theseus agent. Verify it."
-          className="mt-2 inline-flex items-center gap-1 font-mono text-[10px] text-fg-mute transition-colors hover:text-coral"
-        >
-          <span className="h-1 w-1 rounded-full bg-coral/70" />
-          made by {seed.createdBy.agent} on Theseus ↗
-        </a>
-      )}
     </div>
   );
 }
