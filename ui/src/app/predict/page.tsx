@@ -83,7 +83,7 @@ export default function MarketsIndex() {
           {state.hydrated && (
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: state.live ? "var(--green)" : "var(--amber)" }} />
-              {state.live ? "Markets created by agents on Theseus" : "Sample markets"}
+              {state.live ? "Created by agents" : "Sample markets"}
             </span>
           )}
           <span><span className="text-fg">{state.marketList.length}</span> markets</span>

@@ -9,7 +9,7 @@ import ResolvePanel from "./ResolvePanel";
 import { onChainEnabled } from "@/lib/predict/onchain";
 import { findMarketBySlug, liquidityB, usePredict } from "@/lib/predict/store";
 import { priceYes as priceYesFn } from "@/lib/predict/amm";
-import { cents, compactUsd, fmtDate, isPast, pct, untilDeadline } from "@/lib/predict/format";
+import { compactUsd, fmtDate, isPast, pct, untilDeadline } from "@/lib/predict/format";
 import type { Outcome } from "@/lib/predict/types";
 
 export default function MarketDetail({ slug }: { slug: string }) {
@@ -92,30 +92,18 @@ export default function MarketDetail({ slug }: { slug: string }) {
 
           {/* Price + chart */}
           <div className="mt-6 rounded-xl border border-border bg-surface/40 p-4 sm:p-5">
-            <div className="flex items-end justify-between">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="font-mono text-[34px] font-semibold leading-none tabular-nums text-fg">
-                    {pct(pYes)}
-                  </span>
-                  <span className="text-[13px] text-fg-mute">YES</span>
-                </div>
-                <div
-                  className="mt-1 font-mono text-[12px]"
-                  style={{ color: change >= 0 ? "var(--green)" : "var(--red)" }}
-                >
-                  {change >= 0 ? "▲" : "▼"} {Math.abs(Math.round(change * 100))} pts
-                </div>
+            <div>
+              <div className="flex items-baseline gap-2">
+                <span className="font-mono text-[34px] font-semibold leading-none tabular-nums text-fg">
+                  {pct(pYes)}
+                </span>
+                <span className="text-[13px] text-fg-mute">YES chance</span>
               </div>
-              <div className="flex gap-2 text-center">
-                <div className="rounded-lg border border-[color-mix(in_srgb,var(--green)_30%,transparent)] px-3 py-1.5">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg-mute">Yes</div>
-                  <div className="font-mono text-[15px] font-semibold text-green">{cents(pYes)}</div>
-                </div>
-                <div className="rounded-lg border border-[color-mix(in_srgb,var(--red)_30%,transparent)] px-3 py-1.5">
-                  <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg-mute">No</div>
-                  <div className="font-mono text-[15px] font-semibold text-red">{cents(1 - pYes)}</div>
-                </div>
+              <div
+                className="mt-1 font-mono text-[12px]"
+                style={{ color: change >= 0 ? "var(--green)" : "var(--red)" }}
+              >
+                {change >= 0 ? "▲" : "▼"} {Math.abs(Math.round(change * 100))} pts
               </div>
             </div>
             <div className="mt-4">
@@ -128,25 +116,16 @@ export default function MarketDetail({ slug }: { slug: string }) {
             <ResolvePanel seed={seed} />
           </div>
 
-          {/* Rules */}
+          {/* Rules + context */}
           <section className="mt-6 rounded-xl border border-border bg-surface/40 p-5">
-            <h2 className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">
+            <p className="text-[13.5px] leading-relaxed text-fg-dim">{seed.description}</p>
+            <h2 className="mt-4 font-mono text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">
               Resolution rules
             </h2>
-            <p className="mt-2.5 text-[13.5px] leading-relaxed text-fg-dim">
-              {seed.resolutionCriteria}
-            </p>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-fg-dim">{seed.resolutionCriteria}</p>
             <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-mute">
               Source · <span className="text-fg-dim">{seed.resolutionSource}</span>
             </p>
-          </section>
-
-          {/* Context */}
-          <section className="mt-6 rounded-xl border border-border bg-surface/40 p-5">
-            <h2 className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">
-              About this market
-            </h2>
-            <p className="mt-2.5 text-[13.5px] leading-relaxed text-fg-dim">{seed.description}</p>
           </section>
 
           {/* Related markets */}
