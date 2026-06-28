@@ -1,5 +1,11 @@
 # Theseus Predict — on-chain trading + settlement (Base Sepolia)
 
+**Live:** `TheseusPredictionMarket` at `0xC7c57c7991eF070bAe55c2c5C9566c3C89E2a5F1`
+on Base Sepolia, markets 5200-5220 open (agent/owner
+`0xebCCa0A29DB919E083D070B6098C18f966D25588`). This address is the default in
+`ui/src/lib/predict/onchain.ts`, so trading is on by default; the steps below are
+for redeploying or pointing at a different contract.
+
 Real, wallet-based trading for Theseus Predict. Decisions stay on Theseus (agents
 make the markets, the adjudicator decides the verdict); the money and settlement
 live on an EVM testnet. Collateral is the existing **eUSDC faucet token**
@@ -40,7 +46,7 @@ and resolver. You need its **private key** and some Base Sepolia ETH for gas.
    Foundry's safer alternative is an encrypted keystore: `cast wallet import
    agent --interactive`, then deploy with `--account agent` instead of
    `--private-key`.
-3. Deploy (opens markets 5200-5209 seeded with 2,000 eUSDC each):
+3. Deploy (opens markets 5200-5220 seeded with 2,000 eUSDC each):
 
    ```
    cd contracts && source .env

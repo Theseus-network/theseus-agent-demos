@@ -23,8 +23,8 @@ contract DeployTheseusPredictionMarket is Script {
         address usdcAddr = vm.envOr("PREDICT_USDC", DEFAULT_USDC);
 
         // Starter markets (ids match the app's agent-created board).
-        uint256[] memory ids = new uint256[](10);
-        for (uint256 i = 0; i < 10; i++) ids[i] = 5200 + i;
+        uint256[] memory ids = new uint256[](21);
+        for (uint256 i = 0; i < 21; i++) ids[i] = 5200 + i;
 
         vm.startBroadcast();
         TheseusPredictionMarket pm = new TheseusPredictionMarket(IERC20(usdcAddr), agent);

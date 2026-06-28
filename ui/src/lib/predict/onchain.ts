@@ -11,7 +11,9 @@ export const PREDICT_CHAIN_ID = baseSepolia.id; // 84532
 export const EUSDC_ADDRESS = "0x6aaBC0dBC77Bb5F79781D42E2F58F1312bEf607B" as const;
 export const EUSDC_DECIMALS = 6;
 
-export const PREDICT_MARKET_ADDRESS = (process.env.NEXT_PUBLIC_PREDICT_MARKET ?? "") as `0x${string}` | "";
+// Live deployment on Base Sepolia (agent-opened markets 5200-5220). Override with
+// NEXT_PUBLIC_PREDICT_MARKET to point at a different deployment.
+export const PREDICT_MARKET_ADDRESS = (process.env.NEXT_PUBLIC_PREDICT_MARKET || "0xC7c57c7991eF070bAe55c2c5C9566c3C89E2a5F1") as `0x${string}` | "";
 export const onChainEnabled = () => /^0x[0-9a-fA-F]{40}$/.test(PREDICT_MARKET_ADDRESS);
 
 // Outcome enum: matches the contract (YES = 0, NO = 1).
