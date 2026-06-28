@@ -12,6 +12,7 @@ import {
 } from "wagmi";
 import { waitForTransactionReceipt } from "wagmi/actions";
 import { ConnectControl } from "./ConnectControl";
+import { basescanAddressUrl } from "@/lib/deployed-contracts";
 import {
   ESCROW_ADDRESS,
   ESCROW_ABI,
@@ -28,10 +29,10 @@ import {
   type Deal,
 } from "@/lib/escrow/client";
 
-const PANEL = "rounded-2xl border border-white/[0.07] bg-white/[0.03]";
+const PANEL = "rounded-xl border border-white/[0.08] bg-white/[0.02]";
 const INPUT =
-  "mt-1.5 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-[13.5px] text-white outline-none transition-colors placeholder:text-[#6B7488] focus:border-[#6366F1]";
-const GRAD = "bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] shadow-[0_8px_30px_rgba(99,102,241,0.3)]";
+  "mt-1.5 w-full rounded-lg border border-white/12 bg-white/[0.02] px-3.5 py-2.5 text-[13.5px] text-white outline-none transition-colors placeholder:text-[#6B7488] focus:border-white/35";
+const BTN = "bg-white text-[#0a0b0d] hover:bg-white/88";
 
 interface Verdict {
   verdict: "RELEASE" | "REFUND" | "UNRESOLVABLE";
@@ -120,9 +121,9 @@ function AgentSettlePanel({ id, spec, delivery, amountLabel, onSettled }: { id: 
   const tone = verdict?.verdict === "RELEASE" ? "text-[#34D399]" : verdict?.verdict === "REFUND" ? "text-[#FBBF24]" : "text-[#9AA3B2]";
 
   return (
-    <div className="rounded-2xl border border-[#6366F1]/25 bg-[#6366F1]/[0.06] p-5">
+    <div className="rounded-xl border border-white/10 bg-white/[0.025] p-5">
       <div className="flex items-center gap-2">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#6366F1] to-[#8B5CF6]">
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/12 bg-white/[0.05]">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a5 5 0 0 1 5 5v1a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5zM5 21a7 7 0 0 1 14 0" /></svg>
         </span>
         <h3 className="text-[15px] font-semibold text-white">Agent settlement</h3>
@@ -132,11 +133,11 @@ function AgentSettlePanel({ id, spec, delivery, amountLabel, onSettled }: { id: 
         the record supports, and refunds the buyer if it can&rsquo;t call it at 80% confidence.
       </p>
       {!verdict && !running && (
-        <button onClick={settle} className={`mt-3 rounded-xl ${GRAD} px-4 py-2.5 text-[13.5px] font-semibold text-white`}>
+        <button onClick={settle} className={`mt-3 rounded-lg ${BTN} px-4 py-2.5 text-[13.5px] font-semibold`}>
           Have the agent settle this
         </button>
       )}
-      {running && !verdict && <p className="mt-3 animate-pulse text-[12.5px] text-[#A5B0FF]">Agent is reading the deal…</p>}
+      {running && !verdict && <p className="mt-3 animate-pulse text-[12.5px] text-white/70">Agent is reading the deal…</p>}
       {log && <pre className="mt-3 max-h-56 overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-black/30 p-3 font-mono text-[11.5px] leading-relaxed text-[#AAB2C5]">{log}</pre>}
       {verdict && (
         <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-4">
@@ -145,7 +146,7 @@ function AgentSettlePanel({ id, spec, delivery, amountLabel, onSettled }: { id: 
             {verdict.verdict !== "UNRESOLVABLE" && <span className="text-[12px] text-[#6B7488]">{verdict.confidencePct}% confidence</span>}
           </div>
           <p className="mt-2 text-[12.5px] leading-relaxed text-[#AAB2C5]">{verdict.evidenceSummary}</p>
-          {tx && <a href={tx.url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-mono text-[11.5px] text-[#A5B0FF] hover:underline">view settlement ↗ {tx.txHash.slice(0, 10)}…</a>}
+          {tx && <a href={tx.url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-mono text-[11.5px] text-white/70 hover:underline">view settlement ↗ {tx.txHash.slice(0, 10)}…</a>}
 
           {/* Sentinel: independent appeals agent */}
           <div className="mt-3 border-t border-white/10 pt-3">
@@ -157,7 +158,7 @@ function AgentSettlePanel({ id, spec, delivery, amountLabel, onSettled }: { id: 
                 </button>
               </>
             )}
-            {sRunning && !sentinel && <p className="animate-pulse text-[12px] text-[#A5B0FF]">Sentinel is re-judging independently…</p>}
+            {sRunning && !sentinel && <p className="animate-pulse text-[12px] text-white/70">Sentinel is re-judging independently…</p>}
             {sLog && !sentinel && <pre className="mt-2 max-h-44 overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-black/30 p-3 font-mono text-[11px] leading-relaxed text-[#AAB2C5]">{sLog}</pre>}
             {sentinel && (() => {
               const agree = sentinel.verdict === verdict.verdict;
@@ -220,7 +221,7 @@ export default function DealView({ id }: { id: number }) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-20 text-center">
         <p className="text-[15px] text-white">Deal #{id} doesn&rsquo;t exist.</p>
-        <Link href="/escrow" className="mt-3 inline-block text-[13px] text-[#A5B0FF] hover:underline">← Back to escrow</Link>
+        <Link href="/escrow" className="mt-3 inline-block text-[13px] text-white/70 hover:underline">← Back to escrow</Link>
       </main>
     );
   }
@@ -233,7 +234,7 @@ export default function DealView({ id }: { id: number }) {
     : deal.status === 5 ? "text-[#FBBF24] border-[#FBBF24]/30 bg-[#FBBF24]/10"
     : deal.status === 6 ? "text-[#9AA3B2] border-white/10 bg-white/5"
     : deal.status === 3 ? "text-[#F87171] border-[#F87171]/30 bg-[#F87171]/10"
-    : "text-[#A5B0FF] border-[#6366F1]/30 bg-[#6366F1]/10";
+    : "text-white/80 border-white/15 bg-white/5";
   const paidLabel = deal.status === STATUS.RELEASED ? "Released to the seller"
     : deal.status === STATUS.REFUNDED ? "Refunded to the buyer"
     : deal.status === STATUS.UNRESOLVABLE ? "Agent declined; refunded to the buyer" : "";
@@ -261,6 +262,22 @@ export default function DealView({ id }: { id: number }) {
         ))}
       </div>
 
+      <div className="mt-4 flex items-center gap-2">
+        {[
+          { k: "Funded", done: true },
+          { k: "Delivered", done: !!deal.delivery || deal.status >= STATUS.DELIVERED },
+          { k: "Settled", done: terminal },
+        ].map((s, i, arr) => (
+          <div key={s.k} className="flex flex-1 items-center gap-2">
+            <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${s.done ? "bg-[#34D399]" : "border border-white/20"}`}>
+              {s.done && <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#0a0b0d" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>}
+            </span>
+            <span className={`text-[11.5px] ${s.done ? "text-white" : "text-[#6B7488]"}`}>{s.k}</span>
+            {i < arr.length - 1 && <span className={`h-px flex-1 ${s.done ? "bg-[#34D399]/40" : "bg-white/10"}`} />}
+          </div>
+        ))}
+      </div>
+
       <section className={`${PANEL} mt-4 p-5`}>
         <p className="text-[11px] uppercase tracking-wide text-[#6B7488]">Brief</p>
         <p className="mt-1.5 whitespace-pre-wrap text-[14px] leading-relaxed text-white/90">{deal.spec || "(none)"}</p>
@@ -273,12 +290,21 @@ export default function DealView({ id }: { id: number }) {
         )}
       </section>
 
-      {terminal && (
-        <div className="mt-4 rounded-2xl border border-[#34D399]/25 bg-[#34D399]/[0.06] px-5 py-4 text-[14px] text-white">
-          <span className="font-semibold">{paidLabel}.</span>
-          {deal.confidencePct > 0 && deal.status !== STATUS.UNRESOLVABLE ? <span className="text-[#AAB2C5]"> Agent confidence {deal.confidencePct}%.</span> : null}
-        </div>
-      )}
+      {terminal && (() => {
+        const tHex = deal.status === STATUS.RELEASED ? "#34D399" : deal.status === STATUS.REFUNDED ? "#FBBF24" : "#9AA3B2";
+        return (
+          <div className="mt-4 rounded-xl border px-5 py-4" style={{ borderColor: `${tHex}40`, background: `${tHex}12` }}>
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full" style={{ background: tHex }} />
+              <span className="text-[14.5px] font-semibold text-white">{paidLabel}.</span>
+            </div>
+            <p className="mt-2 text-[12.5px] leading-relaxed text-[#AAB2C5]">
+              Decided by the agent reading the delivery against the brief, then committed on-chain by the escrow contract &mdash; not by a company support queue.{" "}
+              <a href={basescanAddressUrl(ESCROW_ADDRESS)} target="_blank" rel="noopener noreferrer" className="text-white/70 underline decoration-white/20 hover:text-white">View on Basescan ↗</a>
+            </p>
+          </div>
+        );
+      })()}
 
       {!isConnected && !terminal && (
         <div className={`${PANEL} mt-4 flex items-center justify-between gap-3 px-5 py-4`}>
@@ -297,7 +323,7 @@ export default function DealView({ id }: { id: number }) {
               <h3 className="text-[14.5px] font-semibold text-white">Submit your delivery</h3>
               <textarea value={delivery} onChange={(e) => setDelivery(e.target.value)} rows={4} placeholder="Paste your deliverable or a link to it. This is what the agent scores against the brief." className={`${INPUT} resize-y leading-relaxed`} />
               <div className="mt-3 flex flex-wrap gap-2">
-                <button disabled={busy !== null || delivery.trim().length < 2} onClick={() => act("deliver", () => w("submitDelivery", [BigInt(id), delivery.trim()]))} className={`rounded-xl ${GRAD} px-4 py-2.5 text-[13.5px] font-semibold text-white disabled:opacity-40 disabled:shadow-none`}>
+                <button disabled={busy !== null || delivery.trim().length < 2} onClick={() => act("deliver", () => w("submitDelivery", [BigInt(id), delivery.trim()]))} className={`rounded-lg ${BTN} px-4 py-2.5 text-[13.5px] font-semibold disabled:opacity-40`}>
                   {busy === "deliver" ? "Submitting…" : "Submit delivery"}
                 </button>
                 <button disabled={busy !== null} onClick={() => act("refund", () => w("refundBuyer", [BigInt(id)]))} className="rounded-xl border border-white/12 px-4 py-2.5 text-[13.5px] font-medium text-[#AAB2C5] hover:text-white disabled:opacity-50">Cancel & refund buyer</button>
