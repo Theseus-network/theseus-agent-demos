@@ -7,7 +7,7 @@ import TradePanel from "./TradePanel";
 import OnChainTradePanel from "./OnChainTradePanel";
 import ResolvePanel from "./ResolvePanel";
 import AnimatedPct from "./AnimatedPct";
-import { onChainEnabled } from "@/lib/predict/onchain";
+import { isOnChainMarket } from "@/lib/predict/onchain";
 import { findMarketBySlug, liquidityB, usePredict } from "@/lib/predict/store";
 import { priceYes as priceYesFn } from "@/lib/predict/amm";
 import { compactUsd, fmtDate, isPast, pct, untilDeadline } from "@/lib/predict/format";
@@ -152,7 +152,7 @@ export default function MarketDetail({ slug }: { slug: string }) {
 
         {/* Right: trade */}
         <div className="lg:sticky lg:top-[72px] lg:self-start">
-          {onChainEnabled() ? (
+          {isOnChainMarket(seed.id) ? (
             <OnChainTradePanel seed={seed} />
           ) : (
             <TradePanel seed={seed} initialSide={initialSide} />

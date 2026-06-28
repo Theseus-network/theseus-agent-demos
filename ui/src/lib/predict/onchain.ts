@@ -16,6 +16,13 @@ export const EUSDC_DECIMALS = 6;
 export const PREDICT_MARKET_ADDRESS = (process.env.NEXT_PUBLIC_PREDICT_MARKET || "0xC7c57c7991eF070bAe55c2c5C9566c3C89E2a5F1") as `0x${string}` | "";
 export const onChainEnabled = () => /^0x[0-9a-fA-F]{40}$/.test(PREDICT_MARKET_ADDRESS);
 
+// Markets actually opened on-chain by the deploy (agent-created board, 5200-5220).
+// Other markets (user-requested, settlement demos) stay play-money.
+export const ON_CHAIN_MARKET_MIN = 5200;
+export const ON_CHAIN_MARKET_MAX = 5220;
+export const isOnChainMarket = (id: number) =>
+  onChainEnabled() && id >= ON_CHAIN_MARKET_MIN && id <= ON_CHAIN_MARKET_MAX;
+
 // Outcome enum: matches the contract (YES = 0, NO = 1).
 export const OUTCOME = { YES: 0, NO: 1 } as const;
 

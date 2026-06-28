@@ -2,9 +2,39 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { faucet, usePredict } from "@/lib/predict/store";
 import { usd } from "@/lib/predict/format";
 import AccountBar from "./AccountBar";
+
+function WalletButton() {
+  return (
+    <ConnectButton.Custom>
+      {({ account, chain, openConnectModal, openAccountModal, mounted }) => {
+        const connected = mounted && account && chain;
+        return (
+          <button
+            onClick={connected ? openAccountModal : openConnectModal}
+            className={
+              connected
+                ? "rounded-md border border-border px-2.5 py-2 text-[13px] font-medium tabular-nums text-fg transition-colors hover:border-fg/30 sm:px-3"
+                : "rounded-md bg-coral px-2.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-coral-dim sm:px-3"
+            }
+          >
+            {connected ? (
+              account.displayName
+            ) : (
+              <>
+                <span className="hidden sm:inline">Connect wallet</span>
+                <span className="sm:hidden">Wallet</span>
+              </>
+            )}
+          </button>
+        );
+      }}
+    </ConnectButton.Custom>
+  );
+}
 
 const LINKS = [
   { href: "/predict", label: "Markets" },
@@ -62,22 +92,14 @@ export default function PredictNav() {
           </nav>
 
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-            <div className="rounded-md border border-border px-2.5 py-1.5 text-right sm:px-3">
-              <div className="font-mono text-[8px] uppercase leading-none tracking-[0.14em] text-fg-mute sm:text-[8.5px]">
-                Balance
-              </div>
-              <div className="mt-0.5 font-mono text-[13px] font-semibold leading-none text-fg tabular-nums sm:text-[14px]">
-                {hydrated ? usd(balance, { cents: true }) : "—"}
-              </div>
-            </div>
+            <WalletButton />
             <button
               onClick={() => faucet()}
               disabled={!hydrated}
-              className="rounded-md bg-coral px-2.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-coral-dim disabled:opacity-50 sm:px-3"
-              title="Add $1,000 play USDC"
+              className="hidden rounded-md border border-border px-2.5 py-2 text-[13px] font-medium text-fg-dim transition-colors hover:border-fg/30 hover:text-fg disabled:opacity-50 sm:inline sm:px-3"
+              title={`Play-money faucet for non-on-chain markets · balance ${hydrated ? usd(balance, { cents: true }) : "—"}`}
             >
-              <span className="hidden sm:inline">+ Faucet</span>
-              <span className="sm:hidden">+</span>
+              + Play funds
             </button>
             <AccountBar />
           </div>
