@@ -254,11 +254,11 @@ export default function EscrowApp() {
             <span className="inline-flex items-center gap-2 text-[12px] text-[#8A93A6]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#34D399]" /> Live on Base Sepolia
             </span>
-            <h1 className="mt-5 font-sans text-[37px] font-bold leading-[1.04] tracking-[-0.03em] text-white sm:text-[50px]">
-              An AI settles your deal fairly, for cents.
+            <h1 className="mt-5 font-sans text-[32px] font-bold leading-[1.12] tracking-[-0.03em] text-white sm:text-[42px]">
+              Escrow for less.<br />Escrow with confidence.<br />Escrow quickly.
             </h1>
-            <p className="mt-4 max-w-md text-[15.5px] leading-relaxed text-[#AAB2C5]">
-              Hold the money in escrow. If you and the seller disagree, an AI agent reads the work and decides who gets paid.
+            <p className="mt-5 max-w-md text-[15.5px] leading-relaxed text-[#AAB2C5]">
+              If you and the seller disagree, an AI agent reads the work and decides who gets paid. No human arbitrator, so it takes seconds and costs a few cents.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-4">
               <a href="#create" className={BTN}>Create a deal</a>
@@ -266,7 +266,6 @@ export default function EscrowApp() {
                 See a settled deal →
               </Link>
             </div>
-            <p className="mt-6 text-[12.5px] text-[#6B7488]">A human arbitrator takes days and hundreds of dollars. An agent does the same job in seconds.</p>
           </div>
           <HeroDealCard id={hero.id} spec={hero.spec} amount={hero.amount} />
         </div>
