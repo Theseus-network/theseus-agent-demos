@@ -239,8 +239,11 @@ export default function EscrowApp() {
     <main className="mx-auto max-w-5xl px-4 pb-24 sm:px-6">
       {/* Hero */}
       <section className="relative pt-14 sm:pt-20">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_55%_50%_at_30%_0%,black,transparent_75%)]" />
-        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="pointer-events-none absolute inset-x-0 -top-14 z-0 h-[460px] overflow-hidden sm:-top-20">
+          <div className="absolute inset-0 bg-cover bg-center opacity-95" style={{ backgroundImage: "url('/hero-escrow.png')" }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#080a12]/60 via-transparent to-[#080a12]" />
+        </div>
+        <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-[#9AA3B2]">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#34D399]" /> Live on Base Sepolia

@@ -67,12 +67,13 @@ export default function MarketsIndex() {
   return (
     <main className="mx-auto max-w-6xl px-3 pb-20 pt-6 sm:px-5">
       {/* Hero */}
-      <section className="relative overflow-hidden pt-6 sm:pt-10">
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_60%_at_30%_0%,black,transparent_75%)]" />
-          <div className="absolute -top-40 -left-28 h-[480px] w-[480px] rounded-full bg-[#6366F1]/25 blur-[130px]" />
-          <div className="absolute -top-28 right-10 h-[420px] w-[420px] rounded-full bg-[#8B5CF6]/18 blur-[130px]" />
+      <section className="relative pt-6 sm:pt-10">
+        <div className="pointer-events-none absolute inset-x-0 -top-6 z-0 h-[200px] overflow-hidden sm:-top-10 sm:h-[250px]">
+          <div className="absolute inset-0 bg-cover bg-right opacity-90" style={{ backgroundImage: "url('/hero-predict.png')" }} />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0a09] via-[#0c0a09]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0c0a09]" />
         </div>
+        <div className="relative z-10">
         <h1 className="max-w-3xl font-serif text-[34px] font-medium leading-[1.03] tracking-tight text-fg sm:text-[52px]">
           Bet on anything, fairly.
         </h1>
@@ -87,6 +88,7 @@ export default function MarketsIndex() {
           <Link href="/predict/how-it-works" className="text-coral hover:underline">How it resolves</Link>
           <span className="opacity-40">/</span>
           <a href="https://theseus.network" target="_blank" rel="noopener noreferrer" className="text-coral hover:underline">Built on Theseus &#8599;</a>
+        </div>
         </div>
       </section>
 
