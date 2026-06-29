@@ -84,34 +84,33 @@ function WorkedDispute() {
         A single-agent escrow pays out on the first verdict. Here the second model overturns it, and the money stays locked.
       </p>
 
-      <div className="mt-7 grid gap-x-12 gap-y-7 lg:grid-cols-[0.85fr_1.15fr]">
-        <div className="text-[13px] leading-relaxed">
-          <p className="text-[#6B7488]">A buyer asked for</p>
-          <p className="mt-1 text-white/85">a native-quality French translation of their homepage, no machine translation.</p>
-          <p className="mt-4 text-[#6B7488]">The seller delivered</p>
-          <p className="mt-1 text-[#9AA3B2]">&laquo; Bienvenue&hellip; Nous sommes excit&eacute;s de vous avoir ici&hellip; &raquo;</p>
+      <div className="mt-6 overflow-hidden rounded-xl border border-white/[0.08]">
+        <div className="border-b border-white/[0.08] bg-white/[0.015] px-5 py-3.5 text-[12.5px] leading-relaxed">
+          <span className="text-[#6B7488]">Brief: </span>
+          <span className="text-white/85">a native-quality French homepage translation, no machine translation. </span>
+          <span className="text-[#6B7488]">Delivered: </span>
+          <span className="text-[#9AA3B2]">&laquo; Bienvenue&hellip; Nous sommes excit&eacute;s de vous avoir ici&hellip; &raquo;</span>
         </div>
 
-        <div className="space-y-5">
-          <div>
-            <div className="flex items-center gap-3">
+        <div className="grid divide-y divide-white/[0.08] sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+          <div className="px-5 py-4">
+            <div className="flex items-center gap-2.5">
               <span className="flex items-center gap-2 text-[14px] text-[#9AA3B2]"><AgentMark name="arbiter" className="h-4 w-4 text-[#8A93A6]" />Arbiter</span>
               <span className="text-[12.5px] font-semibold text-[#34D399]/55 line-through decoration-[#EF4444] decoration-2">RELEASE</span>
             </div>
             <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#7E8696]">&ldquo;Reads fluently, pay the seller.&rdquo;</p>
           </div>
-
-          <div>
-            <div className="flex items-center gap-3">
+          <div className="px-5 py-4">
+            <div className="flex items-center gap-2.5">
               <span className="flex items-center gap-2 text-[14px] text-white"><AgentMark name="sentinel" className="h-4 w-4 text-[#EF4444]" />Sentinel</span>
               <span className="text-[12.5px] font-semibold text-[#EF4444]">REFUND</span>
             </div>
             <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#9AA3B2]">&ldquo;&lsquo;Excit&eacute;s de vous avoir&rsquo; is a calque from English, not native French.&rdquo;</p>
           </div>
+        </div>
 
-          <p className="border-t border-white/[0.08] pt-4 text-[13px] leading-relaxed text-[#AAB2C5]">
-            <span className="font-semibold text-[#FBBF24]">They disagree, so the funds stay locked</span> and a human decides. A single-agent escrow would have already paid.
-          </p>
+        <div className="border-t border-[#FBBF24]/25 bg-[#FBBF24]/[0.07] px-5 py-3.5 text-[12.5px] leading-relaxed text-[#AAB2C5]">
+          <span className="font-semibold text-[#FBBF24]">They disagree, so the funds stay locked</span> and a human decides. A single-agent escrow would have already paid.
         </div>
       </div>
     </div>
