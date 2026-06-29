@@ -27,10 +27,8 @@ export default function EscrowLayout({ children }: { children: React.ReactNode }
             </a>
           </div>
           <p className="mt-2 max-w-2xl text-[12px] leading-relaxed text-[#6B7488]">
-            The contract holds the funds; the agent never does. Disputes are read against the brief by
-            a Theseus agent and re-checked by an independent second agent; they must agree to pay out,
-            and disagreement escalates to a human. Funds are a faucet token ({ESCROW.usdcSymbol}) with
-            no cash value. Nothing here is legal or financial advice.
+            The contract holds the funds; the agent never does. Disputes are settled by a Theseus agent
+            and re-checked by an independent second one. Testnet token ({ESCROW.usdcSymbol}), no cash value.
           </p>
         </div>
       </footer>

@@ -127,26 +127,16 @@ function WorkedDispute() {
 }
 
 const FAQ = [
-  { q: "What if the agents can’t decide?", a: "Either one can return UNRESOLVABLE when the brief is too vague to score or the deliverable can’t be verified. The buyer is refunded and a human takes over. The agent never guesses to look decisive." },
-  { q: "Who decides on a tie?", a: "Disagreement or UNRESOLVABLE routes to a human review step, not an automatic payout. The contract holds the funds the entire time. Neither the agents nor we can move them to ourselves." },
-  { q: "Can a deliverable trick the agents?", a: "The agent holds no keys, so a prompt-injection has nothing to steal. It could still try to fool the judgment, but it has to fool two different models the same way, and any disagreement holds the funds for a human. The brief is fixed before the delivery arrives, so the goalposts can’t move." },
-  { q: "Why not Kleros or UMA?", a: "Those settle with staked jurors or an optimistic-oracle challenge window, capital games and multi-day waits. Here two different models read the actual deliverable in seconds, and you can read both their verdicts on-chain." },
-  { q: "Where does the trust bottom out?", a: "The contract is trustless for custody: no one, not the agents, not us, can move locked funds to themselves. What remains is the model providers and the human who breaks ties, and we don’t hide that. The point is that every verdict is on-chain, so you audit it instead of taking it on faith." },
+  { q: "What if the agents can’t decide?", a: "Either can return UNRESOLVABLE. The buyer is refunded and a human takes over." },
+  { q: "Can a deliverable trick the agents?", a: "The agent holds no keys to steal, and a delivery has to fool two different models to move funds." },
+  { q: "Why not Kleros or UMA?", a: "No staked-juror games or multi-day challenge windows. Two models read the deliverable in seconds, on-chain." },
+  { q: "Where does the trust bottom out?", a: "The contract is trustless for custody. The model providers and a human tiebreaker are the rest, and every verdict is on-chain to audit." },
 ];
 
 const TENETS = [
-  {
-    h: "The contract holds the keys, not the agent.",
-    p: "Funds sit in the escrow contract. The agent can only ever signal a verdict, it can’t move money to itself, and there’s no key for a prompt-injection to steal.",
-  },
-  {
-    h: "Two independent models must agree to pay out.",
-    p: "A second agent, a different model blind to the first, re-judges every disputed deal. One model’s mistake or hallucination doesn’t move your money.",
-  },
-  {
-    h: "Every verdict is on-chain and readable.",
-    p: "The reasoning, the confidence, and the settlement transaction are all recorded. You audit the decision instead of trusting a company’s support queue.",
-  },
+  { h: "The contract holds the keys, not the agent.", p: "The agent only signals a verdict. It can never move the money itself." },
+  { h: "Two models must agree to pay out.", p: "A different model re-judges every disputed deal, blind to the first." },
+  { h: "Every verdict is on-chain.", p: "You audit the decision instead of trusting a support queue." },
 ];
 
 function StatusPill({ status }: { status: number }) {
@@ -257,20 +247,15 @@ export default function EscrowApp() {
             <h1 className="mt-5 font-sans text-[37px] font-bold leading-[1.04] tracking-[-0.03em] text-white sm:text-[50px]">
               Escrow that doesn&rsquo;t trust a single agent.
             </h1>
-            <p className="mt-5 max-w-lg text-[15.5px] leading-relaxed text-[#AAB2C5]">
-              Funds sit in a contract, so no one can run off with them. When a deal is disputed, an agent
-              rules on the brief, and a second, independent agent re-checks it. They have to agree to pay
-              out. If they don&rsquo;t, a human decides.
+            <p className="mt-4 max-w-md text-[15.5px] leading-relaxed text-[#AAB2C5]">
+              Funds sit in a contract until two independent agents agree on who gets paid.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-7 flex flex-wrap items-center gap-4">
               <a href="#create" className={BTN}>Create a deal</a>
               <Link href={`/escrow/${hero.id}`} className="text-[14px] font-medium text-[#AAB2C5] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white">
                 See a settled deal →
               </Link>
             </div>
-            <p className="mt-6 text-[12.5px] text-[#6B7488]">
-              No platform percentage like escrow.com. Settled in seconds, not a multi-day juror vote.
-            </p>
           </div>
           <HeroDealCard id={hero.id} spec={hero.spec} amount={hero.amount} />
         </div>
@@ -310,7 +295,7 @@ export default function EscrowApp() {
         {!isConnected && (
           <div className={`${PANEL} flex flex-col items-center gap-4 px-6 py-12 text-center`}>
             <h2 className="font-sans text-[22px] font-bold tracking-[-0.02em] text-white">Create a deal.</h2>
-            <p className="max-w-sm text-[13.5px] leading-relaxed text-[#8A93A6]">Connect a wallet on Base Sepolia. Mint a test token here; ETH for gas comes from any faucet.</p>
+            <p className="max-w-sm text-[13.5px] leading-relaxed text-[#8A93A6]">Connect a wallet on Base Sepolia. Mint a test token here.</p>
             <ConnectControl size="lg" />
           </div>
         )}
