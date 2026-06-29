@@ -37,6 +37,13 @@ const INPUT =
   "mt-1.5 w-full rounded-lg border border-white/12 bg-white/[0.02] px-3.5 py-2.5 text-[13.5px] text-white outline-none transition-colors placeholder:text-[#6B7488] focus:border-white/35";
 const BTN = "rounded-md bg-[#4d8df0] px-5 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-[#5f9bf5] disabled:opacity-40 disabled:hover:bg-[#4d8df0]";
 
+const STEPS = [
+  { h: "Lock the funds", p: "The buyer locks the payment in the contract and writes the brief the seller has to meet." },
+  { h: "Deliver the work", p: "The seller submits the deliverable and attaches any files, like images or a PDF." },
+  { h: "Release or dispute", p: "Happy with it, the buyer releases the funds. If not, either side sends it to the agents." },
+  { h: "The agents settle it", p: "An agent rules on the brief and a second checks the call. The contract pays the side they agree on." },
+];
+
 function HeroDealCard({ id, spec, amount }: { id: number; spec: string; amount: bigint }) {
   return (
     <Link href={`/escrow/${id}`} className="group block">
@@ -236,6 +243,20 @@ export default function EscrowApp() {
             </p>
           </div>
           <HeroDealCard id={hero.id} spec={hero.spec} amount={hero.amount} />
+        </div>
+      </section>
+
+      {/* Simple how-it-works guide */}
+      <section className="mt-16">
+        <h2 className="text-[13px] font-semibold text-[#9AA3B2]">How it works</h2>
+        <div className="mt-5 grid gap-x-10 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map((s, i) => (
+            <div key={s.h}>
+              <div className="text-[13px] font-semibold text-[#4d8df0]">{i + 1}</div>
+              <h3 className="mt-2 text-[14px] font-semibold text-white">{s.h}</h3>
+              <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#8A93A6]">{s.p}</p>
+            </div>
+          ))}
         </div>
       </section>
 
