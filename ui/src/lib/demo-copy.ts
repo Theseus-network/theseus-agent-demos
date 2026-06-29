@@ -49,7 +49,7 @@ export const DEMO_COPY = {
       "On-chain agentic escrow on Base Sepolia. A human escrow takes a percentage and days, and can take a side. An agent settles disputes in seconds for about the cost of gas, with no stake in who wins.",
     og: {
       section: "agentic escrow",
-      headline: "Escrow for cents, not a percentage.",
+      headline: "Escrow for cents, not percentages.",
       blurb:
         "A human escrow takes a percentage and days, and can take a side. An agent settles in seconds for about the cost of gas, with no stake in who wins.",
       url: "demo-agents.theseus.network/escrow",
