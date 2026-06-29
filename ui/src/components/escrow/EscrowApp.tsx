@@ -242,7 +242,7 @@ export default function EscrowApp() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 pb-24 sm:px-6">
+    <main className="mx-auto max-w-5xl px-4 pb-16 sm:px-6">
       {/* Hero */}
       <section className="relative pt-14 sm:pt-20">
         <div className="pointer-events-none absolute inset-x-0 -top-14 z-0 h-[460px] overflow-hidden sm:-top-20">
@@ -266,7 +266,7 @@ export default function EscrowApp() {
                 See a settled deal →
               </Link>
             </div>
-            <p className="mt-4 text-[12.5px] text-[#6B7488]">Free to try on testnet, and locking a deal takes about a minute.</p>
+            <p className="mt-4 text-[12.5px] text-[#6B7488]">Free to try on testnet. Connect a wallet and you can lock a deal in about a minute.</p>
             <p className="mt-2 text-[12.5px] text-[#6B7488]">escrow.com charges 3.25%. This costs about the price of gas.</p>
           </div>
           <HeroDealCard id={hero.id} spec={hero.spec} amount={hero.amount} />
@@ -274,7 +274,7 @@ export default function EscrowApp() {
       </section>
 
       {/* Fair both ways, shown not asserted: the agent protecting the buyer */}
-      <section className="mt-24">
+      <section className="mt-20">
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.88fr]">
           <div>
             <h2 className="font-sans text-[25px] font-bold leading-[1.14] tracking-[-0.02em] text-white sm:text-[31px]">
@@ -299,11 +299,12 @@ export default function EscrowApp() {
       {/* App surface */}
       <section id="create" className="mt-16 scroll-mt-20">
         {!isConnected && (
-          <div className="grid items-center gap-12 border-t border-white/[0.06] pt-12 lg:grid-cols-[1fr_0.88fr]">
+          <div className="grid items-center gap-12 border-t border-white/[0.06] pt-14 lg:grid-cols-[1fr_0.88fr]">
             <div>
               <h2 className="font-sans text-[26px] font-bold tracking-[-0.02em] text-white sm:text-[32px]">Lock your first deal.</h2>
               <p className="mt-4 max-w-md text-[14px] leading-relaxed text-[#8A93A6]">Connect a wallet on Base Sepolia, write a brief, and lock the funds. The faucet hands you testnet tokens, so it costs nothing to try.</p>
               <div className="mt-6"><ConnectControl size="lg" /></div>
+              <p className="mt-5 text-[12.5px] leading-relaxed text-[#6B7488]">The contract holds the funds the whole time. The agent only ever rules; it never touches the money.</p>
             </div>
             <NewDealPreview />
           </div>
