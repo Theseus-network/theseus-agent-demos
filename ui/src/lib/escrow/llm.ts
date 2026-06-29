@@ -79,9 +79,43 @@ Confidence is how little room a careful reader has to disagree, 0 to 100. RELEAS
 After your reasoning, output exactly one JSON object on the very last line, no code fence:
 {"deal_id": <number>, "verdict": "RELEASE" | "REFUND" | "UNRESOLVABLE", "confidence_pct": <0-100 or null for UNRESOLVABLE>, "reason": "<6 words max>", "evidence_summary": "<60-150 words: the clause you scored, what the delivery did, and why it does or does not meet it>"}`;
 
-function buildUserMessage(i: EscrowAdjudicateInput): string {
+// Deliverables aren't always text. The seller can attach image/PDF file URLs in
+// the delivery; we fetch each and hand it to the agent as real visual evidence
+// (Claude reads images and PDFs natively).
+const FILE_URL_RE = /https?:\/\/[^\s)\]]+?\.(?:png|jpe?g|webp|gif|pdf)(?:\?[^\s)\]]*)?/gi;
+
+function extractFileUrls(text: string): string[] {
+  const out = new Set<string>();
+  for (const m of (text || "").matchAll(FILE_URL_RE)) out.add(m[0]);
+  return [...out].slice(0, 8);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function fetchAsBlock(url: string): Promise<any | null> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const buf = Buffer.from(await res.arrayBuffer());
+    if (buf.byteLength > 9 * 1024 * 1024) return null; // skip oversize (>9MB)
+    const data = buf.toString("base64");
+    const ext = (url.split("?")[0].split(".").pop() || "").toLowerCase();
+    const ct = res.headers.get("content-type") || "";
+    if (ext === "pdf" || ct.includes("pdf")) {
+      return { type: "document", source: { type: "base64", media_type: "application/pdf", data } };
+    }
+    const media = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : ext === "gif" ? "image/gif" : "image/jpeg";
+    return { type: "image", source: { type: "base64", media_type: media, data } };
+  } catch {
+    return null;
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function buildUserContent(i: EscrowAdjudicateInput): Promise<any[]> {
   const today = new Date().toISOString().slice(0, 10);
-  return [
+  const urls = extractFileUrls(i.delivery);
+  const fileBlocks = (await Promise.all(urls.map(fetchAsBlock))).filter(Boolean);
+  const text = [
     `Deal id: ${i.dealId}`,
     `Amount in escrow: ${i.amountLabel}`,
     `Today: ${today}`,
@@ -91,9 +125,11 @@ function buildUserMessage(i: EscrowAdjudicateInput): string {
     "",
     "DELIVERY (what the seller submitted):",
     i.delivery || "(nothing submitted)",
+    fileBlocks.length ? `\n${fileBlocks.length} delivered file(s) are attached below. They ARE the deliverable; judge them directly against the spec.` : "",
     "",
     "Judge the delivery against the spec and return your verdict as the final JSON line.",
   ].join("\n");
+  return [{ type: "text", text }, ...fileBlocks];
 }
 
 export type EscrowStreamEvent =
@@ -138,7 +174,7 @@ export async function* escrowAdjudicateStream(
     model: opts?.model ?? MODEL,
     max_tokens: MAX_TOKENS,
     system: opts?.system ?? SYSTEM_PROMPT,
-    messages: [{ role: "user", content: buildUserMessage(input) }],
+    messages: [{ role: "user", content: await buildUserContent(input) }],
     tools: [
       { type: "web_search_20260209", name: "web_search", allowed_callers: ["direct"] },
     ],

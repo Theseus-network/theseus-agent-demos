@@ -273,6 +273,7 @@ export default function DealView({ id }: { id: number }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [delivery, setDelivery] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
 
   async function act(label: string, fn: () => Promise<`0x${string}`>) {
     setErr(null); setBusy(label);
@@ -347,13 +348,33 @@ export default function DealView({ id }: { id: number }) {
       <section className={`${PANEL} mt-4 p-5`}>
         <p className="text-[11px] uppercase tracking-wide text-[#6B7488]">Brief</p>
         <p className="mt-1.5 whitespace-pre-wrap text-[14px] leading-relaxed text-white/90">{deal.spec || "(none)"}</p>
-        {deal.delivery && (
-          <>
-            <div className="my-4 h-px bg-white/[0.07]" />
-            <p className="text-[11px] uppercase tracking-wide text-[#6B7488]">Delivery</p>
-            <p className="mt-1.5 whitespace-pre-wrap text-[14px] leading-relaxed text-[#AAB2C5]">{deal.delivery}</p>
-          </>
-        )}
+        {deal.delivery && (() => {
+          const urls = [...new Set(deal.delivery.match(/https?:\/\/[^\s)\]]+?\.(?:png|jpe?g|webp|gif|pdf)(?:\?[^\s)\]]*)?/gi) ?? [])];
+          const text = deal.delivery.replace(/\n*Attached files:[\s\S]*$/i, "").trim();
+          return (
+            <>
+              <div className="my-4 h-px bg-white/[0.07]" />
+              <p className="text-[11px] uppercase tracking-wide text-[#6B7488]">Delivery</p>
+              {text && <p className="mt-1.5 whitespace-pre-wrap text-[14px] leading-relaxed text-[#AAB2C5]">{text}</p>}
+              {urls.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {urls.map((u) =>
+                    /\.pdf/i.test(u) ? (
+                      <a key={u} href={u} target="_blank" rel="noreferrer" className="flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-lg border border-white/12 text-[11px] text-white/80 hover:border-white/30">
+                        <span className="font-mono text-[13px]">PDF</span>↗
+                      </a>
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <a key={u} href={u} target="_blank" rel="noreferrer" className="block h-20 w-20 overflow-hidden rounded-lg border border-white/12 hover:border-white/30">
+                        <img src={u} alt="delivery attachment" className="h-full w-full object-cover" />
+                      </a>
+                    ),
+                  )}
+                </div>
+              )}
+            </>
+          );
+        })()}
       </section>
 
       {terminal && (() => {
@@ -398,10 +419,30 @@ export default function DealView({ id }: { id: number }) {
           {isSeller && deal.status === STATUS.FUNDED && (
             <div className={`${PANEL} p-5`}>
               <h3 className="text-[14.5px] font-semibold text-white">Submit your delivery</h3>
-              <textarea value={delivery} onChange={(e) => setDelivery(e.target.value)} rows={4} placeholder="Paste your deliverable or a link to it. This is what the agent scores against the brief." className={`${INPUT} resize-y leading-relaxed`} />
+              <textarea value={delivery} onChange={(e) => setDelivery(e.target.value)} rows={4} placeholder="Describe your deliverable, or attach the files below. This is what the agents score against the brief." className={`${INPUT} resize-y leading-relaxed`} />
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <label className="cursor-pointer rounded-md border border-white/15 px-2.5 py-1.5 text-[12.5px] font-medium text-white/85 transition-colors hover:border-white/35">
+                  Attach files
+                  <input type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif,application/pdf" className="hidden" onChange={(e) => setFiles(Array.from(e.target.files ?? []).slice(0, 8))} />
+                </label>
+                {files.length > 0
+                  ? <span className="text-[12px] text-[#9AA3B2]">{files.length} file{files.length > 1 ? "s" : ""}: {files.map((f) => f.name).join(", ")}</span>
+                  : <span className="text-[11.5px] text-[#6B7488]">Images and PDFs. The agents read them as evidence.</span>}
+              </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                <button disabled={busy !== null || delivery.trim().length < 2} onClick={() => act("deliver", () => w("submitDelivery", [BigInt(id), delivery.trim()]))} className={`rounded-lg ${BTN} px-4 py-2.5 text-[13.5px] font-semibold disabled:opacity-40`}>
-                  {busy === "deliver" ? "Submitting…" : "Submit delivery"}
+                <button disabled={busy !== null || (delivery.trim().length < 2 && files.length === 0)} onClick={() => act("deliver", async () => {
+                  let body = delivery.trim();
+                  if (files.length) {
+                    const fd = new FormData();
+                    files.forEach((f) => fd.append("files", f));
+                    const up = await fetch("/api/escrow/upload", { method: "POST", body: fd });
+                    const j = await up.json();
+                    if (!up.ok) throw new Error(j.error || "upload failed");
+                    if (j.urls?.length) body += (body ? "\n\n" : "") + "Attached files:\n" + j.urls.join("\n");
+                  }
+                  return w("submitDelivery", [BigInt(id), body]);
+                })} className={`rounded-lg ${BTN} px-4 py-2.5 text-[13.5px] font-semibold disabled:opacity-40`}>
+                  {busy === "deliver" ? (files.length ? "Uploading…" : "Submitting…") : "Submit delivery"}
                 </button>
                 <button disabled={busy !== null} onClick={() => act("refund", () => w("refundBuyer", [BigInt(id)]))} className="rounded-xl border border-white/12 px-4 py-2.5 text-[13.5px] font-medium text-[#AAB2C5] hover:text-white disabled:opacity-50">Cancel & refund buyer</button>
               </div>
