@@ -46,14 +46,14 @@ export const DEMO_COPY = {
     path: "/escrow",
     title: "Agentic Escrow · escrow an agent settles",
     description:
-      "On-chain agentic escrow on Base Sepolia. A buyer locks the payment against a brief and the seller delivers. If they disagree, a Theseus agent reads the work and decides who gets paid.",
+      "On-chain agentic escrow on Base Sepolia. Funds sit in a contract until two independent agents agree on who gets paid. If they disagree, a human decides.",
     og: {
       section: "agentic escrow",
-      headline: "Escrow with an agent to settle disputes.",
+      headline: "Escrow that doesn’t trust a single agent.",
       blurb:
-        "A buyer locks the payment against a brief and the seller delivers. If they disagree, an agent reads the work and decides who gets paid.",
+        "Funds sit in a contract until two independent agents agree on who gets paid. If they disagree, a human decides.",
       url: "demo-agents.theseus.network/escrow",
-      tag: "RELEASE · REFUND · UNRESOLVABLE",
+      tag: "RELEASE · REFUND · HELD",
     },
   },
   market: {

@@ -13,6 +13,7 @@ import {
 } from "wagmi";
 import { waitForTransactionReceipt } from "wagmi/actions";
 import { ConnectControl } from "./ConnectControl";
+import { AgentMark } from "./AgentMark";
 import {
   ESCROW_ADDRESS,
   ESCROW_ABI,
@@ -49,11 +50,11 @@ function HeroDealCard({ id, spec, amount }: { id: number; spec: string; amount: 
         {/* The two-agent verdict, the actual differentiator, shown not asserted */}
         <div className="mt-4 space-y-2 border-t border-white/[0.07] pt-4">
           <div className="flex items-center justify-between">
-            <span className="text-[12.5px] text-[#9AA3B2]">Arbiter</span>
+            <span className="flex items-center gap-1.5 text-[12.5px] text-[#9AA3B2]"><AgentMark name="arbiter" className="h-4 w-4 text-[#8A93A6]" />Arbiter</span>
             <span className="font-mono text-[12.5px] font-semibold text-[#34D399]">RELEASE ↑</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[12.5px] text-[#9AA3B2]">Sentinel <span className="text-[#6B7488]">(independent)</span></span>
+            <span className="flex items-center gap-1.5 text-[12.5px] text-[#9AA3B2]"><AgentMark name="sentinel" className="h-4 w-4 text-[#8A93A6]" />Sentinel <span className="text-[#6B7488]">(independent)</span></span>
             <span className="font-mono text-[12.5px] font-semibold text-[#34D399]">RELEASE ↑</span>
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-[#34D399]/[0.07] px-3 py-2 text-[12px] text-[#34D399]">
@@ -92,7 +93,7 @@ function WorkedDispute() {
         <div>
           <div className="rounded-lg border border-white/10 bg-white/[0.015] p-3.5">
             <div className="flex items-center justify-between">
-              <span className="text-[12px] text-[#9AA3B2]">Arbiter <span className="font-mono text-[10px] text-[#6B7488]">model A</span></span>
+              <span className="flex items-center gap-1.5 text-[12px] text-[#9AA3B2]"><AgentMark name="arbiter" className="h-4 w-4 text-[#8A93A6]" />Arbiter <span className="font-mono text-[10px] text-[#6B7488]">model A</span></span>
               <span className="rounded border border-[#34D399]/25 bg-[#34D399]/[0.07] px-1.5 py-0.5 font-mono text-[11px] font-bold text-[#34D399]/60 line-through decoration-[#F87171] decoration-2">RELEASE</span>
             </div>
             <p className="mt-1 text-[11.5px] leading-relaxed text-[#7E8696]">&ldquo;Reads fluently, covers every section, pay the seller.&rdquo;</p>
@@ -105,7 +106,7 @@ function WorkedDispute() {
 
           <div className="rounded-lg border border-[#EF4444]/50 bg-[#EF4444]/[0.12] p-3.5 shadow-[0_0_30px_-8px_rgba(239,68,68,0.55)]">
             <div className="flex items-center justify-between">
-              <span className="text-[12px] font-medium text-white">Sentinel <span className="font-mono text-[10px] font-normal text-[#6B7488]">model B · blind</span></span>
+              <span className="flex items-center gap-1.5 text-[12px] font-medium text-white"><AgentMark name="sentinel" className="h-4 w-4 text-[#EF4444]" />Sentinel <span className="font-mono text-[10px] font-normal text-[#6B7488]">model B · blind</span></span>
               <span className="rounded border border-[#EF4444]/60 bg-[#EF4444]/25 px-1.5 py-0.5 font-mono text-[11px] font-bold text-[#FCA5A5]">REFUND</span>
             </div>
             <p className="mt-1 text-[11.5px] leading-relaxed text-[#AAB2C5]">&ldquo;&lsquo;Excit&eacute;s de vous avoir&rsquo; is a calque from English, not native French. The brief required native quality.&rdquo;</p>

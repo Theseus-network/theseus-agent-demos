@@ -12,6 +12,7 @@ import {
 } from "wagmi";
 import { waitForTransactionReceipt } from "wagmi/actions";
 import { ConnectControl } from "./ConnectControl";
+import { AgentMark } from "./AgentMark";
 import { basescanAddressUrl } from "@/lib/deployed-contracts";
 import {
   ESCROW_ADDRESS,
@@ -227,7 +228,7 @@ function SentinelVerify({ id, spec, delivery, amountLabel, onchain }: { id: numb
       {!sentinel && !running && (
         <div className="flex items-center justify-between gap-3">
           <div>
-            <span className="text-[12.5px] font-medium text-white">Sentinel <span className="font-mono text-[10px] font-normal text-[#6B7488]">model B · independent</span></span>
+            <span className="flex items-center gap-1.5 text-[12.5px] font-medium text-white"><AgentMark name="sentinel" className="h-4 w-4 text-[#4d8df0]" />Sentinel <span className="font-mono text-[10px] font-normal text-[#6B7488]">model B · independent</span></span>
             <p className="mt-0.5 text-[11.5px] text-[#7E8696]">Optional: re-verify with a second model, blind to the verdict.</p>
           </div>
           <button onClick={verify} className="shrink-0 rounded-md border border-white/15 px-2.5 py-1 text-[11.5px] font-medium text-white/85 transition-colors hover:border-white/35">Re-verify →</button>
@@ -366,7 +367,7 @@ export default function DealView({ id }: { id: number }) {
             </div>
             <div className="mt-4 flex items-center justify-between rounded-lg border px-3.5 py-3" style={{ borderColor: `${tHex}33`, background: `${tHex}10` }}>
               <div>
-                <span className="text-[12.5px] font-medium text-white">Arbiter <span className="font-mono text-[10px] font-normal text-[#6B7488]">model A</span></span>
+                <span className="flex items-center gap-1.5 text-[12.5px] font-medium text-white"><AgentMark name="arbiter" className="h-4 w-4 text-[#8A93A6]" />Arbiter <span className="font-mono text-[10px] font-normal text-[#6B7488]">model A</span></span>
                 <p className="mt-0.5 text-[11.5px] text-[#7E8696]">ruled on the brief and the delivery, on-chain</p>
               </div>
               <span className="rounded-md border px-2 py-1 font-mono text-[12px] font-bold leading-none" style={{ color: tHex, borderColor: `${tHex}59`, background: `${tHex}22` }}>{arbiterVerdict}</span>
