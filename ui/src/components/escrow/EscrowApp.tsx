@@ -69,9 +69,9 @@ function HeroDealCard({ id, spec, amount }: { id: number; spec: string; amount: 
             <span className="flex items-center gap-1.5 text-[12.5px] text-[#9AA3B2]"><AgentMark name="sentinel" className="h-4 w-4 text-[#8A93A6]" />Sentinel <span className="text-[#6B7488]">(independent)</span></span>
             <span className="font-mono text-[12.5px] font-semibold text-[#34D399]">RELEASE ↑</span>
           </div>
-          <div className="flex items-center gap-2 rounded-lg bg-[#34D399]/[0.07] px-3 py-2 text-[12px] text-[#34D399]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#34D399]" />
-            Both agents agree, released to the seller on-chain.
+          <div className="flex items-center justify-between gap-2 rounded-lg bg-[#34D399]/[0.07] px-3 py-2 text-[12px] text-[#34D399]">
+            <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#34D399]" />Both agents agree, paid the seller.</span>
+            <span className="text-[#34D399]/70 opacity-0 transition-opacity group-hover:opacity-100">Open deal &rarr;</span>
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@ function RefundedReceipt() {
       <div className="rounded-xl border border-white/10 bg-white/[0.025] p-5 transition-colors group-hover:border-white/20">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[12px] text-[#7E8696]">Translation deal · 1,200 {USDC_SYMBOL}</span>
-          <span className="rounded-md border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[11px] font-medium text-[#AAB2C5]">Refunded</span>
+          <span className="rounded-md border border-[#EF4444]/25 bg-[#EF4444]/[0.08] px-2 py-0.5 text-[11px] font-medium text-[#EF4444]">Refunded</span>
         </div>
         <p className="mt-3 text-[13.5px] leading-relaxed text-white/85">A native-quality French translation of the homepage. No machine translation.</p>
 
