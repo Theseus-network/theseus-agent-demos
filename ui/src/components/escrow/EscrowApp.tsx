@@ -258,7 +258,7 @@ export default function EscrowApp() {
               Pay only when the work is right.
             </h1>
             <p className="mt-4 max-w-md text-[15.5px] leading-relaxed text-[#AAB2C5]">
-              Your money is locked in the contract and releases only when the work matches your brief. If there&rsquo;s a dispute, an agent settles it in seconds for the cost of gas.
+              Your money is locked in a contract and releases only when the work matches your brief. If you and the seller disagree, an agent settles it in seconds.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-4">
               <a href="#create" className={BTN}>Create a deal</a>
@@ -266,8 +266,7 @@ export default function EscrowApp() {
                 See a settled deal →
               </Link>
             </div>
-            <p className="mt-4 text-[12.5px] text-[#6B7488]">Free to try on testnet. Connect a wallet and you can lock a deal in about a minute.</p>
-            <p className="mt-2 text-[12.5px] text-[#6B7488]">escrow.com charges 3.25%. This costs about the price of gas.</p>
+            <p className="mt-6 text-[12.5px] text-[#6B7488]">escrow.com charges 3.25%. This costs about the price of gas.</p>
           </div>
           <HeroDealCard id={hero.id} spec={hero.spec} amount={hero.amount} />
         </div>
@@ -285,8 +284,7 @@ export default function EscrowApp() {
               money moves. Every ruling is written on-chain, so you can open one and read exactly why it landed where it did.
             </p>
             <p className="mt-4 max-w-md text-[14.5px] leading-relaxed text-[#9AA3B2]">
-              When a brief is too vague to call fairly, the agent refuses to guess and your money comes back. Until a deal
-              settles it sits in the contract, out of everyone&rsquo;s reach, for about the price of gas.
+              When a brief is too vague to call fairly, the agent refuses to guess, and your money comes back.
             </p>
             <Link href="/escrow/how-it-works" className="mt-6 inline-block text-[13.5px] font-medium text-[#4d8df0] transition-colors hover:text-[#7badf5]">
               See exactly how it works &rarr;
@@ -302,9 +300,8 @@ export default function EscrowApp() {
           <div className="grid items-center gap-12 border-t border-white/[0.06] pt-14 lg:grid-cols-[1fr_0.88fr]">
             <div>
               <h2 className="font-sans text-[26px] font-bold tracking-[-0.02em] text-white sm:text-[32px]">Lock your first deal.</h2>
-              <p className="mt-4 max-w-md text-[14px] leading-relaxed text-[#8A93A6]">Connect a wallet on Base Sepolia, write a brief, and lock the funds. The faucet hands you testnet tokens, so it costs nothing to try.</p>
+              <p className="mt-4 max-w-md text-[14px] leading-relaxed text-[#8A93A6]">Connect a wallet to get started. The faucet covers the testnet tokens, so it costs nothing to try.</p>
               <div className="mt-6"><ConnectControl size="lg" /></div>
-              <p className="mt-5 text-[12.5px] leading-relaxed text-[#6B7488]">The contract holds the funds the whole time. The agent only ever rules; it never touches the money.</p>
             </div>
             <NewDealPreview />
           </div>
