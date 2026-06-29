@@ -10,12 +10,12 @@ export default function EscrowNav() {
     <header className="sticky top-0 z-30 border-b border-white/[0.07] bg-[#070B16]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
         <Link href="/escrow" className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/12 bg-white/[0.04]">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12l5 5L20 7" />
+          <span className="flex h-7 w-7 items-center justify-center rounded-md border border-[#4d8df0]/40 bg-[#4d8df0]/15">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d8df0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" />
             </svg>
           </span>
-          <span className="text-[15px] font-semibold tracking-tight text-white">Agentic Escrow</span>
+          <span className="font-mono text-[14px] font-semibold tracking-tight text-white">Agentic Escrow</span>
         </Link>
         <div className="flex items-center gap-5">
           <a

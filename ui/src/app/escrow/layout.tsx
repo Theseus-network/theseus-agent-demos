@@ -6,7 +6,8 @@ export const metadata = demoMetadata("escrow");
 
 export default function EscrowLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#070B16] text-white [color-scheme:dark]">
+    <div className="min-h-screen bg-[#080a12] text-white [color-scheme:dark]">
+      <div className="h-[2px] w-full bg-gradient-to-r from-[#4d8df0] via-[#4d8df0]/35 to-transparent" />
       <EscrowNav />
       {children}
       <footer className="border-t border-white/[0.07]">

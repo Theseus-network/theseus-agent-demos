@@ -32,7 +32,7 @@ import {
 const PANEL = "rounded-xl border border-white/[0.08] bg-white/[0.02]";
 const INPUT =
   "mt-1.5 w-full rounded-lg border border-white/12 bg-white/[0.02] px-3.5 py-2.5 text-[13.5px] text-white outline-none transition-colors placeholder:text-[#6B7488] focus:border-white/35";
-const BTN = "bg-white text-[#0a0b0d] hover:bg-white/88";
+const BTN = "bg-[#4d8df0] text-white hover:bg-[#5f9bf5]";
 
 interface Verdict {
   verdict: "RELEASE" | "REFUND" | "UNRESOLVABLE";

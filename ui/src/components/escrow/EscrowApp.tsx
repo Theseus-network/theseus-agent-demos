@@ -34,7 +34,7 @@ import {
 const PANEL = "rounded-xl border border-white/[0.08] bg-white/[0.02]";
 const INPUT =
   "mt-1.5 w-full rounded-lg border border-white/12 bg-white/[0.02] px-3.5 py-2.5 text-[13.5px] text-white outline-none transition-colors placeholder:text-[#6B7488] focus:border-white/35";
-const BTN = "rounded-lg bg-white px-5 py-3 text-[14px] font-semibold text-[#0a0b0d] transition-colors hover:bg-white/88 disabled:opacity-40 disabled:hover:bg-white";
+const BTN = "rounded-md bg-[#4d8df0] px-5 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-[#5f9bf5] disabled:opacity-40 disabled:hover:bg-[#4d8df0]";
 
 function HeroDealCard({ id, spec, amount }: { id: number; spec: string; amount: bigint }) {
   return (
@@ -72,7 +72,7 @@ function WorkedDispute() {
   return (
     <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 sm:p-8">
       <div className="flex items-baseline justify-between gap-4">
-        <h2 className="font-serif text-[22px] font-medium leading-tight text-white sm:text-[27px]">When the two agents disagree, no one gets paid.</h2>
+        <h2 className="font-sans text-[21px] font-bold leading-tight tracking-[-0.02em] text-white sm:text-[26px]">When the two agents disagree, no one gets paid.</h2>
         <span className="hidden shrink-0 font-mono text-[11px] text-[#6B7488] sm:block">a contested deal</span>
       </div>
       <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-[#8A93A6]">
@@ -254,7 +254,7 @@ export default function EscrowApp() {
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-[#9AA3B2]">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#34D399]" /> Live on Base Sepolia
             </span>
-            <h1 className="mt-5 font-serif text-[40px] font-medium leading-[1.04] tracking-tight text-white sm:text-[54px]">
+            <h1 className="mt-5 font-sans text-[37px] font-bold leading-[1.04] tracking-[-0.03em] text-white sm:text-[50px]">
               Escrow that doesn&rsquo;t trust a single agent.
             </h1>
             <p className="mt-5 max-w-lg text-[15.5px] leading-relaxed text-[#AAB2C5]">
@@ -309,7 +309,7 @@ export default function EscrowApp() {
       <section id="create" className="mt-16 scroll-mt-20">
         {!isConnected && (
           <div className={`${PANEL} flex flex-col items-center gap-4 px-6 py-12 text-center`}>
-            <h2 className="font-serif text-[24px] font-medium text-white">Create a deal.</h2>
+            <h2 className="font-sans text-[22px] font-bold tracking-[-0.02em] text-white">Create a deal.</h2>
             <p className="max-w-sm text-[13.5px] leading-relaxed text-[#8A93A6]">Connect a wallet on Base Sepolia. Mint a test token here; ETH for gas comes from any faucet.</p>
             <ConnectControl size="lg" />
           </div>
