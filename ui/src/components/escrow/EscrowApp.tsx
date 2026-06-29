@@ -37,11 +37,23 @@ const INPUT =
   "mt-1.5 w-full rounded-lg border border-white/12 bg-white/[0.02] px-3.5 py-2.5 text-[13.5px] text-white outline-none transition-colors placeholder:text-[#6B7488] focus:border-white/35";
 const BTN = "rounded-md bg-[#4d8df0] px-5 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-[#5f9bf5] disabled:opacity-40 disabled:hover:bg-[#4d8df0]";
 
+const BRIEF_LIMIT = 600;
+
+// Starting points so a buyer doesn't face a blank box. The [brackets] are theirs
+// to fill in. They can also ignore these and write their own.
+const BRIEF_TEMPLATES: { label: string; text: string }[] = [
+  { label: "Logo", text: "Design a logo for [brand]. Deliver three concepts, then the chosen one as SVG and PNG with a transparent background. Brand colors: [hex]. No stock icons." },
+  { label: "Article", text: "Write a 900 to 1,100 word article on [topic] for a general audience. Clear headline, an intro, three to five sections with subheads, and at least three cited sources with links." },
+  { label: "Landing page", text: "Build a one-page site for [product] from the copy I attach. Responsive, loads in under two seconds, deployed to a live URL. Match these brand colors: [hex]." },
+  { label: "Translation", text: "Translate the attached text into [language]. Native quality, no machine translation. Keep the tone, and leave product names unchanged." },
+  { label: "Code", text: "Write a [language] function that [does X]. Handle bad input, add a short docstring, and include one usage example." },
+];
+
 const STEPS = [
-  { h: "Lock the funds", p: "The buyer locks the payment in the contract and writes the brief the seller has to meet." },
-  { h: "Deliver the work", p: "The seller submits the deliverable and attaches any files, like images or a PDF." },
-  { h: "Release or dispute", p: "Happy with it, the buyer releases the funds. If not, either side sends it to the agents." },
-  { h: "The agents settle it", p: "An agent rules on the brief and a second checks the call. The contract pays the side they agree on." },
+  { h: "Lock the funds", p: "The buyer puts the money in the contract and says what they want done." },
+  { h: "Deliver the work", p: "The seller hands in the work, plus any files." },
+  { h: "Release or dispute", p: "If the buyer is happy, they release the money. If not, it goes to the agents." },
+  { h: "The agents settle it", p: "One agent makes the call, a second checks it, and the contract pays whoever is right." },
 ];
 
 function HeroDealCard({ id, spec, amount }: { id: number; spec: string; amount: bigint }) {
@@ -81,14 +93,14 @@ function WorkedDispute() {
     <div>
       <h2 className="font-sans text-[21px] font-bold leading-tight tracking-[-0.02em] text-white sm:text-[27px]">When the two agents disagree, no one gets paid.</h2>
       <p className="mt-5 max-w-3xl text-[16.5px] leading-[1.75] text-[#AAB2C5]">
-        Say a buyer pays for a native-quality French translation of their homepage. The seller delivers, and the Arbiter
-        reads it fluently and rules{" "}
-        <span className="font-semibold text-[#34D399]/70 line-through decoration-[#EF4444] decoration-2">RELEASE</span>.
-        But the Sentinel, a different model that never saw that verdict, catches a line that is a calque from English
-        instead of native French, and rules{" "}
-        <span className="font-semibold text-[#EF4444]">REFUND</span>. They disagree, so{" "}
-        <span className="font-semibold text-[#FBBF24]">the funds stay locked</span> and a human decides. A single-agent
-        escrow would have already paid.
+        A buyer orders a French translation of their homepage. The seller turns it in. The first agent reads it, thinks
+        it&rsquo;s good, and votes to{" "}
+        <span className="font-semibold text-[#34D399]/70 line-through decoration-[#EF4444] decoration-2">pay the seller</span>.
+        A second agent, which never saw that call, notices a line lifted straight from English instead of real French,
+        and votes to{" "}
+        <span className="font-semibold text-[#EF4444]">refund the buyer</span>. They don&rsquo;t agree, so{" "}
+        <span className="font-semibold text-[#FBBF24]">the money stays put</span> and a person makes the call. With one
+        agent, the seller would already have been paid.
       </p>
     </div>
   );
@@ -283,8 +295,24 @@ export default function EscrowApp() {
                   </label>
                 </div>
                 <label className="block">
-                  <span className="text-[12px] text-[#8A93A6]">Brief</span>
-                  <textarea value={spec} onChange={(e) => setSpec(e.target.value)} rows={3} placeholder="What the seller must deliver. This is exactly what the agents score against." className={`${INPUT} resize-y leading-relaxed`} />
+                  <div className="flex items-center justify-between">
+                    <span className="text-[12px] text-[#8A93A6]">Brief</span>
+                    <span className="text-[11px] tabular-nums text-[#6B7488]">{spec.length}/{BRIEF_LIMIT}</span>
+                  </div>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                    <span className="text-[11px] text-[#6B7488]">Start from</span>
+                    {BRIEF_TEMPLATES.map((t) => (
+                      <button
+                        key={t.label}
+                        type="button"
+                        onClick={() => setSpec(t.text.slice(0, BRIEF_LIMIT))}
+                        className="rounded-md border border-white/12 px-2 py-0.5 text-[11.5px] text-white/80 transition-colors hover:border-white/30"
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                  <textarea value={spec} onChange={(e) => setSpec(e.target.value.slice(0, BRIEF_LIMIT))} maxLength={BRIEF_LIMIT} rows={4} placeholder="What the seller must deliver, and how you'll know it's done. Keep it specific." className={`${INPUT} mt-1.5 resize-y leading-relaxed`} />
                 </label>
               </div>
               <button onClick={createDeal} disabled={!canCreate || busy !== null} className={`mt-4 w-full ${BTN}`}>
