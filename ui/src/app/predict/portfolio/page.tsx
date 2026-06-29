@@ -196,10 +196,10 @@ export default function PortfolioPage() {
 
 function Stat({ label, value, tone }: { label: string; value: string; tone?: "good" | "bad" }) {
   return (
-    <div className="rounded-xl border border-border bg-surface/40 p-3.5">
-      <div className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-fg-mute">{label}</div>
+    <div>
+      <div className="text-[12px] text-fg-mute">{label}</div>
       <div
-        className="mt-1 font-mono text-[18px] font-semibold tabular-nums"
+        className="mt-1 text-[22px] font-semibold tabular-nums"
         style={{ color: tone === "good" ? "var(--green)" : tone === "bad" ? "var(--red)" : "var(--fg)" }}
       >
         {value}
@@ -210,8 +210,8 @@ function Stat({ label, value, tone }: { label: string; value: string; tone?: "go
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-8">
-      <h2 className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.18em] text-fg-mute">{title}</h2>
+    <section className="mt-9">
+      <h2 className="mb-3 text-[14px] font-semibold text-fg">{title}</h2>
       {children}
     </section>
   );

@@ -74,30 +74,29 @@ export default function LeaderboardBoard({ agents, feed }: { agents: any[]; feed
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <h2 className="flex items-center gap-2 text-[16px] font-semibold text-fg">
-                    <span className="font-mono text-[12px] text-fg-mute">#{i + 1}</span>
+                    <span className="text-[13px] font-normal text-fg-mute">{i + 1}</span>
                     {t.name}
-                    <span className="rounded-full bg-fg/[0.06] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-fg-mute">agent</span>
                   </h2>
-                  <span className="font-mono text-[12px] font-semibold tabular-nums" style={{ color: pnlColor(t.pnlPct) }}>
+                  <span className="text-[13px] font-semibold tabular-nums" style={{ color: pnlColor(t.pnlPct) }}>
                     {t.pnlPct >= 0 ? "+" : ""}{t.pnlPct.toFixed(1)}%
                   </span>
                 </div>
-                <p className="mt-0.5 font-mono text-[11px] text-fg-mute">{(t.blurb || "").split(".")[0]}</p>
+                <p className="mt-0.5 text-[12px] text-fg-mute">{(t.blurb || "").split(".")[0]}</p>
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+            <div className="mt-4 flex gap-7">
               <Stat label="Portfolio" value={usd(t.value)} />
               <Stat label="Cash" value={usd(t.cash)} />
               <Stat label="Positions" value={String(t.positions)} />
             </div>
 
             {t.explorerUrl ? (
-              <a href={t.explorerUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 font-mono text-[10.5px] text-fg-mute transition-colors hover:text-coral">
-                <span className="h-1 w-1 rounded-full bg-coral/70" /> on Theseus, verify ↗
+              <a href={t.explorerUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-[12px] text-fg-mute transition-colors hover:text-coral">
+                <span className="h-1 w-1 rounded-full bg-coral/70" /> Verify on Theseus ↗
               </a>
             ) : (
-              <p className="mt-3 font-mono text-[10.5px] text-fg-mute">awaiting first round</p>
+              <p className="mt-3 text-[12px] text-fg-mute">awaiting first round</p>
             )}
           </div>
         ))}
@@ -109,12 +108,12 @@ export default function LeaderboardBoard({ agents, feed }: { agents: any[]; feed
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-coral font-serif text-[20px] font-medium text-white">Y</span>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-coral">Your standing</span>
-                <span className="font-mono text-[10.5px] text-fg-mute">would place #{myRank} of {rows.length + 1}</span>
+                <span className="text-[14px] font-semibold text-coral">Your standing</span>
+                <span className="text-[12px] text-fg-mute">would place {myRank} of {rows.length + 1}</span>
               </div>
               <p className="mt-0.5 text-[12.5px] text-fg-dim">You trade the same board as the agents, on your own schedule.</p>
             </div>
-            <div className="ml-auto flex items-center gap-2">
+            <div className="ml-auto flex items-center gap-7">
               <Stat label="Return" value={`${me.pnlPct >= 0 ? "+" : ""}${me.pnlPct.toFixed(1)}%`} />
               <Stat label="Portfolio" value={usd(me.value)} />
               <Stat label="Cash" value={usd(state.balance)} />
@@ -157,9 +156,9 @@ export default function LeaderboardBoard({ agents, feed }: { agents: any[]; feed
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-border bg-bg py-2">
-      <div className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-mute">{label}</div>
-      <div className="mt-0.5 font-mono text-[13.5px] font-semibold text-fg tabular-nums">{value}</div>
+    <div>
+      <div className="text-[11px] text-fg-mute">{label}</div>
+      <div className="mt-0.5 text-[14.5px] font-semibold tabular-nums text-fg">{value}</div>
     </div>
   );
 }

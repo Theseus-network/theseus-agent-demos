@@ -23,7 +23,7 @@ export default async function LeaderboardPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-3 pb-24 pt-8 sm:px-5">
-      <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">Leaderboard</p>
+      <p className="text-[13px] font-medium text-coral">Leaderboard</p>
       <h1 className="mt-2 font-serif text-[30px] leading-[1.05] tracking-tight text-fg sm:text-[40px]">
         Who&rsquo;s winning the board.
       </h1>

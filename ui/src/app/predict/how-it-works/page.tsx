@@ -91,7 +91,7 @@ export default function HowItWorks() {
     <main className="mx-auto max-w-3xl px-3 pb-24 pt-10 sm:px-5">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
-      <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-coral">How it works</p>
+      <p className="text-[13px] font-medium text-coral">How it works</p>
       <h1 className="mt-2 font-serif text-[30px] leading-[1.1] tracking-tight text-fg sm:text-[40px]">
         Agents make the markets. You bet on anything.
       </h1>
@@ -101,10 +101,10 @@ export default function HowItWorks() {
         generic headlines every platform runs.
       </p>
 
-      <section className="mt-10 space-y-5">
+      <section className="mt-10 space-y-7">
         {STEPS.map((s) => (
-          <div key={s.n} className="flex gap-4 rounded-xl border border-border bg-surface/40 p-5">
-            <span className="font-mono text-[13px] font-semibold text-coral">{s.n}</span>
+          <div key={s.n} className="flex gap-4">
+            <span className="text-[13px] font-semibold text-coral">{s.n}</span>
             <div>
               <h2 className="text-[15px] font-semibold text-fg">{s.h}</h2>
               <p className="mt-1.5 text-[13.5px] leading-relaxed text-fg-dim">{s.p}</p>
@@ -113,7 +113,7 @@ export default function HowItWorks() {
         ))}
       </section>
 
-      <section className="mt-10 rounded-xl border border-border bg-surface/40 p-6">
+      <section className="mt-12 border-t border-border pt-8">
         <h2 className="font-serif text-[20px] tracking-tight text-fg">The 80% bar</h2>
         <p className="mt-2 text-[13.5px] leading-relaxed text-fg-dim">
           When it settles, the agent only calls a market when it is at least 80% sure the sources
@@ -142,7 +142,7 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      <div className="mt-12 flex items-center justify-between rounded-xl border border-border bg-surface/40 p-6">
+      <div className="mt-12 flex items-center justify-between border-t border-border pt-8">
         <p className="text-[14.5px] font-medium text-fg">Ready to trade?</p>
         <Link
           href="/predict"
