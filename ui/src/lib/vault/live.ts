@@ -20,9 +20,10 @@ const AGENT = process.env.NEXT_PUBLIC_THESEUS_AGENT_FUND ?? "5C8RTTrk13NkNS7B7Uq
 const hasBlob = () => !!process.env.BLOB_READ_WRITE_TOKEN;
 
 interface Market { id: string; question: string; yes: number; url: string; }
-declare global { var __vaultPool: { at: number; markets: Market[] } | undefined; var __vaultTicking: boolean | undefined; }
+declare global { var __vaultPool: { at: number; markets: Market[] } | undefined; }
+let devTicking = false; // local-dev only: avoid stacking lazy ticks in a single process
 
-async function fetchPool(): Promise<Market[]> {
+export async function fetchPool(): Promise<Market[]> {
   const url = "https://gamma-api.polymarket.com/markets?closed=false&active=true&order=volumeNum&ascending=false&limit=120";
   const r = await fetch(url, { cache: "no-store" });
   const arr = (await r.json()) as any[];
@@ -98,40 +99,42 @@ async function doTrade(s: FundState, pool: Market[]) {
   s.tradingUntil = 0;
 }
 
-/** Authoritative update: mark the book, settle NAV, and trade when due. Cron-driven. */
+/**
+ * Authoritative update: mark the book, settle NAV, and trade when due.
+ * Cron-driven. Concurrency across serverless instances is coordinated through
+ * the persisted, self-expiring `tradingUntil` marker (not an in-process lock,
+ * which could get stuck true on a frozen instance and wedge the cron). Marking
+ * is idempotent under last-write-wins; only trading is guarded, so at most one
+ * instance opens a position per cadence.
+ */
 export async function tick(trade: boolean): Promise<void> {
-  if (globalThis.__vaultTicking) return;
-  globalThis.__vaultTicking = true;
-  try {
-    const s = await loadState();
-    const pool = await getPool(true);
-    const byId = new Map(pool.map((m) => [m.id, m]));
-    const stillOpen: Position[] = [];
-    for (const p of s.positions) {
-      const m = byId.get(p.marketId);
-      if (m) { p.curPrice = p.side === "YES" ? m.yes : 1 - m.yes; if (!p.url) p.url = m.url; p.misses = 0; stillOpen.push(p); continue; }
-      p.misses = (p.misses ?? 0) + 1;
-      if (p.misses >= 3) { const res = await resolveIfClosed(p); if (res) { s.resolved.unshift(res); s.resolved = s.resolved.slice(0, 20); continue; } }
-      stillOpen.push(p);
-    }
-    s.positions = stillOpen;
-    const totalPnl = s.positions.reduce((a, p) => a + p.stake * (p.curPrice / p.entryPrice - 1), 0) + s.resolved.reduce((a, r) => a + r.pnl, 0);
-    const delta = totalPnl - s.lastSettledPnl;
-    if (Math.abs(delta) >= 0.5) { const ok = await settlePnlUsd(delta); if (ok) s.lastSettledPnl = totalPnl; }
-    s.lastMarkAt = Date.now();
-    if (trade && Date.now() - s.lastTradeAt > TRADE_MS && s.positions.length < MAX_POSITIONS) {
-      await doTrade(s, pool);
-    }
-    await saveState(s);
-  } finally { globalThis.__vaultTicking = false; }
+  const s = await loadState();
+  const pool = await getPool(true);
+  const byId = new Map(pool.map((m) => [m.id, m]));
+  const stillOpen: Position[] = [];
+  for (const p of s.positions) {
+    const m = byId.get(p.marketId);
+    if (m) { p.curPrice = p.side === "YES" ? m.yes : 1 - m.yes; if (!p.url) p.url = m.url; p.misses = 0; stillOpen.push(p); continue; }
+    p.misses = (p.misses ?? 0) + 1;
+    if (p.misses >= 3) { const res = await resolveIfClosed(p); if (res) { s.resolved.unshift(res); s.resolved = s.resolved.slice(0, 20); continue; } }
+    stillOpen.push(p);
+  }
+  s.positions = stillOpen;
+  const totalPnl = s.positions.reduce((a, p) => a + p.stake * (p.curPrice / p.entryPrice - 1), 0) + s.resolved.reduce((a, r) => a + r.pnl, 0);
+  const delta = totalPnl - s.lastSettledPnl;
+  if (Math.abs(delta) >= 0.5) { const ok = await settlePnlUsd(delta); if (ok) s.lastSettledPnl = totalPnl; }
+  s.lastMarkAt = Date.now();
+  const due = Date.now() - s.lastTradeAt > TRADE_MS && s.positions.length < MAX_POSITIONS && Date.now() >= (s.tradingUntil || 0);
+  if (trade && due) await doTrade(s, pool);
+  await saveState(s);
 }
 
 /** Force one trade now (ops/seeding only; not user-facing). */
 export async function forceTrade(): Promise<void> {
-  if (globalThis.__vaultTicking) return;
-  globalThis.__vaultTicking = true;
-  try { const s = await loadState(); await doTrade(s, await getPool(true)); await saveState(s); }
-  finally { globalThis.__vaultTicking = false; }
+  const s = await loadState();
+  if (Date.now() < (s.tradingUntil || 0)) return; // a trade is already in flight
+  await doTrade(s, await getPool(true));
+  await saveState(s);
 }
 
 export interface LiveView {
@@ -157,8 +160,11 @@ export async function readLive(): Promise<LiveView> {
   const edges = positions.map((p) => p.edge).filter((e): e is number => e != null);
   const avgEdge = edges.length ? edges.reduce((a, b) => a + b, 0) / edges.length : null;
   // Locally there is no cron, so drive the fund from reads (non-blocking).
-  if (!hasBlob() && !globalThis.__vaultTicking && Date.now() - s.lastMarkAt > MARK_MS) tick(true).catch(() => {});
-  const trading = Date.now() < (s.tradingUntil || 0) || !!globalThis.__vaultTicking;
+  if (!hasBlob() && !devTicking && Date.now() - s.lastMarkAt > MARK_MS) {
+    devTicking = true;
+    tick(true).catch(() => {}).finally(() => { devTicking = false; });
+  }
+  const trading = Date.now() < (s.tradingUntil || 0);
   return {
     positions, trades: s.trades, resolved: s.resolved, runCount: s.runCount,
     capital: BOOK_CAPITAL, cash, deployed, bookPnl, avgEdge,
