@@ -56,6 +56,7 @@ export async function fetchPool(): Promise<Market[]> {
     const days = (resolveAt - Date.now()) / 86_400_000;
     if (!Number.isFinite(days) || days < 0 || days > MAX_DAYS) continue; // must resolve soon (skip null/far dates)
     const q = m.question || m.title; if (!q) continue;
+    if (/\bgta\s*vi\b/i.test(q)) continue; // skip the novelty "X before GTA VI" cluster — keeps the book credible
     const slug = m.slug || m.events?.[0]?.slug;
     out.push({ id: String(m.id ?? m.conditionId ?? q), question: q, yes, url: slug ? `https://polymarket.com/event/${slug}` : "https://polymarket.com", resolveAt });
     if (out.length >= 24) break;
