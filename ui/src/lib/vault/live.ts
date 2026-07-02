@@ -22,7 +22,7 @@ const hasBlob = () => !!process.env.BLOB_READ_WRITE_TOKEN;
 interface Market { id: string; question: string; yes: number; url: string; }
 declare global { var __vaultPool: { at: number; markets: Market[] } | undefined; var __vaultTicking: boolean | undefined; }
 
-async function fetchPool(): Promise<Market[]> {
+export async function fetchPool(): Promise<Market[]> {
   const url = "https://gamma-api.polymarket.com/markets?closed=false&active=true&order=volumeNum&ascending=false&limit=120";
   const r = await fetch(url, { cache: "no-store" });
   const arr = (await r.json()) as any[];
