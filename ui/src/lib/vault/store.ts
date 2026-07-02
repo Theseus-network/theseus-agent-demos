@@ -38,6 +38,16 @@ export function initialState(): FundState {
   return { startedAt: Date.now(), positions: [], trades: [], resolved: [], runCount: 0, lastTradeAt: Date.now(), lastMarkAt: 0, lastSettledPnl: 0, poolIdx: 0, tradingUntil: 0, navHistory: [] };
 }
 
+/** Default fields added after a blob was first written, so old state loads safely. */
+function migrate(s: FundState): FundState {
+  if (!Array.isArray(s.navHistory)) s.navHistory = [];
+  if (!Array.isArray(s.positions)) s.positions = [];
+  if (!Array.isArray(s.trades)) s.trades = [];
+  if (!Array.isArray(s.resolved)) s.resolved = [];
+  if (!s.startedAt) s.startedAt = Date.now();
+  return s;
+}
+
 export async function loadState(): Promise<FundState> {
   if (!hasBlob()) return globalThis.__vaultCache?.state ?? initialState();
   const c = globalThis.__vaultCache;
@@ -47,7 +57,7 @@ export async function loadState(): Promise<FundState> {
     const { blobs } = await list({ prefix: KEY });
     const b = blobs.find((x) => x.pathname === KEY) || blobs[0];
     if (b) {
-      const state = (await (await fetch(b.url, { cache: "no-store" })).json()) as FundState;
+      const state = migrate((await (await fetch(b.url, { cache: "no-store" })).json()) as FundState);
       globalThis.__vaultCache = { at: Date.now(), state };
       return state;
     }

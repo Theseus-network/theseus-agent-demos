@@ -49,8 +49,9 @@ export async function fetchPool(): Promise<Market[]> {
     const yes = Number(prices[yi]);
     if (!(yes > 0.12 && yes < 0.88)) continue;
     if (Number(m.volumeNum ?? m.volume ?? 0) < MIN_VOL) continue;
-    const resolveAt = m.endDate ? Date.parse(m.endDate) : null;
-    if (resolveAt && (resolveAt - Date.now()) / 86_400_000 > MAX_DAYS) continue;
+    const resolveAt = m.endDate ? Date.parse(m.endDate) : NaN;
+    const days = (resolveAt - Date.now()) / 86_400_000;
+    if (!Number.isFinite(days) || days < 0 || days > MAX_DAYS) continue; // must resolve soon (skip null/far dates)
     const q = m.question || m.title; if (!q) continue;
     const slug = m.slug || m.events?.[0]?.slug;
     out.push({ id: String(m.id ?? m.conditionId ?? q), question: q, yes, url: slug ? `https://polymarket.com/event/${slug}` : "https://polymarket.com", resolveAt });

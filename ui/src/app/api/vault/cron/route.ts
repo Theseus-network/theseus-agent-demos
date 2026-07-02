@@ -6,6 +6,7 @@
  * driven by the scheduler, never by page polling.
  */
 import { tick } from "@/lib/vault/live";
+import { saveState, initialState } from "@/lib/vault/store";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -14,6 +15,11 @@ export async function GET(req: Request) {
   if (process.env.CRON_SECRET && req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`)
     return Response.json({ error: "unauthorized" }, { status: 401 });
   try {
+    // One-time ops: clear the book after the universe change (stale far-dated positions).
+    if (new URL(req.url).searchParams.get("reset") === "near-resolution-v1") {
+      await saveState(initialState());
+      return Response.json({ ok: true, reset: true });
+    }
     await tick(true);
     return Response.json({ ok: true });
   } catch (e) {
