@@ -29,13 +29,16 @@ let devTicking = false; // local-dev only: avoid stacking lazy ticks in a single
 const MIN_VOL = 10_000;   // enough depth to be a real market
 const MAX_DAYS = 30;      // trade markets that resolve soon, so the book turns over and NAV moves
 
-// The universe is the most imminent, liquid, genuinely-uncertain binary markets.
-// Ordering by soonest resolution (not lifetime volume) is what keeps the book
-// live: these prices move day to day and settle within weeks, so the track
-// record and the NAV line actually accumulate.
+// The universe is the most liquid, genuinely-uncertain binary markets that
+// resolve soon. Bounding the window server-side (end_date_max) and ordering by
+// volume is what keeps the book live and legible: it surfaces real markets that
+// move day to day and settle within weeks — World Cup matches, Fed decisions,
+// near-term events — instead of drowning in the endless intraday crypto candles
+// that dominate a soonest-first feed. So the track record and NAV accumulate.
 export async function fetchPool(): Promise<Market[]> {
-  const minEnd = new Date(Date.now() + 24 * 3600_000).toISOString(); // skip markets resolving within a day (near-decided)
-  const url = `https://gamma-api.polymarket.com/markets?closed=false&active=true&order=endDate&ascending=true&limit=300&end_date_min=${encodeURIComponent(minEnd)}`;
+  const minEnd = new Date(Date.now() + 2 * 3600_000).toISOString();   // skip markets resolving within a couple hours (near-decided)
+  const maxEnd = new Date(Date.now() + MAX_DAYS * 86_400_000).toISOString();
+  const url = `https://gamma-api.polymarket.com/markets?closed=false&active=true&order=volumeNum&ascending=false&limit=100&end_date_min=${encodeURIComponent(minEnd)}&end_date_max=${encodeURIComponent(maxEnd)}`;
   const r = await fetch(url, { cache: "no-store" });
   const arr = (await r.json()) as any[];
   const list = Array.isArray(arr) ? arr : ((arr as any).data ?? []);
