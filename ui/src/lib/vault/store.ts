@@ -7,9 +7,11 @@
  * token, we keep it in a warm-instance singleton — same as a long-running dev
  * server. A short cache avoids a blob read on every poll.
  */
-export interface Position { id: string; marketId: string; question: string; url: string; side: "YES" | "NO"; entryPrice: number; curPrice: number; stake: number; est: number | null; yesPct: number; openedAt: number; runSeq: number; misses: number; }
+export interface Position { id: string; marketId: string; question: string; url: string; side: "YES" | "NO"; entryPrice: number; curPrice: number; stake: number; est: number | null; yesPct: number; openedAt: number; runSeq: number; misses: number; resolveAt: number | null; }
 export interface TradeRec { ts: number; runSeq: number; action: string; size: number; est: number | null; yesPct: number; question: string; url: string; text: string; blockHash: string; }
 export interface ResolvedRec { question: string; side: "YES" | "NO"; est: number | null; yesPct: number; stake: number; won: boolean; pnl: number; ts: number; runSeq: number; }
+
+export interface NavPoint { t: number; pps: number; tvl: number; }
 
 export interface FundState {
   startedAt: number;
@@ -22,6 +24,7 @@ export interface FundState {
   lastSettledPnl: number;
   poolIdx: number;
   tradingUntil: number; // while > now, the agent is mid-evaluation (shown across instances)
+  navHistory: NavPoint[]; // on-chain NAV/share sampled over time — the product surface
 }
 
 export const BOOK_CAPITAL = 25_000;
@@ -32,7 +35,7 @@ const hasBlob = () => !!process.env.BLOB_READ_WRITE_TOKEN;
 declare global { var __vaultCache: { at: number; state: FundState } | undefined; }
 
 export function initialState(): FundState {
-  return { startedAt: Date.now(), positions: [], trades: [], resolved: [], runCount: 0, lastTradeAt: Date.now(), lastMarkAt: 0, lastSettledPnl: 0, poolIdx: 0, tradingUntil: 0 };
+  return { startedAt: Date.now(), positions: [], trades: [], resolved: [], runCount: 0, lastTradeAt: Date.now(), lastMarkAt: 0, lastSettledPnl: 0, poolIdx: 0, tradingUntil: 0, navHistory: [] };
 }
 
 export async function loadState(): Promise<FundState> {

@@ -28,6 +28,8 @@ export async function GET() {
       trading: f.trading,
       nextTradeInMs: f.nextTradeInMs,
       poolSize: f.poolSize,
+      navHistory: f.navHistory,
+      startedAt: f.startedAt,
       agent: f.agent,
       explorer: `https://explorer.theseus.network/agents/${f.agent}`,
     });
