@@ -57,6 +57,6 @@ export async function saveState(state: FundState): Promise<void> {
   if (!hasBlob()) return;
   try {
     const { put } = await import("@vercel/blob");
-    await put(KEY, JSON.stringify(state), { access: "public", addRandomSuffix: false, contentType: "application/json" });
+    await put(KEY, JSON.stringify(state), { access: "public", addRandomSuffix: false, allowOverwrite: true, contentType: "application/json" });
   } catch { /* keep the warm cache even if the write fails */ }
 }
