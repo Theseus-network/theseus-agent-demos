@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-export interface Position { id: string; marketId: string; question: string; url: string; side: "YES" | "NO"; entryPrice: number; curPrice: number; stake: number; value: number; pnl: number; est: number | null; yesPct: number; edge: number | null; runSeq: number; }
+export interface Position { id: string; marketId: string; question: string; url: string; side: "YES" | "NO"; entryPrice: number; curPrice: number; stake: number; value: number; pnl: number; est: number | null; yesPct: number; edge: number | null; runSeq: number; resolveAt: number | null; }
 export interface TradeRec { ts: number; runSeq: number; action: string; size: number; est: number | null; yesPct: number; question: string; url: string; text: string; blockHash: string; }
 export interface ResolvedRec { question: string; side: "YES" | "NO"; est: number | null; yesPct: number; stake: number; won: boolean; pnl: number; ts: number; runSeq: number; }
+export interface NavPoint { t: number; pps: number; tvl: number; }
 export interface VaultOnChain { tvl: number; shares: number; pricePerShare: number; redemptionsOpen: boolean; nextRedemptionOpen: number; }
 export interface LiveFund {
   vault: VaultOnChain | null;
@@ -21,6 +22,8 @@ export interface LiveFund {
   trading: boolean;
   nextTradeInMs: number;
   poolSize: number;
+  navHistory: NavPoint[];
+  startedAt: number;
   agent: string;
   explorer: string;
 }
