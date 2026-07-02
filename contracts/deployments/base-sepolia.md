@@ -56,3 +56,10 @@ Not deployed:
 - `AgentPriceFeed.sol` — inherits from `aave-v3-core`, which isn't
   installed in this workspace. The Aave Oracle UI demo runs against
   mocked state and doesn't need an on-chain feed.
+
+## Sovereign Vault (LP custody — real deposits)
+| Contract | Address | Role |
+| --- | --- | --- |
+| SovereignVault | [`0xcD5E686553Ed576E44a4ACeB7598E0c73Be2189c`](https://sepolia.basescan.org/address/0xcD5E686553Ed576E44a4ACeB7598E0c73Be2189c) | LP vault: deposit eUSDC -> svUSDC shares, redeem anytime. manager = agent EOA. |
+| Underlying eUSDC | `0x6aaBC0dBC77Bb5F79781D42E2F58F1312bEf607B` | 6dp mintable faucet token |
+Deployer: `0xebCCa0A29DB919E083D070B6098C18f966D25588`. Verified deposit/redeem round-trip on-chain.
