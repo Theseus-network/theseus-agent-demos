@@ -75,7 +75,7 @@ export default function VaultPage() {
 
         <div>
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-[15px] font-semibold text-fg">The agent&rsquo;s desk</h2>
+            <h2 className="text-[15px] font-semibold text-fg">The agent</h2>
             <a href={AGENT_EXPLORER} target="_blank" rel="noopener noreferrer" className="text-[12.5px] text-fg-mute hover:text-fg">on Theseus ↗</a>
           </div>
           <p className="mt-1.5 text-[13px] text-fg-mute">It forms its own probability for a market and takes a position when that estimate is far from the price. The gap is its claim; the track record is where real skill shows.</p>
