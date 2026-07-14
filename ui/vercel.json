@@ -1,5 +1,6 @@
 {
   "crons": [
+    { "path": "/api/cron/ariadne", "schedule": "30 7,19 * * *" },
     { "path": "/api/cron/vera-post", "schedule": "0 16 * * *" },
     { "path": "/api/cron/vera-engage", "schedule": "0 4,12,20 * * *" },
     { "path": "/api/cron/predict-traders", "schedule": "0 */8 * * *" },
