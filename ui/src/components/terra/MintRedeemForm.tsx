@@ -50,7 +50,7 @@ export function MintRedeemForm({ busy, pending, onSubmit }: Props) {
       </p>
 
       <form
-        className="mt-3 flex items-baseline gap-3 text-[13px]"
+        className="mt-3 flex flex-wrap items-center gap-3 text-[13px]"
         onSubmit={(e) => {
           e.preventDefault();
           const n = Number(amount);
@@ -58,19 +58,21 @@ export function MintRedeemForm({ busy, pending, onSubmit }: Props) {
           onSubmit(tab, n);
         }}
       >
-        <input
-          type="text"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          inputMode="decimal"
-          disabled={disabled}
-          className="w-40 border-b border-border bg-transparent font-mono text-[13px] text-fg focus:border-fg focus:outline-none disabled:opacity-50"
-        />
-        <span className="font-mono text-[11px] text-fg-mute">UST</span>
+        <span className="flex items-baseline gap-2">
+          <input
+            type="text"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            inputMode="decimal"
+            disabled={disabled}
+            className="w-40 border-b border-border bg-transparent font-mono text-[13px] text-fg focus:border-fg focus:outline-none disabled:opacity-50"
+          />
+          <span className="font-mono text-[11px] text-fg-mute">UST</span>
+        </span>
         <button
           type="submit"
           disabled={disabled || !amount}
-          className="ml-2 text-fg hover:underline disabled:opacity-30"
+          className="cta-ink inline-flex items-center gap-2 px-5 py-2.5 text-[13px] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {pending ? "agent reasoning…" : busy ? "submitting…" : tab === "MINT" ? "mint →" : "redeem →"}
         </button>

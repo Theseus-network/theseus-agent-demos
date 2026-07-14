@@ -24,7 +24,7 @@ export function WithdrawForm({ busy, pending, onSubmit }: Props) {
       </p>
 
       <form
-        className="mt-4 flex items-baseline gap-2 text-[13px]"
+        className="mt-4 flex flex-wrap items-center gap-3 text-[13px]"
         onSubmit={(e) => {
           e.preventDefault();
           const n = Number(amount);
@@ -32,25 +32,24 @@ export function WithdrawForm({ busy, pending, onSubmit }: Props) {
           onSubmit(n);
         }}
       >
-        <span className="text-fg-mute">$</span>
-        <input
-          type="text"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          inputMode="decimal"
-          disabled={disabled}
-          className="w-40 border-b border-border bg-transparent font-mono text-[13px] text-fg focus:border-fg focus:outline-none disabled:opacity-50"
-        />
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-fg-mute">
-          usd
+        <span className="flex items-baseline gap-2">
+          <span className="text-fg-mute">$</span>
+          <input
+            type="text"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            inputMode="decimal"
+            disabled={disabled}
+            className="w-40 border-b border-border bg-transparent font-mono text-[13px] text-fg focus:border-fg focus:outline-none disabled:opacity-50"
+          />
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-fg-mute">
+            usd
+          </span>
         </span>
         <button
           type="submit"
           disabled={disabled || !amount}
-          className="ml-3 text-fg transition-colors hover:underline disabled:opacity-30 disabled:hover:no-underline"
-          style={
-            pending ? { color: "var(--coral)" } : undefined
-          }
+          className="cta-ink inline-flex items-center gap-2 px-5 py-2.5 text-[13px] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {pending ? "agent reasoning…" : busy ? "submitting…" : "release →"}
         </button>

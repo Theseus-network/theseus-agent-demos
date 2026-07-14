@@ -15,7 +15,7 @@ export function AviationReviewButton({ busy, pending, onSubmit }: Props) {
         type="button"
         onClick={() => onSubmit()}
         disabled={disabled}
-        className="w-full border-b border-border py-3 text-left font-mono text-[12px] uppercase tracking-[0.18em] text-fg transition-colors hover:text-coral disabled:opacity-40 disabled:hover:text-fg"
+        className="cta-ink inline-flex items-center px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.18em] disabled:cursor-not-allowed disabled:opacity-40"
       >
         {pending ? "agent reasoning…" : busy ? "submitting…" : "run review →"}
       </button>

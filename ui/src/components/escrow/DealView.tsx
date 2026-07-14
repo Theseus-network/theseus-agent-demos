@@ -242,7 +242,7 @@ export default function DealView({ id }: { id: number }) {
               <button disabled={busy !== null} onClick={() => act("release", () => w("approveRelease", [BigInt(id)]))} className="rounded-xl bg-[#34D399] px-4 py-2.5 text-[13.5px] font-semibold text-black hover:opacity-90 disabled:opacity-50">
                 {busy === "release" ? "Releasing…" : "Accept & release funds"}
               </button>
-              <button disabled={busy !== null} onClick={() => act("dispute", () => w("dispute", [BigInt(id)]))} className="rounded-xl border border-[#F87171]/40 bg-[#F87171]/10 px-4 py-2.5 text-[13.5px] font-semibold text-[#F87171] disabled:opacity-50">
+              <button disabled={busy !== null} onClick={() => act("dispute", () => w("dispute", [BigInt(id)]))} className="rounded-xl bg-[#F87171] px-4 py-2.5 text-[13.5px] font-semibold text-black hover:opacity-90 disabled:opacity-50">
                 {busy === "dispute" ? "Opening…" : "Dispute → agent"}
               </button>
               {deal.status === STATUS.FUNDED && past && (
@@ -253,7 +253,7 @@ export default function DealView({ id }: { id: number }) {
 
           {isSeller && deal.status === STATUS.DELIVERED && (
             <div className="flex flex-wrap gap-2">
-              <button disabled={busy !== null} onClick={() => act("dispute", () => w("dispute", [BigInt(id)]))} className="rounded-xl border border-[#F87171]/40 bg-[#F87171]/10 px-4 py-2.5 text-[13.5px] font-semibold text-[#F87171] disabled:opacity-50">Dispute → agent</button>
+              <button disabled={busy !== null} onClick={() => act("dispute", () => w("dispute", [BigInt(id)]))} className="rounded-xl bg-[#F87171] px-4 py-2.5 text-[13.5px] font-semibold text-black hover:opacity-90 disabled:opacity-50">Dispute → agent</button>
               {past && (
                 <button disabled={busy !== null} onClick={() => act("claim", () => w("claimDelivered", [BigInt(id)]))} className="rounded-xl bg-[#34D399] px-4 py-2.5 text-[13.5px] font-semibold text-black hover:opacity-90 disabled:opacity-50">
                   {busy === "claim" ? "Claiming…" : "Claim (buyer didn't object, past deadline)"}
