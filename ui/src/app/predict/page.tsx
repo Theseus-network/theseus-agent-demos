@@ -117,7 +117,7 @@ export default function MarketsIndex() {
       </section>
 
       {/* Controls */}
-      <div className="mt-6 flex items-center gap-2">
+      <div className="relative z-10 mt-6 flex items-center gap-2">
         <div className="relative min-w-0 flex-1 sm:max-w-sm">
           <svg className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
           <input
@@ -140,7 +140,7 @@ export default function MarketsIndex() {
       </div>
 
       {/* Status + category chips — full-width scroller so nothing clips */}
-      <div className="no-scrollbar mt-3 flex items-center gap-2 overflow-x-auto pb-1">
+      <div className="no-scrollbar relative z-10 mt-3 flex items-center gap-2 overflow-x-auto pb-1">
         <div className="flex shrink-0 items-center gap-0.5 rounded-full border border-border p-0.5">
           {(
             [

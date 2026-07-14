@@ -4,6 +4,9 @@
     { "path": "/api/cron/vera-post", "schedule": "0 16 * * *" },
     { "path": "/api/cron/vera-engage", "schedule": "0 4,12,20 * * *" },
     { "path": "/api/cron/predict-traders", "schedule": "0 */8 * * *" },
+    { "path": "/api/cron/predict-resolve", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/predict-generate", "schedule": "0 2 * * *" },
+    { "path": "/api/cron/agent-keeper", "schedule": "0 * * * *" },
     { "path": "/api/vault/cron", "schedule": "*/10 * * * *" }
   ]
 }

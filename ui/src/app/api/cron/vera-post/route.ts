@@ -38,12 +38,20 @@ const extractText = (hex: string) =>
 export async function GET(req: Request) {
   if (process.env.CRON_SECRET && req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`)
     return Response.json({ error: "unauthorized" }, { status: 401 });
-  const vera = process.env.VERA_ADDR, seed = process.env.THESEUS_SIGNER_SEED, key = process.env.MOLTBOOK_API_KEY;
-  if (!vera || !seed || !key) return Response.json({ error: "missing VERA_ADDR / THESEUS_SIGNER_SEED / MOLTBOOK_API_KEY" }, { status: 500 });
+  const seed = process.env.THESEUS_SIGNER_SEED, key = process.env.MOLTBOOK_API_KEY;
+  if (!seed || !key) return Response.json({ error: "missing THESEUS_SIGNER_SEED / MOLTBOOK_API_KEY" }, { status: 500 });
 
   const api = await ApiPromise.create({ provider: new WsProvider(RPC, 3000), throwOnConnect: true });
   try {
     const signer = new Keyring({ type: "sr25519" }).addFromUri(seed);
+    // Resolve Vera by on-chain name so a reset + agent-keeper re-registration
+    // (new address) is picked up automatically; fall back to the env pin.
+    const utf8 = (h: string) => Buffer.from(String(h).replace(/^0x/, ""), "hex").toString("utf8");
+    const named = (await api.query.agents.agents.entries())
+      .filter(([, v]: any) => utf8((v.toJSON() as any).name) === "Vera")
+      .map(([k]: any) => k.args[0].toString());
+    const vera = named[named.length - 1] || process.env.VERA_ADDR;
+    if (!vera) throw new Error("Vera not on-chain and no VERA_ADDR fallback");
     const prompt = await buildPrompt(key);
     const text = await new Promise<string>(async (resolve, reject) => {
       const timer = setTimeout(() => reject(new Error("timed out waiting for Vera's run")), 240_000);

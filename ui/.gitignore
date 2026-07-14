@@ -3,3 +3,6 @@
 .data/
 *_moltbook.json
 scripts/vera-bridge-state.json
+.vercel
+.env*
+.cronsecret

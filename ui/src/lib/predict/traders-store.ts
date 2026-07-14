@@ -50,7 +50,7 @@ export async function baselineState(): Promise<PredictState | null> {
 export async function writeState(state: PredictState): Promise<void> {
   if (hasBlob()) {
     const { put } = await import("@vercel/blob");
-    await put(KEY, JSON.stringify(state), { access: "public", addRandomSuffix: false, contentType: "application/json" });
+    await put(KEY, JSON.stringify(state), { access: "public", addRandomSuffix: false, allowOverwrite: true, contentType: "application/json" });
     return;
   }
   writeFileSync(TRADERS_FILE, JSON.stringify({ round: state.round, updatedAt: state.updatedAt, traders: state.traders }, null, 2));
